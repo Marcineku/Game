@@ -13,26 +13,27 @@ import com.badlogic.gdx.physics.box2d.*;
 import java.util.ArrayList;
 
 public class MyGame extends ApplicationAdapter {
+	private final Vector2 mouseInWorld2D = new Vector2();
+	private final Vector3 mouseInWorld3D = new Vector3();
+
 	private SpriteBatch batch;
 	private World world;
 	private Box2DDebugRenderer debugRenderer;
 	private OrthographicCamera camera;
-	private float elapsedTime;
 
 	private Player player;
 	private ArrayList<GameObject> gameObjects;
 
 	private boolean click = false;
 
-	private final Vector2 mouseInWorld2D = new Vector2();
-	private final Vector3 mouseInWorld3D = new Vector3();
-
 	private float accumulator = 0;
+	private float elapsedTime = 0;
 
 	@Override
 	public void create () {
 		Box2D.init();
 		world = new World(new Vector2(0, 0), true);
+		world.setContactListener(new MyContactListener());
 		batch = new SpriteBatch();
 		debugRenderer = new Box2DDebugRenderer();
 
@@ -111,7 +112,7 @@ public class MyGame extends ApplicationAdapter {
 			click = true;
 
 			//on click
-			gameObjects.add(new Box(mouseInWorld2D.x, mouseInWorld2D.y, world));
+			gameObjects.add(new Slime(mouseInWorld2D.x, mouseInWorld2D.y, world));
 		}
 	}
 

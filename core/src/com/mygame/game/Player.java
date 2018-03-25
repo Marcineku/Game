@@ -10,9 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 
 public class Player extends GameObject{
     private Texture texture;
@@ -39,6 +37,7 @@ public class Player extends GameObject{
         state = PlayerState.FACING_DOWN;
         HP = 100.f;
         movementSpeed = 25.f;
+        ID = Constants.PLAYER_ID;
 
         fixtureInit();
         animInit();
@@ -49,7 +48,9 @@ public class Player extends GameObject{
         CircleShape shape = new CircleShape();
         shape.setRadius(5.f / Constants.PPM);
         fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = Constants.BIT_PLAYER;
         fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
 
         shape.dispose();
     }
@@ -99,50 +100,60 @@ public class Player extends GameObject{
     }
 
     public void move(float elapsedTime) {
-        if(Gdx.input.isKeyPressed(Input.Keys.W)) {
-            this.body.applyLinearImpulse(0, movementSpeed, getPosition().x, getPosition().y, true);
-            currentFrame = (TextureRegion) walkUpAnim.getKeyFrame(elapsedTime, true);
-            state = PlayerState.FACING_UP;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
-            this.body.applyLinearImpulse(0, -movementSpeed, getPosition().x, getPosition().y, true);
-            currentFrame = (TextureRegion) walkDownAnim.getKeyFrame(elapsedTime, true);
-            state = PlayerState.FACING_DOWN;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
-            this.body.applyLinearImpulse(-movementSpeed, 0, getPosition().x, getPosition().y, true);
-            currentFrame = (TextureRegion) walkLeftAnim.getKeyFrame(elapsedTime, true);
-            state = PlayerState.FACING_LEFT;
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
-            this.body.applyLinearImpulse(movementSpeed, 0, getPosition().x, getPosition().y, true);
-            currentFrame = (TextureRegion) walkRightAnim.getKeyFrame(elapsedTime, true);
-            state = PlayerState.FACING_RIGHT;
-        }
-
-        float padding = 10.f;
-        if(body.getLinearVelocity().x < padding && body.getLinearVelocity().x > -padding &&
-           body.getLinearVelocity().y < padding && body.getLinearVelocity().y > -padding) {
-            switch (state) {
-                case FACING_UP:
-                    currentFrame = standingUp;
-                    break;
-                case FACING_DOWN:
-                    currentFrame = standingDown;
-                    break;
-                case FACING_LEFT:
-                    currentFrame = standingLeft;
-                    break;
-                case FACING_RIGHT:
-                    currentFrame = standingRight;
-                    break;
+        if(state != PlayerState.DEAD) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                this.body.applyLinearImpulse(0, movementSpeed, getPosition().x, getPosition().y, true);
+                currentFrame = (TextureRegion) walkUpAnim.getKeyFrame(elapsedTime, true);
+                state = PlayerState.FACING_UP;
             }
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                this.body.applyLinearImpulse(0, -movementSpeed, getPosition().x, getPosition().y, true);
+                currentFrame = (TextureRegion) walkDownAnim.getKeyFrame(elapsedTime, true);
+                state = PlayerState.FACING_DOWN;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                this.body.applyLinearImpulse(-movementSpeed, 0, getPosition().x, getPosition().y, true);
+                currentFrame = (TextureRegion) walkLeftAnim.getKeyFrame(elapsedTime, true);
+                state = PlayerState.FACING_LEFT;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                this.body.applyLinearImpulse(movementSpeed, 0, getPosition().x, getPosition().y, true);
+                currentFrame = (TextureRegion) walkRightAnim.getKeyFrame(elapsedTime, true);
+                state = PlayerState.FACING_RIGHT;
+            }
+
+            float padding = 10.f;
+            if (body.getLinearVelocity().x < padding && body.getLinearVelocity().x > -padding &&
+                    body.getLinearVelocity().y < padding && body.getLinearVelocity().y > -padding) {
+                switch (state) {
+                    case FACING_UP:
+                        currentFrame = standingUp;
+                        break;
+                    case FACING_DOWN:
+                        currentFrame = standingDown;
+                        break;
+                    case FACING_LEFT:
+                        currentFrame = standingLeft;
+                        break;
+                    case FACING_RIGHT:
+                        currentFrame = standingRight;
+                        break;
+                }
+            }
+        }
+        else {
+            currentFrame = (TextureRegion) standingDown;
+            HP = 0.f;
         }
     }
 
     @Override
     public void update(float elapsedTime) {
-
+        if(HP <= 0.0) {
+            movementSpeed = 0.f;
+            state = PlayerState.DEAD;
+            body.setAwake(false);
+        }
     }
 
     @Override
@@ -157,6 +168,15 @@ public class Player extends GameObject{
     }
 
     public enum PlayerState {
-        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT
+        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, DEAD
+    }
+
+    @Override
+    public String toString() {
+        return ID;
+    }
+
+    public void hit(float damage) {
+        HP -= damage;
     }
 }

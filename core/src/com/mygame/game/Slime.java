@@ -7,16 +7,19 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Box extends GameObject {
+public class Slime extends GameObject {
     private Texture texture;
 
-    Box(float positionX, float positionY, World world) {
+    Slime(float positionX, float positionY, World world) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(8.f / Constants.PPM, 6.f / Constants.PPM);
         fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = Constants.BIT_ENEMY;
         fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(this);
+        ID = Constants.SLIME_ID;
 
         animInit();
 
@@ -43,5 +46,10 @@ public class Box extends GameObject {
     @Override
     public void dispose() {
         texture.dispose();
+    }
+
+    @Override
+    public String toString() {
+        return ID;
     }
 }
