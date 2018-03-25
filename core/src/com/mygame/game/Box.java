@@ -6,25 +6,25 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
-import javafx.animation.Animation;
 
 public class Box extends GameObject {
-    private PolygonShape shape;
+    private Texture texture;
 
-    private Animation anim;
+    Box(float positionX, float positionY, World world) {
+        super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
 
-    Box(float positionX, float positionY, World world, float colliderWidth, float colliderHeight) {
-        super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.12f, 0.12f, 0.12f);
-
-        shape = new PolygonShape();
-        shape.setAsBox(colliderWidth, colliderHeight);
-        createFixture();
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(8.f / Constants.PPM, 6.f / Constants.PPM);
+        fixtureDef.shape = shape;
+        fixture = body.createFixture(fixtureDef);
 
         animInit();
+
+        shape.dispose();
     }
 
     private void animInit() {
-        Texture texture = new Texture("characters.png");
+        texture = new Texture("images\\characters.png");
         TextureRegion[][] tmpFrames = TextureRegion.split(texture, 16, 16);
 
         currentFrame = tmpFrames[4][1];
@@ -37,17 +37,11 @@ public class Box extends GameObject {
 
     @Override
     public Vector2 getPosition() {
-        return new Vector2(body.getPosition().x - 8, body.getPosition().y - 4);
-    }
-
-    @Override
-    public void createFixture() {
-        fixtureDef.shape = shape;
-        fixture = body.createFixture(fixtureDef);
+        return new Vector2(body.getPosition().x * Constants.PPM - 8, body.getPosition().y * Constants.PPM - 6);
     }
 
     @Override
     public void dispose() {
-        shape.dispose();
+        texture.dispose();
     }
 }

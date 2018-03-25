@@ -43,7 +43,5 @@ public abstract class GameObject {
 
     public abstract void update(float elapsedTime);
 
-    public abstract void createFixture();
-
     public abstract void dispose();
 }

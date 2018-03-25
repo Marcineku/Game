@@ -5,10 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
@@ -20,13 +17,7 @@ public class MyGame extends ApplicationAdapter {
 	private World world;
 	private Box2DDebugRenderer debugRenderer;
 	private OrthographicCamera camera;
-
-	private Texture img;
-	private TextureRegion[] animationFrames;
-	private Animation animation;
 	private float elapsedTime;
-
-	private Animation walkDownAnim;
 
 	private Player player;
 	private ArrayList<GameObject> gameObjects;
@@ -41,14 +32,17 @@ public class MyGame extends ApplicationAdapter {
 	@Override
 	public void create () {
 		Box2D.init();
-		batch = new SpriteBatch();
 		world = new World(new Vector2(0, 0), true);
+		batch = new SpriteBatch();
 		debugRenderer = new Box2DDebugRenderer();
-		camera = new OrthographicCamera(1280, 900);
-		camera.zoom -= 0.8f;
+
+		float w = Gdx.graphics.getWidth();
+		float h = Gdx.graphics.getHeight();
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, w / 2, h / 2);
 
 		gameObjects = new ArrayList<GameObject>();
-		player = new Player(100, 300, world, 80.f, 5.f);
+		player = new Player(0, 0, world);
 	}
 
 	@Override
@@ -59,19 +53,35 @@ public class MyGame extends ApplicationAdapter {
 		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		//debugRenderer.render(world, camera.combined);
+		debugRenderer.render(world, camera.combined.scl(Constants.PPM));
 
 		batch.begin();
+
 		for(GameObject i : gameObjects) {
 			batch.draw(i.getCurrentFrame(), i.getPosition().x, i.getPosition().y);
 		}
 		batch.draw(player.getCurrentFrame(), player.getPosition().x, player.getPosition().y);
+
+		player.drawUI(batch);
+
 		batch.end();
 
 		doPhysicsStep(world, Gdx.graphics.getDeltaTime());
 	}
 
-	public void update() {
+	private void update() {
+		cameraUpdate();
+		player.move(elapsedTime);
+
+		mouseEvents();
+
+		player.update(elapsedTime);
+		for (GameObject i : gameObjects) {
+			i.update(elapsedTime);
+		}
+	}
+
+	private void cameraUpdate() {
 		camera.update();
 		camera.position.set(player.getPosition().x, player.getPosition().y, 0);
 		batch.setProjectionMatrix(camera.combined);
@@ -80,10 +90,8 @@ public class MyGame extends ApplicationAdapter {
 		mouseInWorld3D.y = Gdx.input.getY();
 		mouseInWorld3D.z = 0;
 		camera.unproject(mouseInWorld3D);
-		mouseInWorld2D.x = mouseInWorld3D.x;
-		mouseInWorld2D.y = mouseInWorld3D.y;
-
-		player.move(elapsedTime);
+		mouseInWorld2D.x = mouseInWorld3D.x / Constants.PPM;
+		mouseInWorld2D.y = mouseInWorld3D.y / Constants.PPM;
 
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
 			camera.zoom -= 0.02f;
@@ -91,7 +99,9 @@ public class MyGame extends ApplicationAdapter {
 		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
 			camera.zoom += 0.02f;
 		}
+	}
 
+	private void mouseEvents() {
 		if(click && !Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
 			click = false;
 
@@ -101,12 +111,7 @@ public class MyGame extends ApplicationAdapter {
 			click = true;
 
 			//on click
-			gameObjects.add(new Box(mouseInWorld2D.x, mouseInWorld2D.y, world, 8.f, 5.f));
-		}
-
-		player.update(elapsedTime);
-		for (GameObject i : gameObjects) {
-			i.update(elapsedTime);
+			gameObjects.add(new Box(mouseInWorld2D.x, mouseInWorld2D.y, world));
 		}
 	}
 
@@ -114,9 +119,14 @@ public class MyGame extends ApplicationAdapter {
 		float frameTime = Math.min(deltaTime, 0.25f);
 		accumulator += frameTime;
 		while(accumulator >= 1/60f) {
-			world.step(1/60f, 6, 2);
+			world.step(1/60f, 24, 8);
 			accumulator -= 1/60f;
 		}
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		camera.setToOrtho(false, width / 2, height / 2);
 	}
 
 	@Override
