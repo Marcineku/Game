@@ -2,143 +2,80 @@ package com.mygame.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
-
-import java.util.ArrayList;
+import com.mygame.handlers.*;
 
 public class MyGame extends ApplicationAdapter {
-	private final Vector2 mouseInWorld2D = new Vector2();
-	private final Vector3 mouseInWorld3D = new Vector3();
+	public static final String TITLE    = "Game";
+	public static final int    V_WIDTH  = 640;
+	public static final int    V_HEIGHT = 450;
+	public static final int    SCALE    = 2;
+	public static final int    FPS      = 60;
+	public static final float  STEP     = 1.f/FPS;
 
-	private SpriteBatch batch;
-	private World world;
-	private Box2DDebugRenderer debugRenderer;
-	private OrthographicCamera camera;
+	private float accumulator;
 
-	private Player player;
-	private ArrayList<GameObject> gameObjects;
+	private SpriteBatch sb;
+	private OrthographicCamera cam;
+	private OrthographicCamera hudCam;
 
-	private boolean click = false;
+	private GameStateManager gsm;
 
-	private float accumulator = 0;
-	private float elapsedTime = 0;
+	public static Content assets;
 
 	@Override
 	public void create () {
-		Box2D.init();
-		world = new World(new Vector2(0, 0), true);
-		world.setContactListener(new MyContactListener());
-		batch = new SpriteBatch();
-		debugRenderer = new Box2DDebugRenderer();
+		accumulator = 0;
 
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, w / 2, h / 2);
+		Gdx.input.setInputProcessor(new MyInputProcessor());
 
-		gameObjects = new ArrayList<GameObject>();
-		player = new Player(0, 0, world);
+		assets = new Content();
+		assets.loadTexture("images\\characters.png", "characters");
+
+		sb = new SpriteBatch();
+		cam = new OrthographicCamera();
+		cam.setToOrtho(false, V_WIDTH, V_HEIGHT);
+		hudCam = new OrthographicCamera();
+		hudCam.setToOrtho(false, V_WIDTH, V_HEIGHT);
+
+		gsm = new GameStateManager(this);
 	}
 
 	@Override
 	public void render () {
-		elapsedTime += Gdx.graphics.getDeltaTime();
-		update();
+		Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond());
 
-		Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-		debugRenderer.render(world, camera.combined.scl(Constants.PPM));
-
-		batch.begin();
-
-		for(GameObject i : gameObjects) {
-			batch.draw(i.getCurrentFrame(), i.getPosition().x, i.getPosition().y);
+		accumulator += Gdx.graphics.getDeltaTime();
+		while(accumulator >= STEP) {
+			accumulator -= STEP;
+			MyInput.update();
+			gsm.update(STEP);
+			gsm.render();
 		}
-		batch.draw(player.getCurrentFrame(), player.getPosition().x, player.getPosition().y);
-
-		player.drawUI(batch);
-
-		batch.end();
-
-		doPhysicsStep(world, Gdx.graphics.getDeltaTime());
-	}
-
-	private void update() {
-		cameraUpdate();
-		player.move(elapsedTime);
-
-		mouseEvents();
-
-		player.update(elapsedTime);
-		for (GameObject i : gameObjects) {
-			i.update(elapsedTime);
-		}
-	}
-
-	private void cameraUpdate() {
-		camera.update();
-		camera.position.set(player.getPosition().x, player.getPosition().y, 0);
-		batch.setProjectionMatrix(camera.combined);
-
-		mouseInWorld3D.x = Gdx.input.getX();
-		mouseInWorld3D.y = Gdx.input.getY();
-		mouseInWorld3D.z = 0;
-		camera.unproject(mouseInWorld3D);
-		mouseInWorld2D.x = mouseInWorld3D.x / Constants.PPM;
-		mouseInWorld2D.y = mouseInWorld3D.y / Constants.PPM;
-
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			camera.zoom -= 0.02f;
-		}
-		if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			camera.zoom += 0.02f;
-		}
-	}
-
-	private void mouseEvents() {
-		if(click && !Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-			click = false;
-
-			//on click release
-		}
-		if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !click) {
-			click = true;
-
-			//on click
-			gameObjects.add(new Slime(mouseInWorld2D.x, mouseInWorld2D.y, world));
-		}
-	}
-
-	private void doPhysicsStep(World world, float deltaTime) {
-		float frameTime = Math.min(deltaTime, 0.25f);
-		accumulator += frameTime;
-		while(accumulator >= 1/60f) {
-			world.step(1/60f, 24, 8);
-			accumulator -= 1/60f;
-		}
-	}
-
-	@Override
-	public void resize(int width, int height) {
-		camera.setToOrtho(false, width / 2, height / 2);
 	}
 
 	@Override
 	public void dispose () {
-		batch.dispose();
-		world.dispose();
-		debugRenderer.dispose();
+		sb.dispose();
+		gsm.popState();
+		assets.disposeAll();
+	}
 
-		player.dispose();
-		for (GameObject i: gameObjects) {
-			i.dispose();
-		}
+	@Override
+	public void resize(int width, int height) {
+		cam.setToOrtho(false, width / SCALE, height / SCALE);
+	}
+
+	public SpriteBatch getSpriteBatch() {
+		return sb;
+	}
+
+	public OrthographicCamera getCam() {
+		return cam;
+	}
+
+	public OrthographicCamera getHudCam() {
+		return hudCam;
 	}
 }
