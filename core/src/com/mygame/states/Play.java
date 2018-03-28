@@ -8,13 +8,16 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygame.entities.Player;
 import com.mygame.entities.Slime;
 import com.mygame.entities.Sprite;
 import com.mygame.handlers.Constants;
 import com.mygame.handlers.GameStateManager;
 import com.mygame.handlers.MyContactListener;
+import com.mygame.handlers.MyInput;
 import com.mygame.interfaces.Attackable;
 
 import java.util.ArrayList;
@@ -75,15 +78,15 @@ public class Play extends GameState {
             i.render(sb);
         }
 
+        sb.begin();
         for(Sprite i : gameObjects) {
             if(i instanceof Attackable) {
                 String hp = Integer.toString(((Attackable) i).getHp());
-                Vector2 position = new Vector2(i.getPosition().x * Constants.PPM - 8.f, i.getPosition().y * Constants.PPM + 16.f);
-                sb.begin();
+                Vector2 position = new Vector2(((Attackable) i).getHpBarPosition().x, ((Attackable) i).getHpBarPosition().y);
                 font.draw(sb, hp, position.x, position.y);
-                sb.end();
             }
         }
+        sb.end();
     }
 
     @Override
@@ -99,14 +102,21 @@ public class Play extends GameState {
             //on click
         }
 
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+        //on button pressed
+        if(MyInput.isDown(MyInput.SLIME)) {
             gameObjects.add(new Slime(mousePosition.x, mousePosition.y, world));
         }
+
+        //rotating player's body towards mouse cursor
+        Body body = gameObjects.get(0).getBody();
+        Vector2 toTarget = new Vector2(mousePosition.x / Constants.PPM - body.getPosition().x, mousePosition.y / Constants.PPM - body.getPosition().y);
+        float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
+        body.setTransform(body.getPosition(), desiredAngle);
     }
 
     private void cameraUpdate() {
         cam.update();
-        cam.position.set(gameObjects.get(0).getPosition().x * Constants.PPM, gameObjects.get(0).getPosition().y * Constants.PPM, 0);
+        cam.position.set(gameObjects.get(0).getBody().getPosition().x * Constants.PPM, gameObjects.get(0).getBody().getPosition().y * Constants.PPM, 0);
         sb.setProjectionMatrix(cam.combined);
 
         Vector3 mouseInWorld3D = new Vector3();

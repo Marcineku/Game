@@ -19,6 +19,10 @@ public class MyInputProcessor extends InputAdapter {
             MyInput.setKey(MyInput.RIGHT, true);
         }
 
+        if(keycode == Input.Keys.E) {
+            MyInput.setKey(MyInput.SLIME, true);
+        }
+
         return super.keyDown(keycode);
     }
 
@@ -37,6 +41,28 @@ public class MyInputProcessor extends InputAdapter {
             MyInput.setKey(MyInput.RIGHT, false);
         }
 
+        if(keycode == Input.Keys.E) {
+            MyInput.setKey(MyInput.SLIME, false);
+        }
+
         return super.keyUp(keycode);
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(button == Input.Buttons.LEFT) {
+            MyInput.setKey(MyInput.STRIKE, true);
+        }
+
+        return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if(button == Input.Buttons.LEFT) {
+            MyInput.setKey(MyInput.STRIKE, false);
+        }
+
+        return super.touchUp(screenX, screenY, pointer, button);
     }
 }
