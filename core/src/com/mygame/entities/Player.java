@@ -17,6 +17,8 @@ public class Player extends Sprite implements Attackable {
     private float        movementSpeed;
     private boolean      strike;
 
+    private TextureRegion sword;
+
     public Player(World world, float positionX, float positionY) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 15.f, 0.25f);
 
@@ -95,17 +97,20 @@ public class Player extends Sprite implements Attackable {
             vertices[i+1] = new Vector2(radius * (float) Math.cos(a), radius * (float) Math.sin(a));
         }
 
+        TextureRegion swordtmp[][] = TextureRegion.split(MyGame.assets.getTexture("sword"), 26, 58);
+        sword = swordtmp[0][0];
+
         PolygonShape polygonShape = new PolygonShape();
         polygonShape.set(vertices);
         FixtureDef fd = new FixtureDef();
-        fd.isSensor = false;
+        fd.isSensor = true;
         fd.density = 0.f;
         fd.shape = polygonShape;
         fd.filter.categoryBits = Constants.BIT_WEAPON;
         Fixture fx = body.createFixture(fd);
         fx.setUserData(this);
         body.setSleepingAllowed(false);
-        body.setBullet(true);
+        body.setBullet(false);
 
         polygonShape.dispose();
     }
@@ -177,6 +182,9 @@ public class Player extends Sprite implements Attackable {
     @Override
     public void render(SpriteBatch sb) {
         sb.begin();
+        float x = getPosition().x * Constants.PPM - 13;
+        float y = getPosition().y * Constants.PPM - 5;
+        sb.draw(sword, x, y + 15, 0 + 13, 0 + 5 - 15, 26, 58,0.8f,0.8f, (float) Math.toDegrees(body.getAngle()) - 82.5f);
         sb.draw(currentAnimation.getFrame(),
                 body.getPosition().x * Constants.PPM - width / 2,
                 body.getPosition().y * Constants.PPM - height / 2 + 6

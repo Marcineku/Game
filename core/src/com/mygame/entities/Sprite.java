@@ -74,6 +74,10 @@ public abstract class Sprite {
         return body.getPosition();
     }
 
+    public Animation getCurrentAnimation() {
+        return currentAnimation;
+    }
+
     public float getWidth() {
         return width;
     }

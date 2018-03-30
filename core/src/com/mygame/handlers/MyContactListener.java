@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.entities.Player;
 import com.mygame.entities.Slime;
+import com.mygame.game.MyGame;
 
 public class MyContactListener implements ContactListener{
     @Override
@@ -29,7 +30,7 @@ public class MyContactListener implements ContactListener{
             }
 
 
-            if(slime.getState() == Slime.SlimeStates.ALIVE && player.getState() != Player.PlayerStates.DEAD) {
+            if(slime.getState() != Slime.SlimeStates.DEAD && player.getState() != Player.PlayerStates.DEAD) {
                 float impulsePower = 500.f;
                 WorldManifold wm = contact.getWorldManifold();
                 Vector2 n = wm.getNormal();
@@ -39,6 +40,8 @@ public class MyContactListener implements ContactListener{
                         -n.y * impulsePower), slime.getBody().getPosition(), true);
 
                 player.hit(10);
+                MyGame.assets.getSound("hurt01").stop();
+                MyGame.assets.getSound("hurt01").play();
                 slime.hit(20);
             }
         }
@@ -58,15 +61,15 @@ public class MyContactListener implements ContactListener{
                 slime = (Slime) fa.getUserData();
             }
 
-            if(slime.getState() == Slime.SlimeStates.ALIVE && player.getState() != Player.PlayerStates.DEAD) {
-                float impulsePower = 300.f;
-                WorldManifold wm = contact.getWorldManifold();
-                Vector2[] points = wm.getPoints();
-                Vector2 n = new Vector2(player.getPosition().x - points[0].x, player.getPosition().y - points[0].y);
+            if(slime.getState() != Slime.SlimeStates.DEAD && player.getState() != Player.PlayerStates.DEAD) {
+                float impulsePower = 800.f;
+
+                Vector2 n = new Vector2(player.getPosition().x - slime.getPosition().x, player.getPosition().y - slime.getPosition().y);
                 slime.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
                         -n.y * impulsePower), slime.getBody().getPosition(), true);
 
-                slime.hit(10);
+                slime.hit(30);
+                MyGame.assets.getSound("sword01").play();
             }
         }
     }

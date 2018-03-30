@@ -20,7 +20,7 @@ public class Slime extends Sprite implements Attackable {
 
         id = "slime";
         hp = 100;
-        state = SlimeStates.ALIVE;
+        state = SlimeStates.FACING_DOWN;
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(8.f / Constants.PPM, 6.f / Constants.PPM);
@@ -35,11 +35,29 @@ public class Slime extends Sprite implements Attackable {
 
         float frameDuration = 1/12.f;
 
+        TextureRegion[] walkUp = new TextureRegion[3];
+        for(int i = 0; i < 3; ++i) {
+            walkUp[i] = frames[7][i];
+        }
+        addAnimation("walkUp", walkUp, frameDuration);
+
         TextureRegion[] walkDown = new TextureRegion[3];
         for(int i = 0; i < 3; ++i) {
             walkDown[i] = frames[4][i];
         }
         addAnimation("walkDown", walkDown, frameDuration);
+
+        TextureRegion[] walkLeft = new TextureRegion[3];
+        for(int i = 0; i < 3; ++i) {
+            walkLeft[i] = frames[5][i];
+        }
+        addAnimation("walkLeft", walkLeft, frameDuration);
+
+        TextureRegion[] walkRight = new TextureRegion[3];
+        for(int i = 0; i < 3; ++i) {
+            walkRight[i] = frames[6][i];
+        }
+        addAnimation("walkRight", walkRight, frameDuration);
 
         TextureRegion[] dead = new TextureRegion[3];
         for(int i = 0; i < 3; ++i) {
@@ -55,10 +73,31 @@ public class Slime extends Sprite implements Attackable {
         if(hp <= 0) {
             hp = 0;
             state = SlimeStates.DEAD;
+            fixture.setSensor(true);
         }
 
-        if(state == SlimeStates.DEAD) currentAnimation = animations.get("dead");
-        else currentAnimation = animations.get("walkDown");
+        if(state != SlimeStates.DEAD) {
+            Vector2 v = body.getLinearVelocity();
+            if(v.x > 0 && v.y > 0) {
+                if(v.x > v.y) {
+                    currentAnimation = animations.get("walkRight");
+                }
+                else {
+                    currentAnimation = animations.get("walkUp");
+                }
+            }
+            else {
+                if(v.x < v.y) {
+                    currentAnimation = animations.get("walkLeft");
+                }
+                else {
+                    currentAnimation = animations.get("walkDown");
+                }
+            }
+        }
+        else {
+            currentAnimation = animations.get("dead");
+        }
     }
 
     @Override
@@ -90,7 +129,8 @@ public class Slime extends Sprite implements Attackable {
         return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 12.f);
     }
 
+
     public enum SlimeStates {
-        ALIVE, DEAD
+        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, DEAD
     }
 }

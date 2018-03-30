@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
@@ -14,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygame.entities.Player;
 import com.mygame.entities.Slime;
 import com.mygame.entities.Sprite;
+import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
 import com.mygame.handlers.GameStateManager;
 import com.mygame.handlers.MyContactListener;
@@ -21,6 +23,7 @@ import com.mygame.handlers.MyInput;
 import com.mygame.interfaces.Attackable;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Play extends GameState {
     private World world;
@@ -28,21 +31,28 @@ public class Play extends GameState {
 
     private ArrayList<Sprite> gameObjects;
 
-    private final Vector2 mousePosition = new Vector2();
+    private Vector2 mousePosition;
 
     private boolean click = false;
 
     private BitmapFont font;
 
+    private Player player;
+
+    public static boolean debug = false;
+
     public Play(GameStateManager gsm) {
         super(gsm);
+
+        mousePosition = new Vector2();
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
         b2dr = new Box2DDebugRenderer();
 
         gameObjects = new ArrayList<Sprite>();
-        gameObjects.add(new com.mygame.entities.Player(world, 0, 0));
+        player = new Player(world, 0, 0);
+        gameObjects.add(player);
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts\\PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -56,10 +66,42 @@ public class Play extends GameState {
 
     @Override
     public void update(float dt) {
+        Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + " OBJ: " + gameObjects.size());
+
         handleInput();
+
+        //moving slimes towards the player
+        for(Sprite i : gameObjects) {
+            if(i.toString().equals("slime")) {
+                Slime s = (Slime) i;
+                if(s.getState() != Slime.SlimeStates.DEAD) {
+                    if(player.getState() != Player.PlayerStates.DEAD) {
+                        i.getBody().setLinearVelocity(player.getBody().getPosition().x - i.getBody().getPosition().x, player.getBody().getPosition().y - i.getBody().getPosition().y);
+                    }
+                }
+                else {
+                    i.getBody().setLinearVelocity(i.getBody().getPosition().x - player.getBody().getPosition().x, i.getBody().getPosition().y - player.getBody().getPosition().y);
+                }
+            }
+        }
+
+        //removing dead slimes
+        for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
+            Sprite s = i.next();
+            if(s.toString().equals("slime")) {
+                Slime slime = (Slime) s;
+                if(slime.getState() == Slime.SlimeStates.DEAD) {
+                    if(slime.getCurrentAnimation().getTimesPlayed() > 20) {
+                        world.destroyBody(slime.getBody());
+                        i.remove();
+                    }
+                }
+            }
+        }
 
         world.step(dt, 6, 2);
 
+        //updating all game objects
         for(Sprite i : gameObjects) {
             i.update(dt);
         }
@@ -72,7 +114,14 @@ public class Play extends GameState {
 
         cameraUpdate();
 
-        b2dr.render(world, cam.combined.scl(Constants.PPM));
+        sb.begin();
+        Texture bg = MyGame.assets.getTexture("background");
+        sb.draw(bg, -bg.getWidth() / 2, -bg.getHeight() / 2);
+        sb.end();
+
+        if(debug) {
+            b2dr.render(world, cam.combined.scl(Constants.PPM));
+        }
 
         for(Sprite i : gameObjects) {
             i.render(sb);

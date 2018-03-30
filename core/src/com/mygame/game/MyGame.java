@@ -32,6 +32,10 @@ public class MyGame extends ApplicationAdapter {
 
 		assets = new Content();
 		assets.loadTexture("images\\characters.png", "characters");
+		assets.loadTexture("images\\sword.png", "sword");
+		assets.loadTexture("images\\grass.jpg", "background");
+		assets.loadSound("sfx\\sword02.wav", "sword01");
+		assets.loadSound("sfx\\hurt01.wav", "hurt01");
 
 		sb = new SpriteBatch();
 		cam = new OrthographicCamera();
@@ -44,8 +48,6 @@ public class MyGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond());
-
 		accumulator += Gdx.graphics.getDeltaTime();
 		while(accumulator >= STEP) {
 			accumulator -= STEP;
