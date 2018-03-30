@@ -2,6 +2,7 @@ package com.mygame.handlers;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
+import com.mygame.game.MyGame;
 
 public class MyInputProcessor extends InputAdapter {
     @Override
@@ -21,6 +22,10 @@ public class MyInputProcessor extends InputAdapter {
 
         if(keycode == Input.Keys.E) {
             MyInput.setKey(MyInput.SLIME, true);
+        }
+
+        if(keycode == Input.Keys.R) {
+            MyInput.setKey(MyInput.RESET, true);
         }
 
         return super.keyDown(keycode);
@@ -43,6 +48,10 @@ public class MyInputProcessor extends InputAdapter {
 
         if(keycode == Input.Keys.E) {
             MyInput.setKey(MyInput.SLIME, false);
+        }
+
+        if(keycode == Input.Keys.R) {
+            MyInput.setKey(MyInput.RESET, false);
         }
 
         return super.keyUp(keycode);

@@ -215,6 +215,14 @@ public class Player extends Sprite implements Attackable {
         return strike;
     }
 
+    public void reset() {
+        hp = maxHp;
+        state = PlayerStates.FACING_DOWN;
+        body.setTransform(0, 0, 0);
+        movementSpeed = 25.f;
+        body.setAwake(true);
+    }
+
     public enum PlayerStates {
         FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, DEAD
     }

@@ -99,6 +99,16 @@ public class Play extends GameState {
             }
         }
 
+        for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
+            Sprite s = i.next();
+            if(s.toString().equals("player")) {
+                Player p = (Player) s;
+                if(p.getState() == Player.PlayerStates.DEAD && MyInput.isDown(MyInput.RESET)) {
+                    player.reset();
+                }
+            }
+        }
+
         world.step(dt, 6, 2);
 
         //updating all game objects
