@@ -7,11 +7,13 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.entities.*;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
@@ -32,8 +34,7 @@ public class Play extends GameState {
     private ArrayList<Sprite> gameObjects;
 
     private Vector2 mousePosition;
-
-    private boolean click = false;
+    private boolean click;
 
     private BitmapFont font;
 
@@ -41,19 +42,24 @@ public class Play extends GameState {
 
     private Hud hud;
 
+    private TiledMap tileMap;
+    private OrthogonalTiledMapRenderer tmr;
+    float tileSize;
+
     public static boolean debug = false;
 
     public Play(GameStateManager gsm) {
         super(gsm);
 
         mousePosition = new Vector2();
+        click = false;
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
         b2dr = new Box2DDebugRenderer();
 
         gameObjects = new ArrayList<Sprite>();
-        player = new Player(world, 0, 0);
+        player = new Player(world, 100 * Constants.PPM, 100 * Constants.PPM);
         gameObjects.add(player);
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts\\PressStart2P.ttf"));
@@ -65,9 +71,39 @@ public class Play extends GameState {
 
         generator.dispose();
 
-        gameObjects.add(new Loot(world, 100, 100, 2));
-
         hud = new Hud(player);
+
+        tileMap = new TmxMapLoader().load("maps\\Test.tmx");
+        tmr = new OrthogonalTiledMapRenderer(tileMap);
+
+        TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get("water");
+        tileSize = layer.getTileWidth();
+
+        for(int row = 29; row < layer.getHeight(); ++row) {
+            for(int col = 23; col < layer.getWidth(); ++col) {
+                TiledMapTileLayer.Cell cell = layer.getCell(col, row);
+
+                if(cell == null) continue;
+                if(cell.getTile() == null) continue;
+
+                BodyDef bdef = new BodyDef();
+                bdef.type = BodyDef.BodyType.StaticBody;
+                bdef.position.set((col + 0.5f) * tileSize / Constants.PPM, (row + 0.5f) * tileSize / Constants.PPM);
+
+                PolygonShape shape = new PolygonShape();
+                shape.setAsBox(8 / Constants.PPM, 8 / Constants.PPM);
+
+                FixtureDef fdef = new FixtureDef();
+                fdef.friction = 0;
+                fdef.shape = shape;
+                fdef.isSensor = false;
+                world.createBody(bdef).createFixture(fdef);
+                shape.dispose();
+
+                if(col > 71) break;
+            }
+            if(row > 72) break;
+        }
     }
 
     @Override
@@ -142,13 +178,11 @@ public class Play extends GameState {
         //updating camera
         cameraUpdate();
 
-        //rendering background image
-        sb.begin();
-        Texture bg = MyGame.assets.getTexture("background");
-        sb.draw(bg, -bg.getWidth() / 2, -bg.getHeight() / 2);
-        sb.end();
+        //rendering tiled map
+        tmr.setView(cam);
+        tmr.render();
 
-        //rendering hitboxes
+        //rendering physics engine hitboxes
         if(debug) {
             b2dr.render(world, cam.combined.scl(Constants.PPM));
         }

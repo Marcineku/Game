@@ -235,6 +235,7 @@ public class Player extends Sprite implements Attackable {
 
     public void reset() {
         hp = maxHp;
+        gold = 0;
         playerState = PlayerStates.FACING_DOWN;
         attackableState = AttackableState.ALIVE;
         body.setTransform(0, 0, 0);
