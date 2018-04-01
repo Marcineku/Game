@@ -9,7 +9,7 @@ import com.mygame.handlers.Constants;
 
 import java.util.HashMap;
 
-public abstract class Sprite {
+public abstract class Sprite implements Comparable<Sprite> {
     protected String                     id;
     protected Body                       body;
     protected FixtureDef                 fixtureDef;
@@ -18,6 +18,7 @@ public abstract class Sprite {
     protected Animation                  currentAnimation;
     protected float                      width;
     protected float                      height;
+    protected int                        layer;
 
     public Sprite(BodyDef.BodyType type,
                   float positionX,
@@ -84,6 +85,21 @@ public abstract class Sprite {
 
     public float getHeight() {
         return height;
+    }
+
+    @Override
+    public int compareTo(Sprite o) {
+        if(this.layer > o.layer) {
+            return 1;
+        }
+        else if(this.layer == o.layer) {
+            return 0;
+        }
+        else if(this.layer < o.layer) {
+            return -1;
+        }
+
+        return 0;
     }
 
     @Override

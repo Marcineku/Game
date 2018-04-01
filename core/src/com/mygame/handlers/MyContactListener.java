@@ -2,76 +2,26 @@ package com.mygame.handlers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.mygame.entities.Loot;
 import com.mygame.entities.Player;
-import com.mygame.entities.Slime;
+import com.mygame.entities.Sprite;
 import com.mygame.game.MyGame;
+import com.mygame.interfaces.Attackable;
 
 public class MyContactListener implements ContactListener{
     @Override
     public void beginContact(Contact contact) {
         Fixture fa = contact.getFixtureA();
         Fixture fb = contact.getFixtureB();
+        WorldManifold wm = contact.getWorldManifold();
 
         if(fa.getUserData() == null  || fb.getUserData() == null) return;
 
-        //player and slime collision
-        if((fa.getFilterData().categoryBits == Constants.BIT_PLAYER && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
-                (fb.getFilterData().categoryBits == Constants.BIT_PLAYER && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
-            Player player;
-            Slime slime;
+        playerEnemyCollision(fa, fb, wm);
 
-            if(fa.getUserData().toString() == "player") {
-                player = (Player) fa.getUserData();
-                slime = (Slime) fb.getUserData();
-            }
-            else {
-                player = (Player) fb.getUserData();
-                slime = (Slime) fa.getUserData();
-            }
+        swordEnemyCollision(fa, fb);
 
-
-            if(slime.getState() != Slime.SlimeStates.DEAD && player.getState() != Player.PlayerStates.DEAD) {
-                float impulsePower = 500.f;
-                WorldManifold wm = contact.getWorldManifold();
-                Vector2 n = wm.getNormal();
-                player.getBody().applyLinearImpulse(new Vector2(n.x * impulsePower,
-                        n.y * impulsePower), player.getBody().getPosition(), true);
-                slime.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
-                        -n.y * impulsePower), slime.getBody().getPosition(), true);
-
-                player.hit(10);
-                MyGame.assets.getSound("hurt01").stop();
-                MyGame.assets.getSound("hurt01").play();
-                slime.hit(20);
-            }
-        }
-
-        //player strikes a slime with a weapon
-        if ((fa.getFilterData().categoryBits == Constants.BIT_WEAPON && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
-                (fb.getFilterData().categoryBits == Constants.BIT_WEAPON && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
-            Player player;
-            Slime slime;
-
-            if(fa.getUserData().toString() == "player") {
-                player = (Player) fa.getUserData();
-                slime = (Slime) fb.getUserData();
-            }
-            else {
-                player = (Player) fb.getUserData();
-                slime = (Slime) fa.getUserData();
-            }
-
-            if(slime.getState() != Slime.SlimeStates.DEAD && player.getState() != Player.PlayerStates.DEAD) {
-                float impulsePower = 800.f;
-
-                Vector2 n = new Vector2(player.getPosition().x - slime.getPosition().x, player.getPosition().y - slime.getPosition().y);
-                slime.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
-                        -n.y * impulsePower), slime.getBody().getPosition(), true);
-
-                slime.hit(30);
-                MyGame.assets.getSound("sword01").play();
-            }
-        }
+        playerLootCollision(fa, fb);
     }
 
     @Override
@@ -87,5 +37,78 @@ public class MyContactListener implements ContactListener{
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
 
+    }
+
+    private void playerEnemyCollision(Fixture fa, Fixture fb, WorldManifold wm) {
+        if((fa.getFilterData().categoryBits == Constants.BIT_PLAYER && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
+                (fb.getFilterData().categoryBits == Constants.BIT_PLAYER && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
+            Sprite player = (Sprite) fa.getUserData();
+            Sprite enemy = (Sprite) fb.getUserData();
+
+            if(!player.toString().equals("player")) {
+                player = (Sprite) fb.getUserData();
+                enemy = (Sprite) fa.getUserData();
+            }
+
+            if(((Attackable) player).getAttackableState() == Attackable.AttackableState.ALIVE &&
+                    ((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE) {
+                float impulsePower = 500.f;
+                Vector2 n = wm.getNormal();
+                player.getBody().applyLinearImpulse(new Vector2(n.x * impulsePower,
+                        n.y * impulsePower), player.getBody().getPosition(), true);
+                enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
+                        -n.y * impulsePower), enemy.getBody().getPosition(), true);
+
+                ((Attackable) player).hit(10);
+                MyGame.assets.getSound("hurt01").stop();
+                MyGame.assets.getSound("hurt01").play();
+                ((Attackable) enemy).hit(20);
+            }
+        }
+    }
+
+    private void swordEnemyCollision(Fixture fa, Fixture fb) {
+        if ((fa.getFilterData().categoryBits == Constants.BIT_WEAPON && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
+                (fb.getFilterData().categoryBits == Constants.BIT_WEAPON && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
+            Sprite player = (Sprite) fa.getUserData();
+            Sprite enemy = (Sprite) fb.getUserData();
+
+            if(!fa.getUserData().toString().equals("player")) {
+                player = (Sprite) fb.getUserData();
+                enemy = (Sprite) fa.getUserData();
+            }
+
+            if(((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE &&
+                    ((Attackable) player).getAttackableState() == Attackable.AttackableState.ALIVE) {
+                float impulsePower = 800.f;
+
+                Vector2 n = new Vector2(player.getPosition().x - enemy.getPosition().x, player.getPosition().y - enemy.getPosition().y);
+                enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
+                        -n.y * impulsePower), enemy.getBody().getPosition(), true);
+
+                ((Attackable) enemy).hit(30);
+                MyGame.assets.getSound("sword01").play();
+            }
+        }
+    }
+
+    private void playerLootCollision(Fixture fa, Fixture fb) {
+        if ((fa.getFilterData().categoryBits == Constants.BIT_PLAYER && fb.getFilterData().categoryBits == Constants.BIT_LOOT) ||
+                (fb.getFilterData().categoryBits == Constants.BIT_PLAYER && fa.getFilterData().categoryBits == Constants.BIT_LOOT)) {
+            Player player;
+            Loot loot;
+
+            if (fa.getUserData().toString().equals("player")) {
+                player = (Player) fa.getUserData();
+                loot = (Loot) fb.getUserData();
+            }
+            else {
+                player = (Player) fb.getUserData();
+                loot = (Loot) fa.getUserData();
+            }
+
+            player.lootGold(loot.getGold());
+            MyGame.assets.getSound("gold").play();
+        }
     }
 }

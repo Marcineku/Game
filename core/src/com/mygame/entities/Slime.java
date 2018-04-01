@@ -10,17 +10,31 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
 import com.mygame.interfaces.Attackable;
+import com.mygame.interfaces.Lootable;
 
-public class Slime extends Sprite implements Attackable {
+public class Slime extends Sprite implements Attackable, Lootable {
     private int hp;
-    private SlimeStates state;
+    private int maxHp;
+    private SlimeStates slimeState;
+    private AttackableState attackableState;
+    private float movementSpeed;
+    private float maxMovementSpeed;
+    private boolean looted;
+    private int gold;
 
     public Slime(float positionX, float positionY, World world) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
 
         id = "slime";
-        hp = 100;
-        state = SlimeStates.FACING_DOWN;
+        layer = 2;
+        maxHp = 100;
+        hp = maxHp;
+        maxMovementSpeed = 25.f;
+        movementSpeed = maxMovementSpeed;
+        slimeState = SlimeStates.FACING_DOWN;
+        attackableState = AttackableState.ALIVE;
+        looted = false;
+        gold = 2;
 
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(8.f / Constants.PPM, 6.f / Constants.PPM);
@@ -72,26 +86,30 @@ public class Slime extends Sprite implements Attackable {
 
         if(hp <= 0) {
             hp = 0;
-            state = SlimeStates.DEAD;
+            attackableState = AttackableState.DEAD;
             fixture.setSensor(true);
         }
 
-        if(state != SlimeStates.DEAD) {
+        if(attackableState == AttackableState.ALIVE) {
             Vector2 v = body.getLinearVelocity();
             if(v.x > 0 && v.y > 0) {
                 if(v.x > v.y) {
                     currentAnimation = animations.get("walkRight");
+                    slimeState = SlimeStates.FACING_RIGHT;
                 }
                 else {
                     currentAnimation = animations.get("walkUp");
+                    slimeState = SlimeStates.FACING_UP;
                 }
             }
             else {
                 if(v.x < v.y) {
                     currentAnimation = animations.get("walkLeft");
+                    slimeState = SlimeStates.FACING_LEFT;
                 }
                 else {
                     currentAnimation = animations.get("walkDown");
+                    slimeState = SlimeStates.FACING_DOWN;
                 }
             }
         }
@@ -110,8 +128,24 @@ public class Slime extends Sprite implements Attackable {
         return hp;
     }
 
-    public SlimeStates getState() {
-        return state;
+    public SlimeStates getSlimeState() {
+        return slimeState;
+    }
+
+    public AttackableState getAttackableState() {
+        return attackableState;
+    }
+
+    public void setLooted(boolean looted) {
+        this.looted = looted;
+    }
+
+    public boolean isLooted() {
+        return looted;
+    }
+
+    public int getGold() {
+        return gold;
     }
 
     @Override
@@ -131,6 +165,6 @@ public class Slime extends Sprite implements Attackable {
 
 
     public enum SlimeStates {
-        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, DEAD
+        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT
     }
 }

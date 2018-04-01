@@ -11,11 +11,14 @@ import com.mygame.handlers.MyInput;
 import com.mygame.interfaces.Attackable;
 
 public class Player extends Sprite implements Attackable {
-    private int          hp;
-    private int          maxHp;
-    private PlayerStates state;
-    private float        movementSpeed;
-    private boolean      strike;
+    private int             hp;
+    private int             maxHp;
+    private PlayerStates    playerState;
+    private AttackableState attackableState;
+    private float           movementSpeed;
+    private float           maxMovementSpeed;
+    private boolean         strike;
+    private int             gold;
 
     private TextureRegion sword;
 
@@ -23,11 +26,15 @@ public class Player extends Sprite implements Attackable {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 15.f, 0.25f);
 
         id = "player";
-        state = PlayerStates.FACING_DOWN;
+        layer = 3;
+        playerState = PlayerStates.FACING_DOWN;
+        attackableState = AttackableState.ALIVE;
         maxHp = 100;
         hp = maxHp;
-        movementSpeed = 25.f;
+        maxMovementSpeed = 25.f;
+        movementSpeed = maxMovementSpeed;
         strike = false;
+        gold = 0;
 
         CircleShape shape = new CircleShape();
         shape.setRadius(5.f / Constants.PPM);
@@ -35,7 +42,6 @@ public class Player extends Sprite implements Attackable {
         fixtureDef.filter.categoryBits = Constants.BIT_PLAYER;
         fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
-
         shape.dispose();
 
         Texture tex = MyGame.assets.getTexture("characters");
@@ -121,30 +127,30 @@ public class Player extends Sprite implements Attackable {
 
         if(hp <= 0.0) {
             movementSpeed = 0.f;
-            state = PlayerStates.DEAD;
+            attackableState = AttackableState.DEAD;
             body.setAwake(false);
         }
 
-        if(state != PlayerStates.DEAD) {
+        if(attackableState == AttackableState.ALIVE) {
             if (MyInput.isDown(MyInput.UP)) {
                 this.body.applyLinearImpulse(0, movementSpeed, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("walkUp");
-                state = PlayerStates.FACING_UP;
+                playerState = PlayerStates.FACING_UP;
             }
             if (MyInput.isDown(MyInput.DOWN)) {
                 this.body.applyLinearImpulse(0, -movementSpeed, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("walkDown");
-                state = PlayerStates.FACING_DOWN;
+                playerState = PlayerStates.FACING_DOWN;
             }
             if (MyInput.isDown(MyInput.LEFT)) {
                 this.body.applyLinearImpulse(-movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("walkLeft");
-                state = PlayerStates.FACING_LEFT;
+                playerState = PlayerStates.FACING_LEFT;
             }
             if (MyInput.isDown(MyInput.RIGHT)) {
                 this.body.applyLinearImpulse(movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("walkRight");
-                state = PlayerStates.FACING_RIGHT;
+                playerState = PlayerStates.FACING_RIGHT;
             }
 
             if(MyInput.isDown(MyInput.STRIKE)) {
@@ -157,7 +163,7 @@ public class Player extends Sprite implements Attackable {
             float padding = 10.f;
             if (body.getLinearVelocity().x < padding && body.getLinearVelocity().x > -padding &&
                     body.getLinearVelocity().y < padding && body.getLinearVelocity().y > -padding) {
-                switch (state) {
+                switch (playerState) {
                     case FACING_UP:
                         currentAnimation = animations.get("standUp");
                         break;
@@ -207,23 +213,36 @@ public class Player extends Sprite implements Attackable {
         return new Vector2(body.getPosition().x * Constants.PPM - 6.f, body.getPosition().y * Constants.PPM + 20.f);
     }
 
-    public PlayerStates getState() {
-        return state;
+    public PlayerStates getPlayerState() {
+        return playerState;
+    }
+
+    public AttackableState getAttackableState() {
+        return attackableState;
     }
 
     public boolean isStrike() {
         return strike;
     }
 
+    public int getGold() {
+        return gold;
+    }
+
+    public void lootGold(int gold) {
+        this.gold += gold;
+    }
+
     public void reset() {
         hp = maxHp;
-        state = PlayerStates.FACING_DOWN;
+        playerState = PlayerStates.FACING_DOWN;
+        attackableState = AttackableState.ALIVE;
         body.setTransform(0, 0, 0);
-        movementSpeed = 25.f;
+        movementSpeed = maxMovementSpeed;
         body.setAwake(true);
     }
 
     public enum PlayerStates {
-        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, DEAD
+        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT
     }
 }

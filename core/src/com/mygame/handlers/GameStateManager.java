@@ -49,4 +49,8 @@ public class GameStateManager {
         GameState g = gameStates.pop();
         g.dispose();
     }
+
+    public boolean isEmpty() {
+        return gameStates.isEmpty();
+    }
 }

@@ -6,4 +6,5 @@ public class Constants {
     public static final short BIT_PLAYER = 2;
     public static final short BIT_ENEMY  = 4;
     public static final short BIT_WEAPON = 8;
+    public static final short BIT_LOOT   = 16;
 }

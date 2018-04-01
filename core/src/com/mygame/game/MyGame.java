@@ -31,11 +31,17 @@ public class MyGame extends ApplicationAdapter {
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 
 		assets = new Content();
+
 		assets.loadTexture("images\\characters.png", "characters");
 		assets.loadTexture("images\\sword.png", "sword");
 		assets.loadTexture("images\\grass.jpg", "background");
+		assets.loadTexture("images\\treasures.png", "treasures");
+		assets.loadTexture("images\\coin.png", "coin");
+		assets.loadTexture("images\\hud.png", "hud");
+
 		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");
+		assets.loadSound("sfx\\gold02.wav", "gold");
 
 		sb = new SpriteBatch();
 		cam = new OrthographicCamera();
@@ -60,7 +66,11 @@ public class MyGame extends ApplicationAdapter {
 	@Override
 	public void dispose () {
 		sb.dispose();
-		gsm.popState();
+
+		while(!gsm.isEmpty()) {
+			gsm.popState();
+		}
+
 		assets.disposeAll();
 	}
 

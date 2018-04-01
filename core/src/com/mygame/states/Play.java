@@ -12,17 +12,17 @@ import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
-import com.mygame.entities.Player;
-import com.mygame.entities.Slime;
-import com.mygame.entities.Sprite;
+import com.mygame.entities.*;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
 import com.mygame.handlers.GameStateManager;
 import com.mygame.handlers.MyContactListener;
 import com.mygame.handlers.MyInput;
 import com.mygame.interfaces.Attackable;
+import com.mygame.interfaces.Lootable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class Play extends GameState {
@@ -38,6 +38,8 @@ public class Play extends GameState {
     private BitmapFont font;
 
     private Player player;
+
+    private Hud hud;
 
     public static boolean debug = false;
 
@@ -62,6 +64,10 @@ public class Play extends GameState {
         font.setUseIntegerPositions(false);
 
         generator.dispose();
+
+        gameObjects.add(new Loot(world, 100, 100, 2));
+
+        hud = new Hud(player);
     }
 
     @Override
@@ -74,8 +80,8 @@ public class Play extends GameState {
         for(Sprite i : gameObjects) {
             if(i.toString().equals("slime")) {
                 Slime s = (Slime) i;
-                if(s.getState() != Slime.SlimeStates.DEAD) {
-                    if(player.getState() != Player.PlayerStates.DEAD) {
+                if(s.getAttackableState() == Attackable.AttackableState.ALIVE) {
+                    if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
                         i.getBody().setLinearVelocity(player.getBody().getPosition().x - i.getBody().getPosition().x, player.getBody().getPosition().y - i.getBody().getPosition().y);
                     }
                 }
@@ -85,30 +91,40 @@ public class Play extends GameState {
             }
         }
 
-        //removing dead slimes
+        //removing dead slimes, dropping loot and removing looted loot
+        ArrayList<Loot> lootToDrop = new ArrayList<Loot>();
         for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
             Sprite s = i.next();
-            if(s.toString().equals("slime")) {
-                Slime slime = (Slime) s;
-                if(slime.getState() == Slime.SlimeStates.DEAD) {
-                    if(slime.getCurrentAnimation().getTimesPlayed() > 20) {
-                        world.destroyBody(slime.getBody());
+            if(s instanceof Attackable) {
+                if(((Attackable) s).getAttackableState() == Attackable.AttackableState.DEAD) {
+                    if(s.getCurrentAnimation().getTimesPlayed() > 20) {
+                        world.destroyBody(s.getBody());
                         i.remove();
+                    }
+                    if(s instanceof Lootable) {
+                        if(!((Lootable) s).isLooted()) {
+                            lootToDrop.add(new Loot(world, s.getPosition().x * Constants.PPM, s.getPosition().y * Constants.PPM, ((Lootable) s).getGold()));
+                            ((Lootable) s).setLooted(true);
+                        }
                     }
                 }
             }
-        }
-
-        for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
-            Sprite s = i.next();
-            if(s.toString().equals("player")) {
-                Player p = (Player) s;
-                if(p.getState() == Player.PlayerStates.DEAD && MyInput.isDown(MyInput.RESET)) {
-                    player.reset();
+            if(s.toString().equals("loot")) {
+                Loot loot = (Loot) s;
+                if(loot.isLooted()) {
+                    world.destroyBody(loot.getBody());
+                    i.remove();
                 }
             }
         }
+        gameObjects.addAll(lootToDrop);
 
+        //resetting player after death and when he pressed reset button
+        if(player.getAttackableState() == Attackable.AttackableState.DEAD && MyInput.isDown(MyInput.RESET)) {
+            player.reset();
+        }
+
+        //stepping physics simulation
         world.step(dt, 6, 2);
 
         //updating all game objects
@@ -119,24 +135,31 @@ public class Play extends GameState {
 
     @Override
     public void render() {
+        //clearing screen
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        //updating camera
         cameraUpdate();
 
+        //rendering background image
         sb.begin();
         Texture bg = MyGame.assets.getTexture("background");
         sb.draw(bg, -bg.getWidth() / 2, -bg.getHeight() / 2);
         sb.end();
 
+        //rendering hitboxes
         if(debug) {
             b2dr.render(world, cam.combined.scl(Constants.PPM));
         }
 
+        //rendering all game objects
+        Collections.sort(gameObjects);
         for(Sprite i : gameObjects) {
             i.render(sb);
         }
 
+        //rendering Attackable hp bars
         sb.begin();
         for(Sprite i : gameObjects) {
             if(i instanceof Attackable) {
@@ -146,6 +169,10 @@ public class Play extends GameState {
             }
         }
         sb.end();
+
+        //rendering hud
+        sb.setProjectionMatrix(hudCam.combined);
+        hud.render(sb);
     }
 
     @Override
@@ -167,15 +194,17 @@ public class Play extends GameState {
         }
 
         //rotating player's body towards mouse cursor
-        Body body = gameObjects.get(0).getBody();
-        Vector2 toTarget = new Vector2(mousePosition.x / Constants.PPM - body.getPosition().x, mousePosition.y / Constants.PPM - body.getPosition().y);
-        float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
-        body.setTransform(body.getPosition(), desiredAngle);
+        if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
+            Body body = player.getBody();
+            Vector2 toTarget = new Vector2(mousePosition.x / Constants.PPM - body.getPosition().x, mousePosition.y / Constants.PPM - body.getPosition().y);
+            float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
+            body.setTransform(body.getPosition(), desiredAngle);
+        }
     }
 
     private void cameraUpdate() {
         cam.update();
-        cam.position.set(gameObjects.get(0).getBody().getPosition().x * Constants.PPM, gameObjects.get(0).getBody().getPosition().y * Constants.PPM, 0);
+        cam.position.set(player.getBody().getPosition().x * Constants.PPM, player.getBody().getPosition().y * Constants.PPM, 0);
         sb.setProjectionMatrix(cam.combined);
 
         Vector3 mouseInWorld3D = new Vector3();
@@ -198,6 +227,7 @@ public class Play extends GameState {
     public void dispose() {
         world.dispose();
         b2dr.dispose();
+        font.dispose();
+        hud.dispose();
     }
-
 }
