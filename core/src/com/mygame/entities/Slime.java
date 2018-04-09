@@ -24,6 +24,7 @@ public class Slime extends Sprite implements Attackable, Lootable {
 
     public Slime(float positionX, float positionY, World world) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
+        body.setBullet(true);
 
         id = "slime";
         layer = 2;

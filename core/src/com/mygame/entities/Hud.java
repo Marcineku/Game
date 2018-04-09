@@ -12,7 +12,6 @@ public class Hud {
     private Player player;
 
     private BitmapFont font;
-    private TextureRegion hud;
     private TextureRegion coin;
 
     public Hud(Player player) {
@@ -26,20 +25,18 @@ public class Hud {
 
         generator.dispose();
 
-        TextureRegion[][] hd = TextureRegion.split(MyGame.assets.getTexture("hud"), 118, 52);
-        hud = hd[0][0];
-
         TextureRegion[][] cn = TextureRegion.split(MyGame.assets.getTexture("coin"), 9, 9);
         coin = cn[0][0];
     }
 
     public void render(SpriteBatch sb) {
         String gold = Integer.toString(player.getGold());
+        String arrows = Integer.toString(player.getArrows());
 
         sb.begin();
-        sb.draw(hud, 0, MyGame.V_HEIGHT - 52);
         sb.draw(coin, 20, MyGame.V_HEIGHT - 35);
         font.draw(sb, gold, 32, MyGame.V_HEIGHT - 28);
+        font.draw(sb, "Arrows: " + arrows, 32, MyGame.V_HEIGHT - 48);
         sb.end();
     }
 

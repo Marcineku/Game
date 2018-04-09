@@ -39,6 +39,7 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadTexture("images\\treasures.png", "treasures");
 		assets.loadTexture("images\\coin.png", "coin");
 		assets.loadTexture("images\\hud.png", "hud");
+		assets.loadTexture("images\\arrow.png" , "arrow");
 
 		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");

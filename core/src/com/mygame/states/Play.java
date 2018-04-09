@@ -46,7 +46,7 @@ public class Play extends GameState {
     private OrthogonalTiledMapRenderer tmr;
     float tileSize;
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     public Play(GameStateManager gsm) {
         super(gsm);
@@ -152,6 +152,13 @@ public class Play extends GameState {
                     i.remove();
                 }
             }
+            if(s.toString().equals("arrow")) {
+                Arrow arrow = (Arrow) s;
+                if(arrow.isLooted()) {
+                    world.destroyBody(arrow.getBody());
+                    i.remove();
+                }
+            }
         }
         gameObjects.addAll(lootToDrop);
 
@@ -220,9 +227,24 @@ public class Play extends GameState {
             click = true;
 
             //on click
+            //shooting arrows
+            if(player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty()) {
+                player.shoot();
+                Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y);
+                arrow.getBody().setTransform(
+                        player.getBody().getPosition().x,
+                        player.getBody().getPosition().y,
+                        player.getBody().getAngle() + (float) Math.toRadians(100f)
+                );
+                arrow.getBody().setLinearVelocity(
+                        -arrow.getBody().getPosition().x * Constants.PPM + mousePosition.x, -arrow.getBody().getPosition().y * Constants.PPM + mousePosition.y
+                );
+                gameObjects.add(arrow);
+            }
         }
 
         //on button pressed
+        //spawning slimes
         if(MyInput.isDown(MyInput.SLIME)) {
             gameObjects.add(new Slime(mousePosition.x, mousePosition.y, world));
         }

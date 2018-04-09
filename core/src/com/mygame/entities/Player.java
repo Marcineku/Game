@@ -8,6 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
 import com.mygame.handlers.MyInput;
+import com.mygame.handlers.Timer;
 import com.mygame.interfaces.Attackable;
 
 public class Player extends Sprite implements Attackable {
@@ -19,6 +20,10 @@ public class Player extends Sprite implements Attackable {
     private float           maxMovementSpeed;
     private boolean         strike;
     private int             gold;
+    private Fixture         weapon;
+    private Timer           timer;
+    private int             arrows;
+    private int             maxArrows;
 
     private TextureRegion sword;
 
@@ -35,6 +40,9 @@ public class Player extends Sprite implements Attackable {
         movementSpeed = maxMovementSpeed;
         strike = false;
         gold = 0;
+        timer = new Timer();
+        maxArrows = 100;
+        arrows = maxArrows;
 
         CircleShape shape = new CircleShape();
         shape.setRadius(5.f / Constants.PPM);
@@ -113,8 +121,8 @@ public class Player extends Sprite implements Attackable {
         fd.density = 0.f;
         fd.shape = polygonShape;
         fd.filter.categoryBits = Constants.BIT_WEAPON;
-        Fixture fx = body.createFixture(fd);
-        fx.setUserData(this);
+        weapon = body.createFixture(fd);
+        weapon.setUserData(this);
         body.setSleepingAllowed(false);
         body.setBullet(false);
 
@@ -124,6 +132,8 @@ public class Player extends Sprite implements Attackable {
     @Override
     public void update(float dt) {
         super.update(dt);
+
+        timer.update(dt);
 
         if(hp <= 0.0) {
             movementSpeed = 0.f;
@@ -153,11 +163,25 @@ public class Player extends Sprite implements Attackable {
                 playerState = PlayerStates.FACING_RIGHT;
             }
 
-            if(MyInput.isDown(MyInput.STRIKE)) {
+            if(!MyInput.isDown(MyInput.STRIKE) && strike && timer.getTime() >= 0.5f) {
+                strike = false;
+                timer.stop();
+                timer.reset();
+            }
+            if(MyInput.isDown(MyInput.STRIKE) && !strike) {
                 strike = true;
+                timer.start();
+            }
+
+            if(strike) {
+                Filter f = weapon.getFilterData();
+                f.categoryBits = Constants.BIT_WEAPON;
+                weapon.setFilterData(f);
             }
             else {
-                strike = false;
+                Filter f = weapon.getFilterData();
+                //f.categoryBits = 0;
+                weapon.setFilterData(f);
             }
 
             float padding = 10.f;
@@ -187,9 +211,9 @@ public class Player extends Sprite implements Attackable {
 
     @Override
     public void render(SpriteBatch sb) {
-        sb.begin();
         float x = getPosition().x * Constants.PPM - 13;
         float y = getPosition().y * Constants.PPM - 5;
+        sb.begin();
         sb.draw(sword, x, y + 15, 0 + 13, 0 + 5 - 15, 26, 58,0.8f,0.8f, (float) Math.toDegrees(body.getAngle()) - 82.5f);
         sb.draw(currentAnimation.getFrame(),
                 body.getPosition().x * Constants.PPM - width / 2,
@@ -238,12 +262,33 @@ public class Player extends Sprite implements Attackable {
         gold = 0;
         playerState = PlayerStates.FACING_DOWN;
         attackableState = AttackableState.ALIVE;
-        body.setTransform(0, 0, 0);
+        body.setTransform(100, 100, 0);
         movementSpeed = maxMovementSpeed;
         body.setAwake(true);
     }
 
+    public boolean isArrowsEmpty() {
+        if(arrows <= 0) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    public void shoot() {
+        arrows -= 1;
+    }
+
+    public int getArrows() {
+        return arrows;
+    }
+
+    public void lootArrow() {
+        arrows += 1;
+    }
+
     public enum PlayerStates {
-        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT
+        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, JUMPING
     }
 }

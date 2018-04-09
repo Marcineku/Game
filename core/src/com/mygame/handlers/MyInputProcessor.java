@@ -28,6 +28,10 @@ public class MyInputProcessor extends InputAdapter {
             MyInput.setKey(MyInput.RESET, true);
         }
 
+        if(keycode == Input.Keys.SPACE) {
+            MyInput.setKey(MyInput.JUMP, true);
+        }
+
         return super.keyDown(keycode);
     }
 
@@ -52,6 +56,10 @@ public class MyInputProcessor extends InputAdapter {
 
         if(keycode == Input.Keys.R) {
             MyInput.setKey(MyInput.RESET, false);
+        }
+
+        if(keycode == Input.Keys.SPACE) {
+            MyInput.setKey(MyInput.JUMP, false);
         }
 
         return super.keyUp(keycode);
