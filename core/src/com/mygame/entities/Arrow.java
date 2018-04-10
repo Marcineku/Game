@@ -24,10 +24,10 @@ public class Arrow extends Sprite {
         looted = false;
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(4.f / Constants.PPM, 3.f / Constants.PPM);
+        shape.setAsBox(4.f / Constants.PPM, 6.f / Constants.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Constants.BIT_ARROW;
-        fixtureDef.isSensor = true;
+        fixtureDef.isSensor = false;
         fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         shape.dispose();
@@ -66,10 +66,10 @@ public class Arrow extends Sprite {
     @Override
     public void render(SpriteBatch sb) {
         float x = body.getPosition().x * Constants.PPM - width / 2;
-        float y = body.getPosition().y * Constants.PPM - 3;
+        float y = body.getPosition().y * Constants.PPM - 6;
         float rot = (float) Math.toDegrees(body.getAngle());
         sb.begin();
-        sb.draw(currentAnimation.getFrame(), x, y, width/2, 3, width, height, 1.f, 1.f, rot);
+        sb.draw(currentAnimation.getFrame(), x, y, width/2, 6, width, height, 1.f, 1.f, rot);
         sb.end();
     }
 

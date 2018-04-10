@@ -44,6 +44,10 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");
 		assets.loadSound("sfx\\gold02.wav", "gold");
+		assets.loadSound("sfx\\arrowImpact01.wav", "arrowImpact01");
+		assets.loadSound("sfx\\bow01.mp3", "bow");
+		assets.loadSound("sfx\\sword03.wav", "swordSwing");
+		assets.loadSound("sfx\\arrowPickup.wav", "arrowPickup");
 
 		sb = new SpriteBatch();
 		cam = new OrthographicCamera();

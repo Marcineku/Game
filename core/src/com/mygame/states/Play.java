@@ -168,7 +168,7 @@ public class Play extends GameState {
         }
 
         //stepping physics simulation
-        world.step(dt, 6, 2);
+        world.step(dt, 18, 6);
 
         //updating all game objects
         for(Sprite i : gameObjects) {
@@ -229,6 +229,7 @@ public class Play extends GameState {
             //on click
             //shooting arrows
             if(player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty()) {
+                MyGame.assets.getSound("bow").play();
                 player.shoot();
                 Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y);
                 arrow.getBody().setTransform(

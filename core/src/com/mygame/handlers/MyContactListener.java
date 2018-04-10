@@ -140,6 +140,8 @@ public class MyContactListener implements ContactListener {
 
                 ((Attackable) enemy).hit(20);
                 arrow.getBody().setLinearVelocity(0, 0);
+                arrow.getBody().getFixtureList().peek().setSensor(true);
+                MyGame.assets.getSound("arrowImpact01").play();
             }
         }
     }
@@ -161,6 +163,7 @@ public class MyContactListener implements ContactListener {
             if(!arrow.isActive()) {
                 player.lootArrow();
                 arrow.setLooted(true);
+                MyGame.assets.getSound("arrowPickup").play();
             }
         }
     }
