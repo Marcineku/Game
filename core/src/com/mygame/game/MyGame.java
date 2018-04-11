@@ -3,6 +3,7 @@ package com.mygame.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygame.handlers.*;
@@ -31,6 +32,9 @@ public class MyGame extends ApplicationAdapter {
 
 		Gdx.input.setInputProcessor(new MyInputProcessor());
 
+		Pixmap pm = new Pixmap(Gdx.files.internal("images\\cursor.png"));
+		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 2, 0));
+
 		assets = new Content();
 
 		assets.loadTexture("images\\characters.png", "characters");
@@ -48,6 +52,13 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadSound("sfx\\bow01.mp3", "bow");
 		assets.loadSound("sfx\\sword03.wav", "swordSwing");
 		assets.loadSound("sfx\\arrowPickup.wav", "arrowPickup");
+		//assets.loadSound("sfx\\sea01.ogg", "sea01");
+		assets.loadSound("sfx\\sea02.ogg", "sea02");
+		assets.loadSound("sfx\\fire01.wav", "fire01");
+		assets.loadSound("sfx\\walking.ogg", "walking");
+		assets.loadSound("sfx\\walking02.ogg", "walking02");
+
+		assets.loadParticleEffect("particles\\fire", "fire");
 
 		sb = new SpriteBatch();
 		cam = new OrthographicCamera();

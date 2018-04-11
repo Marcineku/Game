@@ -1,5 +1,6 @@
 package com.mygame.entities;
 
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,6 +25,9 @@ public class Player extends Sprite implements Attackable {
     private Timer           timer;
     private int             arrows;
     private int             maxArrows;
+    private Sound           walking;
+    private boolean         isWalking;
+    private Body            shadow;
 
     private TextureRegion sword;
 
@@ -43,6 +47,8 @@ public class Player extends Sprite implements Attackable {
         timer = new Timer();
         maxArrows = 100;
         arrows = maxArrows;
+        walking = MyGame.assets.getSound("walking02");
+        isWalking = false;
 
         CircleShape shape = new CircleShape();
         shape.setRadius(5.f / Constants.PPM);
@@ -101,7 +107,7 @@ public class Player extends Sprite implements Attackable {
         TextureRegion[] dead = new TextureRegion[1];
         dead[0] = frames[0][10];
         addAnimation("dead", dead, 0);
-
+/*
         float radius = 6.f;
         float angle = 15;
         Vector2[] vertices = new Vector2[8];
@@ -127,6 +133,23 @@ public class Player extends Sprite implements Attackable {
         body.setBullet(false);
 
         polygonShape.dispose();
+*/
+        BodyDef bd = new BodyDef();
+        bd.type = BodyDef.BodyType.KinematicBody;
+        bd.linearDamping = 0.f;
+        bd.position.set(body.getPosition());
+        bd.fixedRotation = false;
+        shadow = world.createBody(bd);
+
+        PolygonShape shadowShape = new PolygonShape();
+        shadowShape.setAsBox(2.f / Constants.PPM, 8 / Constants.PPM, new Vector2(0, 6 / Constants.PPM), 0);
+        FixtureDef f = new FixtureDef();
+        f.isSensor = true;
+        f.density = 0.f;
+        f.shape = shadowShape;
+        f.filter.categoryBits = Constants.BIT_SHADOWS;
+        shadow.createFixture(f);
+        shadowShape.dispose();
     }
 
     @Override
@@ -146,6 +169,7 @@ public class Player extends Sprite implements Attackable {
                 this.body.applyLinearImpulse(0, movementSpeed, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("walkUp");
                 playerState = PlayerStates.FACING_UP;
+
             }
             if (MyInput.isDown(MyInput.DOWN)) {
                 this.body.applyLinearImpulse(0, -movementSpeed, body.getPosition().x, body.getPosition().y, true);
@@ -174,14 +198,14 @@ public class Player extends Sprite implements Attackable {
             }
 
             if(strike) {
-                Filter f = weapon.getFilterData();
-                f.categoryBits = Constants.BIT_WEAPON;
-                weapon.setFilterData(f);
+                //Filter f = weapon.getFilterData();
+                //f.categoryBits = Constants.BIT_WEAPON;
+                //weapon.setFilterData(f);
             }
             else {
-                Filter f = weapon.getFilterData();
+                //Filter f = weapon.getFilterData();
                 //f.categoryBits = 0;
-                weapon.setFilterData(f);
+                //weapon.setFilterData(f);
             }
 
             float padding = 10.f;
@@ -201,12 +225,21 @@ public class Player extends Sprite implements Attackable {
                         currentAnimation = animations.get("standRight");
                         break;
                 }
+                walking.stop();
+                isWalking = true;
+            }
+            else if(isWalking){
+                long id = walking.loop(0.4f);
+                walking.setPitch(id, 3.0f);
+                isWalking = false;
             }
         }
         else {
             currentAnimation = animations.get("dead");
             hp = 0;
         }
+
+        shadow.setTransform(body.getPosition().x + body.getLinearVelocity().x * dt, body.getPosition().y + body.getLinearVelocity().y * dt, 0.f);
     }
 
     @Override
@@ -214,7 +247,7 @@ public class Player extends Sprite implements Attackable {
         float x = getPosition().x * Constants.PPM - 13;
         float y = getPosition().y * Constants.PPM - 5;
         sb.begin();
-        sb.draw(sword, x, y + 15, 0 + 13, 0 + 5 - 15, 26, 58,0.8f,0.8f, (float) Math.toDegrees(body.getAngle()) - 82.5f);
+        //sb.draw(sword, x, y + 15, 0 + 13, 0 + 5 - 15, 26, 58,0.8f,0.8f, (float) Math.toDegrees(body.getAngle()) - 82.5f);
         sb.draw(currentAnimation.getFrame(),
                 body.getPosition().x * Constants.PPM - width / 2,
                 body.getPosition().y * Constants.PPM - height / 2 + 6

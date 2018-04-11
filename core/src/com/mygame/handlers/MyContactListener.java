@@ -66,7 +66,7 @@ public class MyContactListener implements ContactListener {
 
                 ((Attackable) player).hit(10);
                 MyGame.assets.getSound("hurt01").stop();
-                MyGame.assets.getSound("hurt01").play();
+                MyGame.assets.getSound("hurt01").play(0.2f);
                 ((Attackable) enemy).hit(20);
             }
         }
@@ -163,7 +163,7 @@ public class MyContactListener implements ContactListener {
             if(!arrow.isActive()) {
                 player.lootArrow();
                 arrow.setLooted(true);
-                MyGame.assets.getSound("arrowPickup").play();
+                MyGame.assets.getSound("arrowPickup").play(0.5f);
             }
         }
     }

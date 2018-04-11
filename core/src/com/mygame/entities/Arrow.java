@@ -3,6 +3,7 @@ package com.mygame.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -16,7 +17,6 @@ public class Arrow extends Sprite {
     public Arrow(World world, float positionX, float positionY) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 0.25f, 0.f);
         body.setFixedRotation(true);
-        body.setBullet(true);
 
         id = "arrow";
         layer = 1;
@@ -27,7 +27,7 @@ public class Arrow extends Sprite {
         shape.setAsBox(4.f / Constants.PPM, 6.f / Constants.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Constants.BIT_ARROW;
-        fixtureDef.isSensor = false;
+        fixtureDef.isSensor = true;
         fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         shape.dispose();
@@ -57,7 +57,9 @@ public class Arrow extends Sprite {
         super.update(dt);
 
         float padding = 0.1f;
-        if(body.getLinearVelocity().x < padding && body.getLinearVelocity().y < padding) {
+        Vector2 v = body.getLinearVelocity();
+
+        if((v.x < padding && v.x > -padding) && (v.y < padding && v.y > -padding)) {
             active = false;
             currentAnimation = animations.get("standingArrow");
         }

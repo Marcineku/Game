@@ -1,11 +1,15 @@
 package com.mygame.states;
 
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -30,6 +34,11 @@ import java.util.Iterator;
 public class Play extends GameState {
     private World world;
     private Box2DDebugRenderer b2dr;
+    private RayHandler rayHandler;
+    private PointLight pointLight;
+    private ParticleEffect fire;
+    private Sound fireSound;
+    private long fireSoundID;
 
     private ArrayList<Sprite> gameObjects;
 
@@ -44,9 +53,9 @@ public class Play extends GameState {
 
     private TiledMap tileMap;
     private OrthogonalTiledMapRenderer tmr;
-    float tileSize;
+    private float tileSize;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     public Play(GameStateManager gsm) {
         super(gsm);
@@ -57,6 +66,21 @@ public class Play extends GameState {
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
         b2dr = new Box2DDebugRenderer();
+        rayHandler = new RayHandler(world);
+
+        rayHandler.setAmbientLight(0.2f);
+        rayHandler.setBlur(true);
+
+        pointLight = new PointLight(rayHandler, 200, Color.RED, 20.f, 95, 100);
+        pointLight.setSoftnessLength(0.f);
+        Filter filter = new Filter();
+        filter.maskBits = Constants.BIT_SHADOWS;
+        pointLight.setContactFilter(filter);
+
+        fire = MyGame.assets.getParticleEffect("fire");
+        fire.scaleEffect(0.4f);
+        fire.getEmitters().first().setPosition(95 * Constants.PPM, 100 * Constants.PPM);
+        fire.start();
 
         gameObjects = new ArrayList<Sprite>();
         player = new Player(world, 100 * Constants.PPM, 100 * Constants.PPM);
@@ -104,6 +128,12 @@ public class Play extends GameState {
             }
             if(row > 72) break;
         }
+
+        //MyGame.assets.getSound("sea01").play();
+        MyGame.assets.getSound("sea02").loop(0.5f);
+
+        fireSound = MyGame.assets.getSound("fire01");
+        fireSoundID = fireSound.loop();
     }
 
     @Override
@@ -111,6 +141,8 @@ public class Play extends GameState {
         Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + " OBJ: " + gameObjects.size());
 
         handleInput();
+
+        fire.update(dt);
 
         //moving slimes towards the player
         for(Sprite i : gameObjects) {
@@ -167,13 +199,23 @@ public class Play extends GameState {
             player.reset();
         }
 
-        //stepping physics simulation
-        world.step(dt, 18, 6);
-
         //updating all game objects
         for(Sprite i : gameObjects) {
             i.update(dt);
         }
+
+        //stepping physics simulation
+        world.step(dt, 6, 2);
+
+        //updating lights
+        rayHandler.update();
+
+        //updating camera
+        cameraUpdate();
+
+        float dst = player.getBody().getPosition().dst(new Vector2(95, 100));
+        dst = (float) Math.pow(dst, -1);
+        fireSound.setVolume(fireSoundID, dst);
     }
 
     @Override
@@ -181,9 +223,6 @@ public class Play extends GameState {
         //clearing screen
         Gdx.gl.glClearColor(0.2f, 0.2f, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        //updating camera
-        cameraUpdate();
 
         //rendering tiled map
         tmr.setView(cam);
@@ -209,6 +248,13 @@ public class Play extends GameState {
                 font.draw(sb, hp, position.x, position.y);
             }
         }
+        sb.end();
+
+        //rendering lights
+        rayHandler.render();
+
+        sb.begin();
+        fire.draw(sb);
         sb.end();
 
         //rendering hud
@@ -264,6 +310,8 @@ public class Play extends GameState {
         cam.position.set(player.getBody().getPosition().x * Constants.PPM, player.getBody().getPosition().y * Constants.PPM, 0);
         sb.setProjectionMatrix(cam.combined);
 
+        rayHandler.setCombinedMatrix(cam.combined.cpy().scl(Constants.PPM), 0, 0, MyGame.V_WIDTH, MyGame.V_HEIGHT);
+
         Vector3 mouseInWorld3D = new Vector3();
         mouseInWorld3D.x = Gdx.input.getX();
         mouseInWorld3D.y = Gdx.input.getY();
@@ -284,6 +332,7 @@ public class Play extends GameState {
     public void dispose() {
         world.dispose();
         b2dr.dispose();
+        rayHandler.dispose();
         font.dispose();
         hud.dispose();
     }
