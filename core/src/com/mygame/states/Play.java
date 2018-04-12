@@ -11,6 +11,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.maps.MapLayer;
+import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -55,7 +57,7 @@ public class Play extends GameState {
     private OrthogonalTiledMapRenderer tmr;
     private float tileSize;
 
-    public static boolean debug = false;
+    public static boolean debug = true;
 
     public Play(GameStateManager gsm) {
         super(gsm);
@@ -97,41 +99,72 @@ public class Play extends GameState {
 
         hud = new Hud(player);
 
-        tileMap = new TmxMapLoader().load("maps\\Test.tmx");
+        tileMap = new TmxMapLoader().load("maps\\test.tmx");
         tmr = new OrthogonalTiledMapRenderer(tileMap);
 
-        TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get("water");
+        TiledMapTileLayer layer = (TiledMapTileLayer) tileMap.getLayers().get("coast");
         tileSize = layer.getTileWidth();
 
-        for(int row = 29; row < layer.getHeight(); ++row) {
-            for(int col = 23; col < layer.getWidth(); ++col) {
+        for(int row = 0; row < layer.getHeight(); ++row) {
+            for(int col = 0; col < layer.getWidth(); ++col) {
                 TiledMapTileLayer.Cell cell = layer.getCell(col, row);
 
                 if(cell == null) continue;
                 if(cell.getTile() == null) continue;
 
-                BodyDef bdef = new BodyDef();
-                bdef.type = BodyDef.BodyType.StaticBody;
-                bdef.position.set((col + 0.5f) * tileSize / Constants.PPM, (row + 0.5f) * tileSize / Constants.PPM);
+                BodyDef bd = new BodyDef();
+                bd.type = BodyDef.BodyType.StaticBody;
+                bd.position.set(
+                        (col + 0.5f) * tileSize / Constants.PPM,
+                        (row + 0.5f) * tileSize / Constants.PPM
+                );
 
-                PolygonShape shape = new PolygonShape();
-                shape.setAsBox(8 / Constants.PPM, 8 / Constants.PPM);
+                PolygonShape s = new PolygonShape();
+                s.setAsBox(16 / Constants.PPM, 16 / Constants.PPM);
+                FixtureDef fd = new FixtureDef();
+                fd.shape = s;
+                fd.density = 0;
+                fd.isSensor = false;
+                fd.friction = 0;
+                fd.restitution = 0;
+                world.createBody(bd).createFixture(fd);
 
-                FixtureDef fdef = new FixtureDef();
-                fdef.friction = 0;
-                fdef.shape = shape;
-                fdef.isSensor = false;
-                world.createBody(bdef).createFixture(fdef);
-                shape.dispose();
-
-                if(col > 71) break;
+                s.dispose();
             }
-            if(row > 72) break;
         }
 
-        //MyGame.assets.getSound("sea01").play();
-        MyGame.assets.getSound("sea02").loop(0.5f);
+        layer = (TiledMapTileLayer) tileMap.getLayers().get("things");
+        tileSize = layer.getTileWidth();
 
+        for(int row = 0; row < layer.getHeight(); ++row) {
+            for(int col = 0; col < layer.getWidth(); ++col) {
+                TiledMapTileLayer.Cell cell = layer.getCell(col, row);
+
+                if(cell == null) continue;
+                if(cell.getTile() == null) continue;
+
+                BodyDef bd = new BodyDef();
+                bd.type = BodyDef.BodyType.StaticBody;
+                bd.position.set(
+                        (col + 0.5f) * tileSize / Constants.PPM,
+                        (row + 0.5f) * tileSize / Constants.PPM
+                );
+
+                PolygonShape s = new PolygonShape();
+                s.setAsBox(16 / Constants.PPM, 16 / Constants.PPM);
+                FixtureDef fd = new FixtureDef();
+                fd.shape = s;
+                fd.density = 0;
+                fd.isSensor = false;
+                fd.friction = 0;
+                fd.restitution = 0;
+                world.createBody(bd).createFixture(fd);
+
+                s.dispose();
+            }
+        }
+
+        MyGame.assets.getSound("sea02").loop(0.5f);
         fireSound = MyGame.assets.getSound("fire01");
         fireSoundID = fireSound.loop();
     }

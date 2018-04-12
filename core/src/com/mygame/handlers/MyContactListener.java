@@ -132,7 +132,7 @@ public class MyContactListener implements ContactListener {
 
             if (((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE &&
                     arrow.isActive()) {
-                float impulsePower = 8000.f;
+                float impulsePower = 800.f;
 
                 Vector2 n = new Vector2(arrow.getPosition().x - enemy.getPosition().x, arrow.getPosition().y - enemy.getPosition().y);
                 enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,

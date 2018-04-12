@@ -34,6 +34,7 @@ public class MyGame extends ApplicationAdapter {
 
 		Pixmap pm = new Pixmap(Gdx.files.internal("images\\cursor.png"));
 		Gdx.graphics.setCursor(Gdx.graphics.newCursor(pm, 2, 0));
+		pm.dispose();
 
 		assets = new Content();
 
@@ -42,8 +43,10 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadTexture("images\\grass.jpg", "background");
 		assets.loadTexture("images\\treasures.png", "treasures");
 		assets.loadTexture("images\\coin.png", "coin");
-		assets.loadTexture("images\\hud.png", "hud");
 		assets.loadTexture("images\\arrow.png" , "arrow");
+
+		assets.loadTexture("images\\bodyManIdle.png", "bodyManIdle");
+		assets.loadTexture("images\\bodyManRun.png", "bodyManRun");
 
 		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");
@@ -52,7 +55,6 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadSound("sfx\\bow01.mp3", "bow");
 		assets.loadSound("sfx\\sword03.wav", "swordSwing");
 		assets.loadSound("sfx\\arrowPickup.wav", "arrowPickup");
-		//assets.loadSound("sfx\\sea01.ogg", "sea01");
 		assets.loadSound("sfx\\sea02.ogg", "sea02");
 		assets.loadSound("sfx\\fire01.wav", "fire01");
 		assets.loadSound("sfx\\walking.ogg", "walking");

@@ -21,18 +21,15 @@ public class Player extends Sprite implements Attackable {
     private float           maxMovementSpeed;
     private boolean         strike;
     private int             gold;
-    private Fixture         weapon;
     private Timer           timer;
     private int             arrows;
     private int             maxArrows;
-    private Sound           walking;
-    private boolean         isWalking;
+    private Sound           walkingSound;
+    private boolean         walking;
     private Body            shadow;
 
-    private TextureRegion sword;
-
     public Player(World world, float positionX, float positionY) {
-        super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 15.f, 0.25f);
+        super(BodyDef.BodyType.DynamicBody, positionX, positionY, 6.f, world, 0.f, 25.f, 0.25f);
 
         id = "player";
         layer = 3;
@@ -47,93 +44,88 @@ public class Player extends Sprite implements Attackable {
         timer = new Timer();
         maxArrows = 100;
         arrows = maxArrows;
-        walking = MyGame.assets.getSound("walking02");
-        isWalking = false;
+        walkingSound = MyGame.assets.getSound("walking02");
+        walking = false;
 
+        //Collider
         CircleShape shape = new CircleShape();
-        shape.setRadius(5.f / Constants.PPM);
+        shape.setRadius(6.f / Constants.PPM);
         fixtureDef.shape = shape;
         fixtureDef.filter.categoryBits = Constants.BIT_PLAYER;
         fixture = body.createFixture(fixtureDef);
         fixture.setUserData(this);
         shape.dispose();
 
-        Texture tex = MyGame.assets.getTexture("characters");
-        TextureRegion[][] frames = TextureRegion.split(tex, 16, 16);
+        //Idle animations
+        Texture bodyManIdleTex = MyGame.assets.getTexture("bodyManIdle");
+        TextureRegion[][] bodyManIdle = TextureRegion.split(bodyManIdleTex, 52, 52);
+        float idleFrameDuration = 0.25f;
 
-        float frameDuration = 1/12.f;
-
-        //walking up animation + standing up animation
-        TextureRegion[] walkUp = new TextureRegion[3];
-        TextureRegion[] standUp = new TextureRegion[1];
-        for(int i = 0; i < 3; ++i) {
-            walkUp[i] = frames[3][i];
+        TextureRegion[] idleUp        = new TextureRegion[5];
+        TextureRegion[] idleUpRight   = new TextureRegion[5];
+        TextureRegion[] idleRight     = new TextureRegion[5];
+        TextureRegion[] idleRightDown = new TextureRegion[5];
+        TextureRegion[] idleDown      = new TextureRegion[5];
+        TextureRegion[] idleDownLeft  = new TextureRegion[5];
+        TextureRegion[] idleLeft      = new TextureRegion[5];
+        TextureRegion[] idleLeftUp    = new TextureRegion[5];
+        for(int i = 0; i < idleUp.length; ++i) {
+            idleUp[i]        = bodyManIdle[0][i];
+            idleUpRight[i]   = bodyManIdle[1][i];
+            idleRight[i]     = bodyManIdle[2][i];
+            idleRightDown[i] = bodyManIdle[3][i];
+            idleDown[i]      = bodyManIdle[4][i];
+            idleDownLeft[i]  = bodyManIdle[5][i];
+            idleLeft[i]      = bodyManIdle[6][i];
+            idleLeftUp[i]    = bodyManIdle[7][i];
         }
-        standUp[0] = walkUp[1];
-        addAnimation("walkUp", walkUp, frameDuration);
-        addAnimation("standUp", standUp, 0);
+        addAnimation("idleUp",        idleUp,        idleFrameDuration);
+        addAnimation("idleUpRight",   idleUpRight,   idleFrameDuration);
+        addAnimation("idleRight",     idleRight,     idleFrameDuration);
+        addAnimation("idleRightDown", idleRightDown, idleFrameDuration);
+        addAnimation("idleDown",      idleDown,      idleFrameDuration);
+        addAnimation("idleDownLeft",  idleDownLeft,  idleFrameDuration);
+        addAnimation("idleLeft",      idleLeft,      idleFrameDuration);
+        addAnimation("idleLeftUp",    idleLeftUp,    idleFrameDuration);
 
-        //walking down animation + standing down animation
-        TextureRegion[] walkDown = new TextureRegion[3];
-        TextureRegion[] standDown = new TextureRegion[1];
-        for(int i = 0; i < 3; ++i) {
-            walkDown[i] = frames[0][i];
+        //Running animations
+        Texture bodyManRunTex = MyGame.assets.getTexture("bodyManRun");
+        TextureRegion[][] bodyManRun = TextureRegion.split(bodyManRunTex, 52, 52);
+        float runFrameDuration = 0.09f;
+
+        TextureRegion[] runUp        = new TextureRegion[8];
+        TextureRegion[] runUpRight   = new TextureRegion[8];
+        TextureRegion[] runRight     = new TextureRegion[8];
+        TextureRegion[] runRightDown = new TextureRegion[8];
+        TextureRegion[] runDown      = new TextureRegion[8];
+        TextureRegion[] runDownLeft  = new TextureRegion[8];
+        TextureRegion[] runLeft      = new TextureRegion[8];
+        TextureRegion[] runLeftUp    = new TextureRegion[8];
+        for(int i = 0; i < runUp.length; ++i) {
+            runUp[i]        = bodyManRun[0][i];
+            runUpRight[i]   = bodyManRun[1][i];
+            runRight[i]     = bodyManRun[2][i];
+            runRightDown[i] = bodyManRun[3][i];
+            runDown[i]      = bodyManRun[4][i];
+            runDownLeft[i]  = bodyManRun[5][i];
+            runLeft[i]      = bodyManRun[6][i];
+            runLeftUp[i]    = bodyManRun[7][i];
         }
-        standDown[0] = walkDown[1];
-        addAnimation("walkDown", walkDown, frameDuration);
-        addAnimation("standDown", standDown, 0);
+        addAnimation("runUp",        runUp,        runFrameDuration);
+        addAnimation("runUpRight",   runUpRight,   runFrameDuration);
+        addAnimation("runRight",     runRight,     runFrameDuration);
+        addAnimation("runRightDown", runRightDown, runFrameDuration);
+        addAnimation("runDown",      runDown,      runFrameDuration);
+        addAnimation("runDownLeft",  runDownLeft,  runFrameDuration);
+        addAnimation("runLeft",      runLeft,      runFrameDuration);
+        addAnimation("runLeftUp",    runLeftUp,    runFrameDuration);
 
-        //walking left animation + standing left animation
-        TextureRegion[] walkLeft = new TextureRegion[3];
-        TextureRegion[] standLeft = new TextureRegion[1];
-        for(int i = 0; i < 3; ++i) {
-            walkLeft[i] = frames[1][i];
-        }
-        standLeft[0] = walkLeft[1];
-        addAnimation("walkLeft", walkLeft, frameDuration);
-        addAnimation("standLeft", standLeft, 0);
-
-        //walking right animation + standing right animation
-        TextureRegion[] walkRight = new TextureRegion[3];
-        TextureRegion[] standRight = new TextureRegion[1];
-        for(int i = 0; i < 3; ++i) {
-            walkRight[i] = frames[2][i];
-        }
-        standRight[0] = walkRight[1];
-        addAnimation("walkRight", walkRight, frameDuration);
-        addAnimation("standRight", standRight, 0);
-
-        //death animation
+        //Death animation
         TextureRegion[] dead = new TextureRegion[1];
-        dead[0] = frames[0][10];
+        dead[0] = idleDown[0];
         addAnimation("dead", dead, 0);
-/*
-        float radius = 6.f;
-        float angle = 15;
-        Vector2[] vertices = new Vector2[8];
-        vertices[0] = new Vector2(0, 0);
-        for(int i = 0; i < vertices.length - 1; ++i) {
-            float a = (float) Math.toRadians(i / 6.f * angle);
-            vertices[i+1] = new Vector2(radius * (float) Math.cos(a), radius * (float) Math.sin(a));
-        }
 
-        TextureRegion swordtmp[][] = TextureRegion.split(MyGame.assets.getTexture("sword"), 26, 58);
-        sword = swordtmp[0][0];
-
-        PolygonShape polygonShape = new PolygonShape();
-        polygonShape.set(vertices);
-        FixtureDef fd = new FixtureDef();
-        fd.isSensor = true;
-        fd.density = 0.f;
-        fd.shape = polygonShape;
-        fd.filter.categoryBits = Constants.BIT_WEAPON;
-        weapon = body.createFixture(fd);
-        weapon.setUserData(this);
-        body.setSleepingAllowed(false);
-        body.setBullet(false);
-
-        polygonShape.dispose();
-*/
+        //Shadows
         BodyDef bd = new BodyDef();
         bd.type = BodyDef.BodyType.KinematicBody;
         bd.linearDamping = 0.f;
@@ -142,7 +134,7 @@ public class Player extends Sprite implements Attackable {
         shadow = world.createBody(bd);
 
         PolygonShape shadowShape = new PolygonShape();
-        shadowShape.setAsBox(2.f / Constants.PPM, 8 / Constants.PPM, new Vector2(0, 6 / Constants.PPM), 0);
+        shadowShape.setAsBox(1.f / Constants.PPM, 15 / Constants.PPM, new Vector2(0, 15 / Constants.PPM), 0);
         FixtureDef f = new FixtureDef();
         f.isSensor = true;
         f.density = 0.f;
@@ -165,26 +157,53 @@ public class Player extends Sprite implements Attackable {
         }
 
         if(attackableState == AttackableState.ALIVE) {
-            if (MyInput.isDown(MyInput.UP)) {
-                this.body.applyLinearImpulse(0, movementSpeed, body.getPosition().x, body.getPosition().y, true);
-                currentAnimation = animations.get("walkUp");
-                playerState = PlayerStates.FACING_UP;
-
+            //up right
+            if(MyInput.isDown(MyInput.UP) && MyInput.isDown(MyInput.RIGHT)) {
+                this.body.applyLinearImpulse(movementSpeed / (float) Math.sqrt(2), movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
+                currentAnimation = animations.get("runUpRight");
+                playerState = PlayerStates.FACING_UP_RIGHT;
             }
-            if (MyInput.isDown(MyInput.DOWN)) {
+            //right down
+            else if(MyInput.isDown(MyInput.RIGHT) && MyInput.isDown(MyInput.DOWN)) {
+                this.body.applyLinearImpulse(movementSpeed / (float) Math.sqrt(2),  -movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
+                currentAnimation = animations.get("runRightDown");
+                playerState = PlayerStates.FACING_RIGHT_DOWN;
+            }
+            //down left
+            else if (MyInput.isDown(MyInput.DOWN) && MyInput.isDown(MyInput.LEFT)) {
+                this.body.applyLinearImpulse(-movementSpeed / (float) Math.sqrt(2), -movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
+                currentAnimation = animations.get("runDownLeft");
+                playerState = PlayerStates.FACING_DOWN_LEFT;
+            }
+            //left up
+            else if(MyInput.isDown(MyInput.LEFT) && MyInput.isDown(MyInput.UP)) {
+                this.body.applyLinearImpulse(-movementSpeed / (float) Math.sqrt(2), movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
+                currentAnimation = animations.get("runLeftUp");
+                playerState = PlayerStates.FACING_LEFT_UP;
+            }
+            //up
+            else if (MyInput.isDown(MyInput.UP)) {
+                this.body.applyLinearImpulse(0, movementSpeed, body.getPosition().x, body.getPosition().y, true);
+                currentAnimation = animations.get("runUp");
+                playerState = PlayerStates.FACING_UP;
+            }
+            //right
+            else if (MyInput.isDown(MyInput.RIGHT)) {
+                this.body.applyLinearImpulse(movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
+                currentAnimation = animations.get("runRight");
+                playerState = PlayerStates.FACING_RIGHT;
+            }
+            //down
+            else if (MyInput.isDown(MyInput.DOWN)) {
                 this.body.applyLinearImpulse(0, -movementSpeed, body.getPosition().x, body.getPosition().y, true);
-                currentAnimation = animations.get("walkDown");
+                currentAnimation = animations.get("runDown");
                 playerState = PlayerStates.FACING_DOWN;
             }
-            if (MyInput.isDown(MyInput.LEFT)) {
+            //left
+            else if (MyInput.isDown(MyInput.LEFT)) {
                 this.body.applyLinearImpulse(-movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
-                currentAnimation = animations.get("walkLeft");
+                currentAnimation = animations.get("runLeft");
                 playerState = PlayerStates.FACING_LEFT;
-            }
-            if (MyInput.isDown(MyInput.RIGHT)) {
-                this.body.applyLinearImpulse(movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
-                currentAnimation = animations.get("walkRight");
-                playerState = PlayerStates.FACING_RIGHT;
             }
 
             if(!MyInput.isDown(MyInput.STRIKE) && strike && timer.getTime() >= 0.5f) {
@@ -197,41 +216,41 @@ public class Player extends Sprite implements Attackable {
                 timer.start();
             }
 
-            if(strike) {
-                //Filter f = weapon.getFilterData();
-                //f.categoryBits = Constants.BIT_WEAPON;
-                //weapon.setFilterData(f);
-            }
-            else {
-                //Filter f = weapon.getFilterData();
-                //f.categoryBits = 0;
-                //weapon.setFilterData(f);
-            }
-
             float padding = 10.f;
             if (body.getLinearVelocity().x < padding && body.getLinearVelocity().x > -padding &&
                     body.getLinearVelocity().y < padding && body.getLinearVelocity().y > -padding) {
                 switch (playerState) {
                     case FACING_UP:
-                        currentAnimation = animations.get("standUp");
+                        currentAnimation = animations.get("idleUp");
                         break;
-                    case FACING_DOWN:
-                        currentAnimation = animations.get("standDown");
-                        break;
-                    case FACING_LEFT:
-                        currentAnimation = animations.get("standLeft");
+                    case FACING_UP_RIGHT:
+                        currentAnimation = animations.get("idleUpRight");
                         break;
                     case FACING_RIGHT:
-                        currentAnimation = animations.get("standRight");
+                        currentAnimation = animations.get("idleRight");
                         break;
+                    case FACING_RIGHT_DOWN:
+                        currentAnimation = animations.get("idleRightDown");
+                        break;
+                    case FACING_DOWN:
+                        currentAnimation = animations.get("idleDown");
+                        break;
+                    case FACING_DOWN_LEFT:
+                        currentAnimation = animations.get("idleDownLeft");
+                        break;
+                    case FACING_LEFT:
+                        currentAnimation = animations.get("idleLeft");
+                        break;
+                    case FACING_LEFT_UP:
+                        currentAnimation = animations.get("idleLeftUp");
                 }
-                walking.stop();
-                isWalking = true;
+                walkingSound.stop();
+                walking = true;
             }
-            else if(isWalking){
-                long id = walking.loop(0.4f);
-                walking.setPitch(id, 3.0f);
-                isWalking = false;
+            else if(walking){
+                long id = walkingSound.loop(0.4f);
+                walkingSound.setPitch(id, 3.0f);
+                walking = false;
             }
         }
         else {
@@ -239,19 +258,16 @@ public class Player extends Sprite implements Attackable {
             hp = 0;
         }
 
+        //updating shadow's position
         shadow.setTransform(body.getPosition().x + body.getLinearVelocity().x * dt, body.getPosition().y + body.getLinearVelocity().y * dt, 0.f);
     }
 
     @Override
     public void render(SpriteBatch sb) {
-        float x = getPosition().x * Constants.PPM - 13;
-        float y = getPosition().y * Constants.PPM - 5;
+        float x = getPosition().x * Constants.PPM - width / 2;
+        float y = getPosition().y * Constants.PPM - height / 2 + 16;
         sb.begin();
-        //sb.draw(sword, x, y + 15, 0 + 13, 0 + 5 - 15, 26, 58,0.8f,0.8f, (float) Math.toDegrees(body.getAngle()) - 82.5f);
-        sb.draw(currentAnimation.getFrame(),
-                body.getPosition().x * Constants.PPM - width / 2,
-                body.getPosition().y * Constants.PPM - height / 2 + 6
-        );
+        sb.draw(currentAnimation.getFrame(), x, y);
         sb.end();
     }
 
@@ -267,7 +283,7 @@ public class Player extends Sprite implements Attackable {
 
     @Override
     public Vector2 getHpBarPosition() {
-        return new Vector2(body.getPosition().x * Constants.PPM - 6.f, body.getPosition().y * Constants.PPM + 20.f);
+        return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 42.f);
     }
 
     public PlayerStates getPlayerState() {
@@ -322,6 +338,6 @@ public class Player extends Sprite implements Attackable {
     }
 
     public enum PlayerStates {
-        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT, JUMPING
+        FACING_UP, FACING_UP_RIGHT, FACING_RIGHT, FACING_RIGHT_DOWN, FACING_DOWN, FACING_DOWN_LEFT, FACING_LEFT, FACING_LEFT_UP
     }
 }
