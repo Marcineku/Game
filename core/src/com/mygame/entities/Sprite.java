@@ -10,7 +10,6 @@ import com.mygame.handlers.Constants;
 import java.util.HashMap;
 
 public abstract class Sprite implements Comparable<Sprite> {
-    protected String                     id;
     protected Body                       body;
     protected FixtureDef                 fixtureDef;
     protected Fixture                    fixture;
@@ -87,6 +86,10 @@ public abstract class Sprite implements Comparable<Sprite> {
         return height;
     }
 
+    public Fixture getFixture() {
+        return fixture;
+    }
+
     @Override
     public int compareTo(Sprite o) {
         if(this.layer > o.layer) {
@@ -102,8 +105,7 @@ public abstract class Sprite implements Comparable<Sprite> {
         return 0;
     }
 
-    @Override
-    public String toString() {
-        return id;
+    public int getLayer() {
+        return layer;
     }
 }

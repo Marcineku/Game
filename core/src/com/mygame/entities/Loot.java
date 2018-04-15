@@ -15,11 +15,11 @@ public class Loot extends Sprite {
     public Loot(World world, float positionX, float positionY, int gold) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 15.f, 0.25f);
 
-        id = "loot";
         layer = 1;
         this.gold = gold;
         looted = false;
 
+        //Defining main collider
         CircleShape shape = new CircleShape();
         shape.setRadius(8.f / Constants.PPM);
         fixtureDef.shape = shape;

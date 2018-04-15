@@ -46,11 +46,6 @@ public class Content {
         return particles.get(key);
     }
 
-    public void disposeTexture(String key) {
-        Texture tex = textures.get(key);
-        if(tex != null) tex.dispose();
-    }
-
     public void disposeAll() {
         for(Texture i : textures.values()) {
             i.dispose();

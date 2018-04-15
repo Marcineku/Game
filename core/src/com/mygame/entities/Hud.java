@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.mygame.game.MyGame;
+import com.mygame.handlers.Constants;
 
 public class Hud {
     private Player player;
@@ -36,7 +37,9 @@ public class Hud {
         sb.begin();
         sb.draw(coin, 20, MyGame.V_HEIGHT - 35);
         font.draw(sb, gold, 32, MyGame.V_HEIGHT - 28);
-        font.draw(sb, "Arrows: " + arrows, 32, MyGame.V_HEIGHT - 48);
+        if(player.getWeaponEquipped().equals(Constants.ITEM_BOW)) {
+            font.draw(sb, "Arrows: " + arrows, 32, MyGame.V_HEIGHT - 48);
+        }
         sb.end();
     }
 

@@ -2,10 +2,7 @@ package com.mygame.handlers;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
-import com.mygame.entities.Arrow;
-import com.mygame.entities.Loot;
-import com.mygame.entities.Player;
-import com.mygame.entities.Sprite;
+import com.mygame.entities.*;
 import com.mygame.game.MyGame;
 import com.mygame.interfaces.Attackable;
 
@@ -25,8 +22,6 @@ public class MyContactListener implements ContactListener {
         playerLootCollision(fa, fb);
 
         arrowEnemyCollision(fa, fb);
-
-        playerArrowCollision(fa, fb);
     }
 
     @Override
@@ -47,27 +42,32 @@ public class MyContactListener implements ContactListener {
     private void playerEnemyCollision(Fixture fa, Fixture fb, WorldManifold wm) {
         if ((fa.getFilterData().categoryBits == Constants.BIT_PLAYER && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
                 (fb.getFilterData().categoryBits == Constants.BIT_PLAYER && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
-            Sprite player = (Sprite) fa.getUserData();
-            Sprite enemy = (Sprite) fb.getUserData();
+            Sprite player;
+            Sprite enemy;
 
-            if (!player.toString().equals("player")) {
+            if (fa.getUserData() instanceof Player) {
+                player = (Sprite) fa.getUserData();
+                enemy = (Sprite) fb.getUserData();
+            } else {
                 player = (Sprite) fb.getUserData();
                 enemy = (Sprite) fa.getUserData();
             }
 
             if (((Attackable) player).getAttackableState() == Attackable.AttackableState.ALIVE &&
                     ((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE) {
-                float impulsePower = 500.f;
+                float impulsePower = 200.f;
                 Vector2 n = wm.getNormal();
+
                 player.getBody().applyLinearImpulse(new Vector2(n.x * impulsePower,
                         n.y * impulsePower), player.getBody().getPosition(), true);
                 enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
                         -n.y * impulsePower), enemy.getBody().getPosition(), true);
 
                 ((Attackable) player).hit(10);
+                ((Attackable) enemy).hit(20);
+
                 MyGame.assets.getSound("hurt01").stop();
                 MyGame.assets.getSound("hurt01").play(0.2f);
-                ((Attackable) enemy).hit(20);
             }
         }
     }
@@ -75,10 +75,13 @@ public class MyContactListener implements ContactListener {
     private void swordEnemyCollision(Fixture fa, Fixture fb) {
         if ((fa.getFilterData().categoryBits == Constants.BIT_WEAPON && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
                 (fb.getFilterData().categoryBits == Constants.BIT_WEAPON && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
-            Sprite player = (Sprite) fa.getUserData();
-            Sprite enemy = (Sprite) fb.getUserData();
+            Sprite player;
+            Sprite enemy;
 
-            if (!fa.getUserData().toString().equals("player")) {
+            if (fa.getUserData() instanceof Player) {
+                player = (Sprite) fa.getUserData();
+                enemy = (Sprite) fb.getUserData();
+            } else {
                 player = (Sprite) fb.getUserData();
                 enemy = (Sprite) fa.getUserData();
             }
@@ -86,12 +89,13 @@ public class MyContactListener implements ContactListener {
             if (((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE &&
                     ((Attackable) player).getAttackableState() == Attackable.AttackableState.ALIVE) {
                 float impulsePower = 800.f;
-
                 Vector2 n = new Vector2(player.getPosition().x - enemy.getPosition().x, player.getPosition().y - enemy.getPosition().y);
+
                 enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
                         -n.y * impulsePower), enemy.getBody().getPosition(), true);
 
                 ((Attackable) enemy).hit(30);
+
                 MyGame.assets.getSound("sword01").play();
             }
         }
@@ -103,7 +107,7 @@ public class MyContactListener implements ContactListener {
             Player player;
             Loot loot;
 
-            if (fa.getUserData().toString().equals("player")) {
+            if (fa.getUserData() instanceof Player) {
                 player = (Player) fa.getUserData();
                 loot = (Loot) fb.getUserData();
             } else {
@@ -112,6 +116,7 @@ public class MyContactListener implements ContactListener {
             }
 
             player.lootGold(loot.getGold());
+
             MyGame.assets.getSound("gold").play();
         }
     }
@@ -122,7 +127,7 @@ public class MyContactListener implements ContactListener {
             Arrow arrow;
             Sprite enemy;
 
-            if (fa.getUserData().toString().equals("arrow")) {
+            if (fa.getUserData() instanceof Arrow) {
                 arrow = (Arrow) fa.getUserData();
                 enemy = (Sprite) fb.getUserData();
             } else {
@@ -140,30 +145,10 @@ public class MyContactListener implements ContactListener {
 
                 ((Attackable) enemy).hit(20);
                 arrow.getBody().setLinearVelocity(0, 0);
-                arrow.getBody().getFixtureList().peek().setSensor(true);
+                arrow.getFixture().setSensor(true);
+                arrow.setTarget(enemy);
+
                 MyGame.assets.getSound("arrowImpact01").play();
-            }
-        }
-    }
-
-    private void playerArrowCollision(Fixture fa, Fixture fb) {
-        if ((fa.getFilterData().categoryBits == Constants.BIT_PLAYER && fb.getFilterData().categoryBits == Constants.BIT_ARROW) ||
-                (fb.getFilterData().categoryBits == Constants.BIT_PLAYER && fa.getFilterData().categoryBits == Constants.BIT_ARROW)) {
-            Player player;
-            Arrow arrow;
-
-            if (fa.getUserData().toString().equals("player")) {
-                player = (Player) fa.getUserData();
-                arrow = (Arrow) fb.getUserData();
-            } else {
-                player = (Player) fb.getUserData();
-                arrow = (Arrow) fa.getUserData();
-            }
-
-            if(!arrow.isActive()) {
-                player.lootArrow();
-                arrow.setLooted(true);
-                MyGame.assets.getSound("arrowPickup").play(0.5f);
             }
         }
     }

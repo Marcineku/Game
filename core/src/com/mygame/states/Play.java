@@ -7,12 +7,9 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -41,13 +38,15 @@ public class Play extends GameState {
     private ParticleEffect fire;
     private Sound fireSound;
     private long fireSoundID;
+    private Cursor cursor;
 
     private ArrayList<Sprite> gameObjects;
 
-    private Vector2 mousePosition;
     private boolean click;
+    private boolean spawn;
 
-    private BitmapFont font;
+    private BitmapFont hpBarFont;
+    private BitmapFont itemNameFont;
 
     private Player player;
 
@@ -62,13 +61,14 @@ public class Play extends GameState {
     public Play(GameStateManager gsm) {
         super(gsm);
 
-        mousePosition = new Vector2();
         click = false;
+        spawn = false;
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
         b2dr = new Box2DDebugRenderer();
         rayHandler = new RayHandler(world);
+        cursor = new Cursor(world);
 
         rayHandler.setAmbientLight(0.2f);
         rayHandler.setBlur(true);
@@ -76,7 +76,7 @@ public class Play extends GameState {
         pointLight = new PointLight(rayHandler, 200, Color.RED, 20.f, 95, 100);
         pointLight.setSoftnessLength(0.f);
         Filter filter = new Filter();
-        filter.maskBits = Constants.BIT_SHADOWS;
+        filter.maskBits = Constants.BIT_PLAYER | Constants.BIT_ENEMY;
         pointLight.setContactFilter(filter);
 
         fire = MyGame.assets.getParticleEffect("fire");
@@ -92,8 +92,13 @@ public class Play extends GameState {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 5;
         parameter.color = Color.GREEN;
-        font = generator.generateFont(parameter);
-        font.setUseIntegerPositions(false);
+        hpBarFont = generator.generateFont(parameter);
+        hpBarFont.setUseIntegerPositions(false);
+
+        parameter.size = 8;
+        parameter.color = Color.WHITE;
+        itemNameFont = generator.generateFont(parameter);
+        itemNameFont.setUseIntegerPositions(false);
 
         generator.dispose();
 
@@ -167,6 +172,8 @@ public class Play extends GameState {
         MyGame.assets.getSound("sea02").loop(0.5f);
         fireSound = MyGame.assets.getSound("fire01");
         fireSoundID = fireSound.loop();
+
+        gameObjects.add(new Item(world, 105 * Constants.PPM, 100 * Constants.PPM, Constants.ITEM_BOW));
     }
 
     @Override
@@ -177,31 +184,26 @@ public class Play extends GameState {
 
         fire.update(dt);
 
-        //moving slimes towards the player
-        for(Sprite i : gameObjects) {
-            if(i.toString().equals("slime")) {
-                Slime s = (Slime) i;
-                if(s.getAttackableState() == Attackable.AttackableState.ALIVE) {
-                    if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
-                        i.getBody().setLinearVelocity(player.getBody().getPosition().x - i.getBody().getPosition().x, player.getBody().getPosition().y - i.getBody().getPosition().y);
-                    }
-                }
-                else {
-                    i.getBody().setLinearVelocity(i.getBody().getPosition().x - player.getBody().getPosition().x, i.getBody().getPosition().y - player.getBody().getPosition().y);
-                }
-            }
-        }
-
-        //removing dead slimes, dropping loot and removing looted loot
         ArrayList<Loot> lootToDrop = new ArrayList<Loot>();
         for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
             Sprite s = i.next();
+
+            //moving slimes towards the player
+            if(s instanceof Slime) {
+                if(((Slime) s).getAttackableState() == Attackable.AttackableState.ALIVE) {
+                    if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
+                        s.getBody().setLinearVelocity(player.getBody().getPosition().x - s.getBody().getPosition().x, player.getBody().getPosition().y - s.getBody().getPosition().y);
+                    }
+                }
+            }
             if(s instanceof Attackable) {
+                //Removing dead slimes
                 if(((Attackable) s).getAttackableState() == Attackable.AttackableState.DEAD) {
                     if(s.getCurrentAnimation().getTimesPlayed() > 20) {
                         world.destroyBody(s.getBody());
                         i.remove();
                     }
+                    //Dropping loot
                     if(s instanceof Lootable) {
                         if(!((Lootable) s).isLooted()) {
                             lootToDrop.add(new Loot(world, s.getPosition().x * Constants.PPM, s.getPosition().y * Constants.PPM, ((Lootable) s).getGold()));
@@ -210,17 +212,38 @@ public class Play extends GameState {
                     }
                 }
             }
-            if(s.toString().equals("loot")) {
+            //Removing looted loot
+            if(s instanceof Loot) {
                 Loot loot = (Loot) s;
                 if(loot.isLooted()) {
                     world.destroyBody(loot.getBody());
                     i.remove();
                 }
             }
-            if(s.toString().equals("arrow")) {
-                Arrow arrow = (Arrow) s;
-                if(arrow.isLooted()) {
-                    world.destroyBody(arrow.getBody());
+            if(s instanceof Arrow) {
+                if(s.getFixture().testPoint(cursor.getBox2DPosition()) && s.getPosition().dst(player.getPosition()) < 2.f && MyInput.isDown(MyInput.PICK)) {
+                    player.lootArrow();
+                    ((Arrow) s).setLooted(true);
+
+                    MyGame.assets.getSound("arrowPickup").play(0.5f);
+                }
+                //Removing looted arrows
+                if(((Arrow) s).isLooted()) {
+                    world.destroyBody(s.getBody());
+                    i.remove();
+                }
+            }
+            if(s instanceof Item) {
+                //Picking up items
+                if(s.getFixture().testPoint(cursor.getBox2DPosition()) && s.getPosition().dst(player.getPosition()) < 2.f && MyInput.isDown(MyInput.PICK)) {
+                    ((Item) s).setLooted(true);
+                    player.setWeaponEquipped(((Item) s).getItemName());
+
+                    MyGame.assets.getSound("pickup").play(0.5f);
+                }
+                //Removing looted items
+                if(((Item) s).isLooted()) {
+                    world.destroyBody(s.getBody());
                     i.remove();
                 }
             }
@@ -272,13 +295,43 @@ public class Play extends GameState {
             i.render(sb);
         }
 
-        //rendering Attackable hp bars
         sb.begin();
         for(Sprite i : gameObjects) {
+            //Rendering Attackable hp bars
             if(i instanceof Attackable) {
                 String hp = Integer.toString(((Attackable) i).getHp());
                 Vector2 position = new Vector2(((Attackable) i).getHpBarPosition().x, ((Attackable) i).getHpBarPosition().y);
-                font.draw(sb, hp, position.x, position.y);
+                hpBarFont.draw(sb, hp, position.x, position.y);
+            }
+            //Rendering Item names if mouse cursor is over Item
+            if(i instanceof Item ) {
+                if(i.getFixture().testPoint(cursor.getBox2DPosition())) {
+                String tmp = ((Item) i).getItemName();
+                String name = tmp.substring(0, 1).toUpperCase() + tmp.substring(1);
+                Vector2 position = new Vector2(((Item) i).getNamePosition().x, ((Item) i).getNamePosition().y);
+                itemNameFont.draw(sb, "- " + name + " -", position.x, position.y);
+
+                String damage = Integer.toString(((Item) i).getDamage());
+                position = new Vector2(((Item) i).getNamePosition().x, ((Item) i).getNamePosition().y - 10);
+                itemNameFont.draw(sb, "Damage: " + damage, position.x, position.y);
+
+                String price = Integer.toString(((Item) i).getPrice());
+                position = new Vector2(((Item) i).getNamePosition().x, ((Item) i).getNamePosition().y - 20);
+                itemNameFont.draw(sb, "Price:  " + price, position.x, position.y);
+
+                ((Item) i).setHighlighted(true);
+                }
+                else {
+                    ((Item) i).setHighlighted(false);
+                }
+            }
+            if(i instanceof Arrow) {
+                if(i.getFixture().testPoint(cursor.getBox2DPosition()) && !((Arrow) i).isActive()) {
+                    ((Arrow) i).setHighlighted(true);
+                }
+                else {
+                    ((Arrow) i).setHighlighted(false);
+                }
             }
         }
         sb.end();
@@ -307,7 +360,7 @@ public class Play extends GameState {
 
             //on click
             //shooting arrows
-            if(player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty()) {
+            if(player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && !player.getWeaponEquipped().equals("none")) {
                 MyGame.assets.getSound("bow").play();
                 player.shoot();
                 Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y);
@@ -317,22 +370,25 @@ public class Play extends GameState {
                         player.getBody().getAngle() + (float) Math.toRadians(100f)
                 );
                 arrow.getBody().setLinearVelocity(
-                        -arrow.getBody().getPosition().x * Constants.PPM + mousePosition.x, -arrow.getBody().getPosition().y * Constants.PPM + mousePosition.y
+                        -arrow.getBody().getPosition().x * Constants.PPM + cursor.getPosition().x, -arrow.getBody().getPosition().y * Constants.PPM + cursor.getPosition().y
                 );
                 gameObjects.add(arrow);
             }
         }
 
-        //on button pressed
         //spawning slimes
-        if(MyInput.isDown(MyInput.SLIME)) {
-            gameObjects.add(new Slime(mousePosition.x, mousePosition.y, world));
+        if(!MyInput.isDown(MyInput.SLIME) && spawn) {
+            spawn = false;
+        }
+        if(MyInput.isDown(MyInput.SLIME) && !spawn) {
+            spawn = true;
+            gameObjects.add(new Slime(cursor.getPosition().x, cursor.getPosition().y, world));
         }
 
         //rotating player's body towards mouse cursor
         if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
             Body body = player.getBody();
-            Vector2 toTarget = new Vector2(mousePosition.x / Constants.PPM - body.getPosition().x, mousePosition.y / Constants.PPM - body.getPosition().y);
+            Vector2 toTarget = new Vector2(cursor.getPosition().x / Constants.PPM - body.getPosition().x, cursor.getPosition().y / Constants.PPM - body.getPosition().y);
             float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
             body.setTransform(body.getPosition(), desiredAngle);
         }
@@ -345,13 +401,7 @@ public class Play extends GameState {
 
         rayHandler.setCombinedMatrix(cam.combined.cpy().scl(Constants.PPM), 0, 0, MyGame.V_WIDTH, MyGame.V_HEIGHT);
 
-        Vector3 mouseInWorld3D = new Vector3();
-        mouseInWorld3D.x = Gdx.input.getX();
-        mouseInWorld3D.y = Gdx.input.getY();
-        mouseInWorld3D.z = 0;
-        cam.unproject(mouseInWorld3D);
-        mousePosition.x = mouseInWorld3D.x;
-        mousePosition.y = mouseInWorld3D.y;
+        cursor.Update(cam);
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             cam.zoom -= 0.02f;
@@ -366,7 +416,7 @@ public class Play extends GameState {
         world.dispose();
         b2dr.dispose();
         rayHandler.dispose();
-        font.dispose();
+        hpBarFont.dispose();
         hud.dispose();
     }
 }

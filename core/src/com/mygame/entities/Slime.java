@@ -19,13 +19,11 @@ public class Slime extends Sprite implements Attackable, Lootable {
     private float maxMovementSpeed;
     private boolean looted;
     private int gold;
-    private Body shadow;
 
     public Slime(float positionX, float positionY, World world) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
 
-        id = "slime";
-        layer = 2;
+        layer = 3;
         maxHp = 100;
         hp = maxHp;
         maxMovementSpeed = 25.f;
@@ -72,28 +70,14 @@ public class Slime extends Sprite implements Attackable, Lootable {
         }
         addAnimation("walkRight", walkRight, frameDuration);
 
-        TextureRegion[] dead = new TextureRegion[3];
-        for(int i = 0; i < 3; ++i) {
-            dead[i] = frames[4][6 + i];
-        }
-        addAnimation("dead", dead, frameDuration);
+        Texture deadTex = MyGame.assets.getTexture("dead");
+        TextureRegion[][] deadFrames = TextureRegion.split(deadTex, 32, 32);
+        TextureRegion[] dead = new TextureRegion[1];
+        dead[0] = deadFrames[2][1];
+        addAnimation("dead", dead, 0);
 
-        BodyDef bd = new BodyDef();
-        bd.type = BodyDef.BodyType.KinematicBody;
-        bd.linearDamping = 0.f;
-        bd.position.set(body.getPosition());
-        bd.fixedRotation = false;
-        shadow = world.createBody(bd);
-
-        PolygonShape shadowShape = new PolygonShape();
-        shadowShape.setAsBox(5.f / Constants.PPM, 4.f / Constants.PPM, new Vector2(0, 0 / Constants.PPM), 0);
-        FixtureDef f = new FixtureDef();
-        f.isSensor = true;
-        f.density = 0.f;
-        f.shape = shadowShape;
-        f.filter.categoryBits = Constants.BIT_SHADOWS;
-        shadow.createFixture(f);
-        shadowShape.dispose();
+        width = 16;
+        height = 16;
     }
 
     @Override
@@ -104,6 +88,13 @@ public class Slime extends Sprite implements Attackable, Lootable {
             hp = 0;
             attackableState = AttackableState.DEAD;
             fixture.setSensor(true);
+            layer = 1;
+            width = 32;
+            height = 32;
+            Filter filter = new Filter();
+            filter = fixture.getFilterData();
+            filter.categoryBits = 0;
+            fixture.setFilterData(filter);
         }
 
         if(attackableState == AttackableState.ALIVE) {
@@ -132,8 +123,6 @@ public class Slime extends Sprite implements Attackable, Lootable {
         else {
             currentAnimation = animations.get("dead");
         }
-
-        shadow.setTransform(body.getPosition().x + body.getLinearVelocity().x * dt, body.getPosition().y + body.getLinearVelocity().y * dt, 0.f);
     }
 
     @Override
@@ -180,7 +169,6 @@ public class Slime extends Sprite implements Attackable, Lootable {
     public Vector2 getHpBarPosition() {
         return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 12.f);
     }
-
 
     public enum SlimeStates {
         FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT

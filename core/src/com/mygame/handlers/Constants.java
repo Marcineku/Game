@@ -9,4 +9,8 @@ public class Constants {
     public static final short BIT_LOOT    = 16;
     public static final short BIT_ARROW   = 32;
     public static final short BIT_SHADOWS = 64;
+    public static final short BIT_CURSOR  = 128;
+    public static final short BIT_ITEM    = 256;
+
+    public static final String ITEM_BOW = "bow";
 }
