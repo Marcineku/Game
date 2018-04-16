@@ -195,6 +195,11 @@ public class Play extends GameState {
                         s.getBody().setLinearVelocity(player.getBody().getPosition().x - s.getBody().getPosition().x, player.getBody().getPosition().y - s.getBody().getPosition().y);
                     }
                 }
+                //removing dead slimes
+                if(((Slime) s).getAttackableState() == Attackable.AttackableState.DEAD && s.getBody().getPosition().dst(player.getPosition()) > MyGame.V_WIDTH / Constants.PPM) {
+                    world.destroyBody(s.getBody());
+                    i.remove();
+                }
             }
             if(s instanceof Attackable) {
                 //Removing dead slimes

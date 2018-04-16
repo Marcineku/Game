@@ -101,7 +101,7 @@ public class Arrow extends Sprite {
             }
         }
 
-        if(target != null) {
+        if(target != null && target.getBody().isActive()) {
             active = false;
             currentAnimation = animations.get("arrowThrusted");
             layer = target.getLayer() + 1;
