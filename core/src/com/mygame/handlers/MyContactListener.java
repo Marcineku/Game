@@ -143,7 +143,7 @@ public class MyContactListener implements ContactListener {
                 enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
                         -n.y * impulsePower), enemy.getBody().getPosition(), true);
 
-                ((Attackable) enemy).hit(20);
+                ((Attackable) enemy).hit(arrow.getDamage());
                 arrow.getBody().setLinearVelocity(0, 0);
                 arrow.getFixture().setSensor(true);
                 arrow.setTarget(enemy);

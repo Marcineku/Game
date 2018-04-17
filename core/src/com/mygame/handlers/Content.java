@@ -38,7 +38,7 @@ public class Content {
 
     public void loadParticleEffect(String path, String key) {
         ParticleEffect p = new ParticleEffect();
-        p.load(Gdx.files.internal("particles\\fire"), Gdx.files.internal(""));
+        p.load(Gdx.files.internal(path), Gdx.files.internal("particles"));
         particles.put(key, p);
     }
 

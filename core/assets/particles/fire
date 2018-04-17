@@ -2,35 +2,33 @@ Untitled
 - Delay -
 active: false
 - Duration - 
-lowMin: 3000.0
-lowMax: 3000.0
+lowMin: 10000.0
+lowMax: 10000.0
 - Count - 
-min: 1
-max: 200
+min: 200
+max: 400
 - Emission - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 250.0
-highMax: 250.0
+highMin: 50.0
+highMax: 300.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - Life - 
-lowMin: 0.0
-lowMax: 0.0
-highMin: 500.0
+lowMin: 100.0
+lowMax: 100.0
+highMin: 1000.0
 highMax: 1000.0
 relative: false
-scalingCount: 3
+scalingCount: 2
 scaling0: 1.0
-scaling1: 1.0
-scaling2: 0.3
-timelineCount: 3
+scaling1: 0.74509805
+timelineCount: 2
 timeline0: 0.0
-timeline1: 0.66
-timeline2: 1.0
+timeline1: 0.74657536
 - Life Offset - 
 active: false
 - X Offset - 
@@ -38,12 +36,12 @@ active: false
 - Y Offset - 
 active: false
 - Spawn Shape - 
-shape: point
+shape: line
 - Spawn Width - 
 lowMin: 0.0
 lowMax: 0.0
-highMin: 0.0
-highMax: 0.0
+highMin: 256.0
+highMax: 256.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -60,13 +58,13 @@ scaling0: 1.0
 timelineCount: 1
 timeline0: 0.0
 - X Scale - 
-lowMin: 0.0
-lowMax: 0.0
+lowMin: 16.0
+lowMax: 16.0
 highMin: 32.0
 highMax: 32.0
 relative: false
 scalingCount: 1
-scaling0: 1.0
+scaling0: 1
 timelineCount: 1
 timeline0: 0.0
 - Y Scale - 
@@ -75,8 +73,8 @@ active: false
 active: true
 lowMin: 0.0
 lowMax: 0.0
-highMin: 30.0
-highMax: 300.0
+highMin: 10.0
+highMax: 2000.0
 relative: false
 scalingCount: 1
 scaling0: 1.0
@@ -84,23 +82,32 @@ timelineCount: 1
 timeline0: 0.0
 - Angle - 
 active: true
-lowMin: 90.0
-lowMax: 90.0
-highMin: 45.0
-highMax: 135.0
+lowMin: 0.0
+lowMax: 0.0
+highMin: 90.0
+highMax: 90.0
 relative: false
 scalingCount: 3
-scaling0: 1.0
-scaling1: 0.0
-scaling2: 0.0
+scaling0: 0.84313726
+scaling1: 1.0
+scaling2: 1.0
 timelineCount: 3
 timeline0: 0.0
-timeline1: 0.5
-timeline2: 1.0
+timeline1: 0.369863
+timeline2: 0.5958904
 - Rotation - 
 active: false
 - Wind - 
-active: false
+active: true
+lowMin: 0.0
+lowMax: 0.0
+highMin: 0.0
+highMax: 0.0
+relative: false
+scalingCount: 1
+scaling0: 1.0
+timelineCount: 1
+timeline0: 0.0
 - Gravity - 
 active: false
 - Tint - 
@@ -116,16 +123,14 @@ lowMax: 0.0
 highMin: 1.0
 highMax: 1.0
 relative: false
-scalingCount: 4
-scaling0: 0.3508772
-scaling1: 0.21052632
-scaling2: 0.10526316
-scaling3: 0.28070176
-timelineCount: 4
+scalingCount: 3
+scaling0: 0.73595506
+scaling1: 0.3988764
+scaling2: 0.1741573
+timelineCount: 3
 timeline0: 0.0
-timeline1: 0.5410959
-timeline2: 0.7808219
-timeline3: 0.91780823
+timeline1: 0.43678162
+timeline2: 0.7681992
 - Options - 
 attached: false
 continuous: true
@@ -135,5 +140,5 @@ behind: false
 premultipliedAlpha: false
 spriteMode: single
 - Image Paths -
-particle.png
+fire.png
 

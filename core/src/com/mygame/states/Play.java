@@ -15,7 +15,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.entities.*;
 import com.mygame.game.MyGame;
@@ -42,9 +41,6 @@ public class Play extends GameState {
 
     private ArrayList<Sprite> gameObjects;
 
-    private boolean click;
-    private boolean spawn;
-
     private BitmapFont hpBarFont;
     private BitmapFont itemNameFont;
 
@@ -60,9 +56,6 @@ public class Play extends GameState {
 
     public Play(GameStateManager gsm) {
         super(gsm);
-
-        click = false;
-        spawn = false;
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
@@ -80,8 +73,8 @@ public class Play extends GameState {
         pointLight.setContactFilter(filter);
 
         fire = MyGame.assets.getParticleEffect("fire");
-        fire.scaleEffect(0.4f);
-        fire.getEmitters().first().setPosition(95 * Constants.PPM, 100 * Constants.PPM);
+        fire.scaleEffect(0.1f);
+        fire.getEmitters().first().setPosition(94 * Constants.PPM, 100 * Constants.PPM);
         fire.start();
 
         gameObjects = new ArrayList<Sprite>();
@@ -184,6 +177,14 @@ public class Play extends GameState {
 
         fire.update(dt);
 
+        //rotating player's body towards mouse cursor
+        if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
+            Body body = player.getBody();
+            Vector2 toTarget = new Vector2(cursor.getPosition().x / Constants.PPM - body.getPosition().x, cursor.getPosition().y / Constants.PPM - body.getPosition().y);
+            float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
+            body.setTransform(body.getPosition(), desiredAngle);
+        }
+
         ArrayList<Loot> lootToDrop = new ArrayList<Loot>();
         for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
             Sprite s = i.next();
@@ -242,7 +243,8 @@ public class Play extends GameState {
                 //Picking up items
                 if(s.getFixture().testPoint(cursor.getBox2DPosition()) && s.getPosition().dst(player.getPosition()) < 2.f && MyInput.isDown(MyInput.PICK)) {
                     ((Item) s).setLooted(true);
-                    player.setWeaponEquipped(((Item) s).getItemName());
+                    player.pickItem(((Item) s));
+                    player.setWeaponEquipped(((Item) s));
 
                     MyGame.assets.getSound("pickup").play(0.5f);
                 }
@@ -254,11 +256,6 @@ public class Play extends GameState {
             }
         }
         gameObjects.addAll(lootToDrop);
-
-        //resetting player after death and when he pressed reset button
-        if(player.getAttackableState() == Attackable.AttackableState.DEAD && MyInput.isDown(MyInput.RESET)) {
-            player.reset();
-        }
 
         //updating all game objects
         for(Sprite i : gameObjects) {
@@ -355,47 +352,30 @@ public class Play extends GameState {
 
     @Override
     public void handleInput() {
-        if(click && !Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            click = false;
-
-            //on click release
-        }
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT) && !click) {
-            click = true;
-
-            //on click
-            //shooting arrows
-            if(player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && !player.getWeaponEquipped().equals("none")) {
-                MyGame.assets.getSound("bow").play();
-                player.shoot();
-                Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y);
-                arrow.getBody().setTransform(
-                        player.getBody().getPosition().x,
-                        player.getBody().getPosition().y,
-                        player.getBody().getAngle() + (float) Math.toRadians(100f)
-                );
-                arrow.getBody().setLinearVelocity(
-                        -arrow.getBody().getPosition().x * Constants.PPM + cursor.getPosition().x, -arrow.getBody().getPosition().y * Constants.PPM + cursor.getPosition().y
-                );
-                gameObjects.add(arrow);
-            }
+        //shooting arrows on click
+        if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null) {
+            MyGame.assets.getSound("bow").play();
+            player.shoot();
+            Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y, player.getWeaponEquipped().getDamage());
+            arrow.getBody().setTransform(
+                    player.getBody().getPosition().x,
+                    player.getBody().getPosition().y,
+                    player.getBody().getAngle() + (float) Math.toRadians(100f)
+            );
+            arrow.getBody().setLinearVelocity(
+                    -arrow.getBody().getPosition().x * Constants.PPM + cursor.getPosition().x, -arrow.getBody().getPosition().y * Constants.PPM + cursor.getPosition().y
+            );
+            gameObjects.add(arrow);
         }
 
         //spawning slimes
-        if(!MyInput.isDown(MyInput.SLIME) && spawn) {
-            spawn = false;
-        }
-        if(MyInput.isDown(MyInput.SLIME) && !spawn) {
-            spawn = true;
+        if(MyInput.isPressed(MyInput.SLIME)) {
             gameObjects.add(new Slime(cursor.getPosition().x, cursor.getPosition().y, world));
         }
 
-        //rotating player's body towards mouse cursor
-        if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
-            Body body = player.getBody();
-            Vector2 toTarget = new Vector2(cursor.getPosition().x / Constants.PPM - body.getPosition().x, cursor.getPosition().y / Constants.PPM - body.getPosition().y);
-            float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
-            body.setTransform(body.getPosition(), desiredAngle);
+        //resetting player after death and when he pressed reset button
+        if(player.getAttackableState() == Attackable.AttackableState.DEAD && MyInput.isDown(MyInput.RESET)) {
+            player.reset();
         }
     }
 

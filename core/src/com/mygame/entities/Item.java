@@ -101,4 +101,9 @@ public class Item extends Sprite{
     public boolean isHighlighted() {
         return highlighted;
     }
+
+    @Override
+    public String toString() {
+        return itemName;
+    }
 }

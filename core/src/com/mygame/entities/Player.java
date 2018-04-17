@@ -13,6 +13,8 @@ import com.mygame.handlers.MyInput;
 import com.mygame.handlers.Timer;
 import com.mygame.interfaces.Attackable;
 
+import java.util.ArrayList;
+
 public class Player extends Sprite implements Attackable {
     private int             hp;
     private int             maxHp;
@@ -28,7 +30,8 @@ public class Player extends Sprite implements Attackable {
     private Sound           walkingSound;
     private boolean         walking;
     private Animation       currentWeaponAnim;
-    private String          weaponEquipped;
+    private Item            weaponEquipped;
+    private ArrayList<Item> items;
 
     public Player(World world, float positionX, float positionY) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 6.f, world, 0.f, 25.f, 0.25f);
@@ -47,7 +50,8 @@ public class Player extends Sprite implements Attackable {
         arrows = maxArrows;
         walkingSound = MyGame.assets.getSound("walking02");
         walking = false;
-        weaponEquipped = "none";
+        weaponEquipped = null;
+        items = new ArrayList<Item>();
 
         //Defining main collider
         CircleShape shape = new CircleShape();
@@ -196,7 +200,7 @@ public class Player extends Sprite implements Attackable {
     public void update(float dt) {
         super.update(dt);
 
-        if(!weaponEquipped.equals("none"))
+        if(weaponEquipped != null)
             currentWeaponAnim.update(dt);
 
         timer.update(dt);
@@ -215,7 +219,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runUpRight");
                 playerState = PlayerStates.FACING_UP_RIGHT;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunUpRight");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -226,7 +230,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runRightDown");
                 playerState = PlayerStates.FACING_RIGHT_DOWN;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunRightDown");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -237,7 +241,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runDownLeft");
                 playerState = PlayerStates.FACING_DOWN_LEFT;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunDownLeft");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -248,7 +252,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runLeftUp");
                 playerState = PlayerStates.FACING_LEFT_UP;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunLeftUp");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -259,7 +263,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runUp");
                 playerState = PlayerStates.FACING_UP;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunUp");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -270,7 +274,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runRight");
                 playerState = PlayerStates.FACING_RIGHT;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunRight");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -281,7 +285,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runDown");
                 playerState = PlayerStates.FACING_DOWN;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunDown");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -292,7 +296,7 @@ public class Player extends Sprite implements Attackable {
                 currentAnimation = animations.get("runLeft");
                 playerState = PlayerStates.FACING_LEFT;
 
-                if(!weaponEquipped.equals("none")) {
+                if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunLeft");
                     currentWeaponAnim.Synchronize(currentAnimation);
                 }
@@ -315,7 +319,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_UP:
                         currentAnimation = animations.get("idleUp");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleUp");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -323,7 +327,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_UP_RIGHT:
                         currentAnimation = animations.get("idleUpRight");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleUpRight");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -331,7 +335,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_RIGHT:
                         currentAnimation = animations.get("idleRight");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleRight");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -339,7 +343,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_RIGHT_DOWN:
                         currentAnimation = animations.get("idleRightDown");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleRightDown");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -347,7 +351,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_DOWN:
                         currentAnimation = animations.get("idleDown");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleDown");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -355,7 +359,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_DOWN_LEFT:
                         currentAnimation = animations.get("idleDownLeft");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleDownLeft");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -363,7 +367,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_LEFT:
                         currentAnimation = animations.get("idleLeft");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleLeft");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -371,7 +375,7 @@ public class Player extends Sprite implements Attackable {
                     case FACING_LEFT_UP:
                         currentAnimation = animations.get("idleLeftUp");
 
-                        if(!weaponEquipped.equals("none")) {
+                        if(weaponEquipped != null) {
                             currentWeaponAnim = animations.get(weaponEquipped + "BackIdleLeftUp");
                             currentWeaponAnim.Synchronize(currentAnimation);
                         }
@@ -399,7 +403,7 @@ public class Player extends Sprite implements Attackable {
 
         sb.begin();
         sb.draw(currentAnimation.getFrame(), x, y);
-        if(!weaponEquipped.equals("none"))
+        if(weaponEquipped != null)
             sb.draw(currentWeaponAnim.getFrame(), x, y);
         sb.end();
     }
@@ -450,12 +454,7 @@ public class Player extends Sprite implements Attackable {
     }
 
     public boolean isArrowsEmpty() {
-        if(arrows <= 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return arrows <= 0;
     }
 
     public void shoot() {
@@ -474,11 +473,19 @@ public class Player extends Sprite implements Attackable {
         FACING_UP, FACING_UP_RIGHT, FACING_RIGHT, FACING_RIGHT_DOWN, FACING_DOWN, FACING_DOWN_LEFT, FACING_LEFT, FACING_LEFT_UP
     }
 
-    public void setWeaponEquipped(String weaponEquipped) {
-        this.weaponEquipped = weaponEquipped;
+    public void setWeaponEquipped(Item weapon) {
+        this.weaponEquipped = weapon;
     }
 
-    public String getWeaponEquipped() {
+    public Item getWeaponEquipped() {
         return weaponEquipped;
+    }
+
+    public void pickItem(Item item) {
+        items.add(item);
+    }
+
+    public ArrayList<Item> getItems() {
+        return items;
     }
 }

@@ -19,8 +19,9 @@ public class Arrow extends Sprite {
     private Animation highlightedAnimation;
     private Sprite target;
     private boolean flipped;
+    private int damage;
 
-    public Arrow(World world, float positionX, float positionY) {
+    public Arrow(World world, float positionX, float positionY, int damage) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 0.25f, 0.f);
 
         layer       = 2;
@@ -28,6 +29,7 @@ public class Arrow extends Sprite {
         looted      = false;
         highlighted = false;
         flipped     = false;
+        this.damage = damage;
 
         //Defining main collider
         PolygonShape shape = new PolygonShape();
@@ -163,5 +165,9 @@ public class Arrow extends Sprite {
 
     public void setTarget(Sprite target) {
         this.target = target;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

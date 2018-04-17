@@ -6,7 +6,10 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygame.entities.Sprite;
 import com.mygame.handlers.*;
+
+import java.util.ArrayList;
 
 public class MyGame extends ApplicationAdapter {
 	public static final String TITLE    = "Game";
@@ -79,9 +82,9 @@ public class MyGame extends ApplicationAdapter {
 		accumulator += Gdx.graphics.getDeltaTime();
 		while(accumulator >= STEP) {
 			accumulator -= STEP;
-			MyInput.update();
 			gsm.update(STEP);
 			gsm.render();
+			MyInput.update();
 		}
 	}
 
