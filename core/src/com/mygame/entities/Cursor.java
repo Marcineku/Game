@@ -10,7 +10,7 @@ import com.mygame.handlers.Constants;
 public class Cursor {
     private Vector2 position;
 
-    public Cursor(World world) {
+    public Cursor() {
         position = new Vector2(0, 0);
     }
 

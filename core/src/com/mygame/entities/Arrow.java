@@ -20,6 +20,7 @@ public class Arrow extends Sprite {
     private Sprite target;
     private boolean flipped;
     private int damage;
+    private float random;
 
     public Arrow(World world, float positionX, float positionY, int damage) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 0.25f, 0.f);
@@ -31,15 +32,12 @@ public class Arrow extends Sprite {
         flipped     = false;
         this.damage = damage;
 
-        //Defining main collider
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(2.5f / Constants.PPM, 6.5f / Constants.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Constants.BIT_ARROW;
-        fixtureDef.isSensor = true;
-        fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-        shape.dispose();
+        //Generating random radius from a center of a hit body in pixels
+        float min = 4;
+        float max = 11;
+        random = (float) Math.random() * (max - min) + min;
+
+        defineMainCollider(2.5f, 6.5f, Constants.BIT_ARROW, this, true);
 
         //Arrow animation
         Texture arrowTex = MyGame.assets.getTexture("arrow");
@@ -108,7 +106,7 @@ public class Arrow extends Sprite {
             currentAnimation = animations.get("arrowThrusted");
             layer = target.getLayer() + 1;
 
-            float radius = 8 / Constants.PPM;
+            float radius = random / Constants.PPM;
             float x = target.getPosition().x + radius * (float) Math.cos(body.getAngle() + Math.toRadians(90));
             float y = target.getPosition().y + radius * (float) Math.sin(body.getAngle() + Math.toRadians(90));
             body.setTransform(x, y, body.getAngle());

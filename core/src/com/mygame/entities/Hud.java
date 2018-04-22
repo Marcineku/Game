@@ -40,7 +40,7 @@ public class Hud {
         sb.begin();
         sb.draw(coin, 20, MyGame.V_HEIGHT - 35);
         font.draw(sb, gold, 32, MyGame.V_HEIGHT - 28);
-        if(player.getWeaponEquipped() != null && player.getWeaponEquipped().toString().equals(Constants.ITEM_BOW)) {
+        if(player.getWeaponEquipped() != null && player.getWeaponEquipped().toString().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
             font.draw(sb, "Arrows: " + arrows, 32, MyGame.V_HEIGHT - 48);
         }
         if(MyInput.isDown(MyInput.EQ)) {

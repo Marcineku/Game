@@ -52,6 +52,11 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadTexture("images\\bowBackManIdle.png", "bowBackManIdle");
 		assets.loadTexture("images\\bowBackManRun.png", "bowBackManRun");
 		assets.loadTexture("images\\bowItem.png", "bow");
+		assets.loadTexture("images\\bodyManBowDraw.png", "bodyManBowDraw");
+		assets.loadTexture("images\\bowDrawManIdle.png", "bowDrawManIdle");
+		assets.loadTexture("images\\bodyFleshIdle.png", "bodyFleshIdle");
+		assets.loadTexture("images\\bodyMaleTorsoIdle.png", "bodyManTorsoIdle");
+		assets.loadTexture("images\\bodyLegsIdle.png", "bodyLegsIdle");
 
 		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");
@@ -102,6 +107,7 @@ public class MyGame extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		cam.setToOrtho(false, width / SCALE, height / SCALE);
+		hudCam.setToOrtho(false, width / SCALE, height / SCALE);
 	}
 
 	public SpriteBatch getSpriteBatch() {

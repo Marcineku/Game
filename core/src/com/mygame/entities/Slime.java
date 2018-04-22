@@ -33,13 +33,7 @@ public class Slime extends Sprite implements Attackable, Lootable {
         looted = false;
         gold = 2;
 
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(8.f / Constants.PPM, 6.f / Constants.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Constants.BIT_ENEMY;
-        fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-        shape.dispose();
+        defineMainCollider(8.f, 6.f, Constants.BIT_ENEMY, this);
 
         Texture tex = MyGame.assets.getTexture("characters");
         TextureRegion[][] frames = TextureRegion.split(tex, 16, 16);
@@ -91,8 +85,7 @@ public class Slime extends Sprite implements Attackable, Lootable {
             layer = 1;
             width = 32;
             height = 32;
-            Filter filter = new Filter();
-            filter = fixture.getFilterData();
+            Filter filter = fixture.getFilterData();
             filter.categoryBits = 0;
             fixture.setFilterData(filter);
         }

@@ -20,14 +20,7 @@ public class Loot extends Sprite {
         looted = false;
 
         //Defining main collider
-        CircleShape shape = new CircleShape();
-        shape.setRadius(8.f / Constants.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Constants.BIT_LOOT;
-        fixtureDef.isSensor = true;
-        fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-        shape.dispose();
+        defineMainCollider(8.f, Constants.BIT_LOOT, this, true);
 
         Texture tex = MyGame.assets.getTexture("treasures");
         TextureRegion[][] frames = TextureRegion.split(tex, 16, 16);

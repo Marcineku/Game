@@ -27,15 +27,7 @@ public class Item extends Sprite{
         looted = false;
         highlighted = false;
 
-        //Defining main collider
-        PolygonShape shape = new PolygonShape();
-        shape.setAsBox(8 / Constants.PPM, 12 / Constants.PPM);
-        fixtureDef.filter.categoryBits = Constants.BIT_ITEM;
-        fixtureDef.shape = shape;
-        fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-        fixture.setSensor(true);
-        shape.dispose();
+        defineMainCollider(8.f, 12.f, Constants.BIT_ITEM, this, true);
 
         //Item animation
         Texture itemTex = MyGame.assets.getTexture(itemName);

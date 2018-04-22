@@ -49,6 +49,9 @@ public class MyInputProcessor extends InputAdapter {
             }
         }
 
+        if(keycode == Input.Keys.Q) {
+            MyInput.setKey(MyInput.DRAW, true);
+        }
 
         return super.keyDown(keycode);
     }
@@ -86,6 +89,10 @@ public class MyInputProcessor extends InputAdapter {
 
         if(keycode == Input.Keys.E) {
             MyInput.setKey(MyInput.PICK, false);
+        }
+
+        if(keycode == Input.Keys.Q) {
+            MyInput.setKey(MyInput.DRAW, false);
         }
 
         return super.keyUp(keycode);

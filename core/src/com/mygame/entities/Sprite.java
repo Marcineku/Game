@@ -1,5 +1,6 @@
 package com.mygame.entities;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -51,6 +52,90 @@ public abstract class Sprite implements Comparable<Sprite> {
 
         width = reg[0].getRegionWidth();
         height = reg[0].getRegionHeight();
+    }
+
+    public void addDirectionalAnimation(String name, Texture texture, int framesPerDirection, float frameDuration) {
+        TextureRegion[][] frames = TextureRegion.split(texture, 52, 52);
+
+        TextureRegion[] up        = new TextureRegion[framesPerDirection];
+        TextureRegion[] upRight   = new TextureRegion[framesPerDirection];
+        TextureRegion[] right     = new TextureRegion[framesPerDirection];
+        TextureRegion[] rightDown = new TextureRegion[framesPerDirection];
+        TextureRegion[] down      = new TextureRegion[framesPerDirection];
+        TextureRegion[] downLeft  = new TextureRegion[framesPerDirection];
+        TextureRegion[] left      = new TextureRegion[framesPerDirection];
+        TextureRegion[] leftUp    = new TextureRegion[framesPerDirection];
+        copyFrames(up, upRight, right, rightDown, down, downLeft, left, leftUp, frames);
+        addAnimation(name + "Up",        up,        frameDuration);
+        addAnimation(name + "UpRight",   upRight,   frameDuration);
+        addAnimation(name + "Right",     right,     frameDuration);
+        addAnimation(name + "RightDown", rightDown, frameDuration);
+        addAnimation(name + "Down",      down,      frameDuration);
+        addAnimation(name + "DownLeft",  downLeft,  frameDuration);
+        addAnimation(name + "Left",      left,      frameDuration);
+        addAnimation(name + "LeftUp",    leftUp,    frameDuration);
+    }
+
+    public void addDirectionalAnimation(String name, Texture texture, int framesPerDirection, float frameDuration, boolean loop) {
+        addDirectionalAnimation(name, texture, framesPerDirection, frameDuration);
+
+        if(!loop) {
+            animations.get(name + "Up").setLoop(false);
+            animations.get(name + "UpRight").setLoop(false);
+            animations.get(name + "Right").setLoop(false);
+            animations.get(name + "RightDown").setLoop(false);
+            animations.get(name + "Down").setLoop(false);
+            animations.get(name + "DownLeft").setLoop(false);
+            animations.get(name + "Left").setLoop(false);
+            animations.get(name + "LeftUp").setLoop(false);
+        }
+    }
+
+    public void addDirectionalAnimation(String name, Texture texture, int framesPerDirection, float frameDuration, boolean loop, boolean reverse) {
+        if(reverse) {
+            TextureRegion[][] frames = TextureRegion.split(texture, 52, 52);
+
+            TextureRegion[] up        = new TextureRegion[framesPerDirection];
+            TextureRegion[] upRight   = new TextureRegion[framesPerDirection];
+            TextureRegion[] right     = new TextureRegion[framesPerDirection];
+            TextureRegion[] rightDown = new TextureRegion[framesPerDirection];
+            TextureRegion[] down      = new TextureRegion[framesPerDirection];
+            TextureRegion[] downLeft  = new TextureRegion[framesPerDirection];
+            TextureRegion[] left      = new TextureRegion[framesPerDirection];
+            TextureRegion[] leftUp    = new TextureRegion[framesPerDirection];
+            copyFrames(up, upRight, right, rightDown, down, downLeft, left, leftUp, frames);
+            addAnimation(name + "UpReverse",        up,        frameDuration);
+            addAnimation(name + "UpRightReverse",   upRight,   frameDuration);
+            addAnimation(name + "RightReverse",     right,     frameDuration);
+            addAnimation(name + "RightDownReverse", rightDown, frameDuration);
+            addAnimation(name + "DownReverse",      down,      frameDuration);
+            addAnimation(name + "DownLeftReverse",  downLeft,  frameDuration);
+            addAnimation(name + "LeftReverse",      left,      frameDuration);
+            addAnimation(name + "LeftUpReverse",    leftUp,    frameDuration);
+
+            if(!loop) {
+                animations.get(name + "UpReverse").setLoop(false);
+                animations.get(name + "UpRightReverse").setLoop(false);
+                animations.get(name + "RightReverse").setLoop(false);
+                animations.get(name + "RightDownReverse").setLoop(false);
+                animations.get(name + "DownReverse").setLoop(false);
+                animations.get(name + "DownLeftReverse").setLoop(false);
+                animations.get(name + "LeftReverse").setLoop(false);
+                animations.get(name + "LeftUpReverse").setLoop(false);
+            }
+
+            animations.get(name + "UpReverse").reverse();
+            animations.get(name + "UpRightReverse").reverse();
+            animations.get(name + "RightReverse").reverse();
+            animations.get(name + "RightDownReverse").reverse();
+            animations.get(name + "DownReverse").reverse();
+            animations.get(name + "DownLeftReverse").reverse();
+            animations.get(name + "LeftReverse").reverse();
+            animations.get(name + "LeftUpReverse").reverse();
+        }
+        else {
+            addDirectionalAnimation(name, texture, framesPerDirection, frameDuration, loop);
+        }
     }
 
     public void update(float dt) {
@@ -107,5 +192,60 @@ public abstract class Sprite implements Comparable<Sprite> {
 
     public int getLayer() {
         return layer;
+    }
+
+    private void copyFrames(TextureRegion[] up, TextureRegion[] upRight, TextureRegion[] right, TextureRegion[] rightDown, TextureRegion[] down, TextureRegion[] downLeft, TextureRegion[] left, TextureRegion[] leftUp, TextureRegion[][] frames) {
+        for(int i = 0; i < up.length; ++i) {
+            up[i]        = frames[0][i];
+            upRight[i]   = frames[1][i];
+            right[i]     = frames[2][i];
+            rightDown[i] = frames[3][i];
+            down[i]      = frames[4][i];
+            downLeft[i]  = frames[5][i];
+            left[i]      = frames[6][i];
+            leftUp[i]    = frames[7][i];
+        }
+    }
+
+    protected void defineMainCollider(float radius, short categoryBits, Object userData) {
+        CircleShape shape = new CircleShape();
+        shape.setRadius(radius / Constants.PPM);
+        fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = categoryBits;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(userData);
+        shape.dispose();
+    }
+
+    protected void defineMainCollider(float radius, short categoryBits, Object userData, boolean isSensor) {
+        CircleShape shape = new CircleShape();
+        shape.setRadius(radius / Constants.PPM);
+        fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = categoryBits;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(userData);
+        fixture.setSensor(isSensor);
+        shape.dispose();
+    }
+
+    protected void defineMainCollider(float width, float height, short categoryBits, Object userData) {
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / Constants.PPM, height / Constants.PPM);
+        fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = categoryBits;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(userData);
+        shape.dispose();
+    }
+
+    protected void defineMainCollider(float width, float height, short categoryBits, Object userData, boolean isSensor) {
+        PolygonShape shape = new PolygonShape();
+        shape.setAsBox(width / Constants.PPM, height / Constants.PPM);
+        fixtureDef.shape = shape;
+        fixtureDef.filter.categoryBits = categoryBits;
+        fixture = body.createFixture(fixtureDef);
+        fixture.setUserData(userData);
+        fixture.setSensor(isSensor);
+        shape.dispose();
     }
 }

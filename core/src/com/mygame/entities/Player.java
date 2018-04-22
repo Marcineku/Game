@@ -1,7 +1,6 @@
 package com.mygame.entities;
 
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -16,9 +15,10 @@ import com.mygame.interfaces.Attackable;
 import java.util.ArrayList;
 
 public class Player extends Sprite implements Attackable {
+    private Cursor          cursor;
     private int             hp;
     private int             maxHp;
-    private PlayerStates    playerState;
+    private Direction       playerState;
     private AttackableState attackableState;
     private float           movementSpeed;
     private float           maxMovementSpeed;
@@ -32,12 +32,16 @@ public class Player extends Sprite implements Attackable {
     private Animation       currentWeaponAnim;
     private Item            weaponEquipped;
     private ArrayList<Item> items;
+    private State           state;
+    private boolean         weaponDrawn;
 
-    public Player(World world, float positionX, float positionY) {
+    public Player(World world, float positionX, float positionY, Cursor cursor) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 6.f, world, 0.f, 25.f, 0.25f);
 
+        this.cursor = cursor;
+
         layer = 5;
-        playerState = PlayerStates.FACING_DOWN;
+        playerState = Direction.FACING_DOWN;
         attackableState = AttackableState.ALIVE;
         maxHp = 100;
         hp = maxHp;
@@ -52,158 +56,147 @@ public class Player extends Sprite implements Attackable {
         walking = false;
         weaponEquipped = null;
         items = new ArrayList<Item>();
+        state = State.IDLE;
+        weaponDrawn = false;
 
-        //Defining main collider
-        CircleShape shape = new CircleShape();
-        shape.setRadius(6.f / Constants.PPM);
-        fixtureDef.shape = shape;
-        fixtureDef.filter.categoryBits = Constants.BIT_PLAYER;
-        fixture = body.createFixture(fixtureDef);
-        fixture.setUserData(this);
-        shape.dispose();
+        defineMainCollider(6.f, Constants.BIT_PLAYER, this);
 
-        //Idle animations
-        Texture bodyManIdleTex = MyGame.assets.getTexture("bodyManIdle");
-        TextureRegion[][] bodyManIdle = TextureRegion.split(bodyManIdleTex, 52, 52);
-        float idleFrameDuration = 0.25f;
+        //Idle animation
+        addDirectionalAnimation("idle", MyGame.assets.getTexture("bodyManIdle"), 5, 0.25f);
+        //Run animation
+        addDirectionalAnimation("run", MyGame.assets.getTexture("bodyManRun"), 8, 0.09f);
 
-        TextureRegion[] idleUp        = new TextureRegion[5];
-        TextureRegion[] idleUpRight   = new TextureRegion[5];
-        TextureRegion[] idleRight     = new TextureRegion[5];
-        TextureRegion[] idleRightDown = new TextureRegion[5];
-        TextureRegion[] idleDown      = new TextureRegion[5];
-        TextureRegion[] idleDownLeft  = new TextureRegion[5];
-        TextureRegion[] idleLeft      = new TextureRegion[5];
-        TextureRegion[] idleLeftUp    = new TextureRegion[5];
-        for(int i = 0; i < idleUp.length; ++i) {
-            idleUp[i]        = bodyManIdle[0][i];
-            idleUpRight[i]   = bodyManIdle[1][i];
-            idleRight[i]     = bodyManIdle[2][i];
-            idleRightDown[i] = bodyManIdle[3][i];
-            idleDown[i]      = bodyManIdle[4][i];
-            idleDownLeft[i]  = bodyManIdle[5][i];
-            idleLeft[i]      = bodyManIdle[6][i];
-            idleLeftUp[i]    = bodyManIdle[7][i];
-        }
-        addAnimation("idleUp",        idleUp,        idleFrameDuration);
-        addAnimation("idleUpRight",   idleUpRight,   idleFrameDuration);
-        addAnimation("idleRight",     idleRight,     idleFrameDuration);
-        addAnimation("idleRightDown", idleRightDown, idleFrameDuration);
-        addAnimation("idleDown",      idleDown,      idleFrameDuration);
-        addAnimation("idleDownLeft",  idleDownLeft,  idleFrameDuration);
-        addAnimation("idleLeft",      idleLeft,      idleFrameDuration);
-        addAnimation("idleLeftUp",    idleLeftUp,    idleFrameDuration);
-        currentAnimation = animations.get("idleUp");
+        //Animation of not drawn bow while idling
+        addDirectionalAnimation("bowBackIdle", MyGame.assets.getTexture("bowBackManIdle"), 5, 0.25f);
+        //Animation of not drawn bow while running
+        addDirectionalAnimation("bowBackRun", MyGame.assets.getTexture("bowBackManRun"), 8, 0.09f);
 
-        //Running animations
-        Texture bodyManRunTex = MyGame.assets.getTexture("bodyManRun");
-        TextureRegion[][] bodyManRun = TextureRegion.split(bodyManRunTex, 52, 52);
-        float runFrameDuration = 0.09f;
+        //Animation of drawing a bow
+        addDirectionalAnimation("bodyManBowDraw", MyGame.assets.getTexture("bodyManBowDraw"), 5, 0.20f, false);
+        //Animation of hiding a bow
+        addDirectionalAnimation("bodyManBowDraw", MyGame.assets.getTexture("bodyManBowDraw"), 5, 0.20f, false, true);
 
-        TextureRegion[] runUp        = new TextureRegion[8];
-        TextureRegion[] runUpRight   = new TextureRegion[8];
-        TextureRegion[] runRight     = new TextureRegion[8];
-        TextureRegion[] runRightDown = new TextureRegion[8];
-        TextureRegion[] runDown      = new TextureRegion[8];
-        TextureRegion[] runDownLeft  = new TextureRegion[8];
-        TextureRegion[] runLeft      = new TextureRegion[8];
-        TextureRegion[] runLeftUp    = new TextureRegion[8];
-        for(int i = 0; i < runUp.length; ++i) {
-            runUp[i]        = bodyManRun[0][i];
-            runUpRight[i]   = bodyManRun[1][i];
-            runRight[i]     = bodyManRun[2][i];
-            runRightDown[i] = bodyManRun[3][i];
-            runDown[i]      = bodyManRun[4][i];
-            runDownLeft[i]  = bodyManRun[5][i];
-            runLeft[i]      = bodyManRun[6][i];
-            runLeftUp[i]    = bodyManRun[7][i];
-        }
-        addAnimation("runUp",        runUp,        runFrameDuration);
-        addAnimation("runUpRight",   runUpRight,   runFrameDuration);
-        addAnimation("runRight",     runRight,     runFrameDuration);
-        addAnimation("runRightDown", runRightDown, runFrameDuration);
-        addAnimation("runDown",      runDown,      runFrameDuration);
-        addAnimation("runDownLeft",  runDownLeft,  runFrameDuration);
-        addAnimation("runLeft",      runLeft,      runFrameDuration);
-        addAnimation("runLeftUp",    runLeftUp,    runFrameDuration);
+        //Animation of bow being drawn
+        addDirectionalAnimation("bowDrawManIdle", MyGame.assets.getTexture("bowDrawManIdle"), 5, 0.20f, false);
+        //Animation of bow being hidden
+        addDirectionalAnimation("bowDrawManIdle", MyGame.assets.getTexture("bowDrawManIdle"), 5, 0.20f, false, true);
 
-        //Death animation
         TextureRegion[] dead = new TextureRegion[1];
-        dead[0] = idleDown[0];
+        dead[0] = getCurrentAnimation().getFrame();
         addAnimation("dead", dead, 0);
 
-        //Bow on back when idling animation
-        Texture bowBackManIdleTex = MyGame.assets.getTexture("bowBackManIdle");
-        TextureRegion[][] bowBackManIdle = TextureRegion.split(bowBackManIdleTex, 52, 52);
-
-        TextureRegion[] bowBackIdleUp        = new TextureRegion[5];
-        TextureRegion[] bowBackIdleUpRight   = new TextureRegion[5];
-        TextureRegion[] bowBackIdleRight     = new TextureRegion[5];
-        TextureRegion[] bowBackIdleRightDown = new TextureRegion[5];
-        TextureRegion[] bowBackIdleDown      = new TextureRegion[5];
-        TextureRegion[] bowBackIdleDownLeft  = new TextureRegion[5];
-        TextureRegion[] bowBackIdleLeft      = new TextureRegion[5];
-        TextureRegion[] bowBackIdleLeftUp    = new TextureRegion[5];
-        for(int i = 0; i < bowBackIdleUp.length; ++i) {
-            bowBackIdleUp[i]        = bowBackManIdle[0][i];
-            bowBackIdleUpRight[i]   = bowBackManIdle[1][i];
-            bowBackIdleRight[i]     = bowBackManIdle[2][i];
-            bowBackIdleRightDown[i] = bowBackManIdle[3][i];
-            bowBackIdleDown[i]      = bowBackManIdle[4][i];
-            bowBackIdleDownLeft[i]  = bowBackManIdle[5][i];
-            bowBackIdleLeft[i]      = bowBackManIdle[6][i];
-            bowBackIdleLeftUp[i]    = bowBackManIdle[7][i];
-        }
-        addAnimation("bowBackIdleUp",        bowBackIdleUp,        idleFrameDuration);
-        addAnimation("bowBackIdleUpRight",   bowBackIdleUpRight,   idleFrameDuration);
-        addAnimation("bowBackIdleRight",     bowBackIdleRight,     idleFrameDuration);
-        addAnimation("bowBackIdleRightDown", bowBackIdleRightDown, idleFrameDuration);
-        addAnimation("bowBackIdleDown",      bowBackIdleDown,      idleFrameDuration);
-        addAnimation("bowBackIdleDownLeft",  bowBackIdleDownLeft,  idleFrameDuration);
-        addAnimation("bowBackIdleLeft",      bowBackIdleLeft,      idleFrameDuration);
-        addAnimation("bowBackIdleLeftUp",    bowBackIdleLeftUp,    idleFrameDuration);
+        currentAnimation = animations.get("idleDown");
         currentWeaponAnim = animations.get("bowBackIdleDown");
-
-        //Bow on back when running animation
-        Texture bowBackManRunTex = MyGame.assets.getTexture("bowBackManRun");
-        TextureRegion[][] bowBackManRun = TextureRegion.split(bowBackManRunTex, 52, 52);
-
-        TextureRegion[] bowBackRunUp        = new TextureRegion[8];
-        TextureRegion[] bowBackRunUpRight   = new TextureRegion[8];
-        TextureRegion[] bowBackRunRight     = new TextureRegion[8];
-        TextureRegion[] bowBackRunRightDown = new TextureRegion[8];
-        TextureRegion[] bowBackRunDown      = new TextureRegion[8];
-        TextureRegion[] bowBackRunDownLeft  = new TextureRegion[8];
-        TextureRegion[] bowBackRunLeft      = new TextureRegion[8];
-        TextureRegion[] bowBackRunLeftUp    = new TextureRegion[8];
-        for(int i = 0; i < bowBackRunUp.length; ++i) {
-            bowBackRunUp[i]        = bowBackManRun[0][i];
-            bowBackRunUpRight[i]   = bowBackManRun[1][i];
-            bowBackRunRight[i]     = bowBackManRun[2][i];
-            bowBackRunRightDown[i] = bowBackManRun[3][i];
-            bowBackRunDown[i]      = bowBackManRun[4][i];
-            bowBackRunDownLeft[i]  = bowBackManRun[5][i];
-            bowBackRunLeft[i]      = bowBackManRun[6][i];
-            bowBackRunLeftUp[i]    = bowBackManRun[7][i];
-        }
-        addAnimation("bowBackRunUp",        bowBackRunUp,        runFrameDuration);
-        addAnimation("bowBackRunUpRight",   bowBackRunUpRight,   runFrameDuration);
-        addAnimation("bowBackRunRight",     bowBackRunRight,     runFrameDuration);
-        addAnimation("bowBackRunRightDown", bowBackRunRightDown, runFrameDuration);
-        addAnimation("bowBackRunDown",      bowBackRunDown,      runFrameDuration);
-        addAnimation("bowBackRunDownLeft",  bowBackRunDownLeft,  runFrameDuration);
-        addAnimation("bowBackRunLeft",      bowBackRunLeft,      runFrameDuration);
-        addAnimation("bowBackRunLeftUp",    bowBackRunLeftUp,    runFrameDuration);
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
 
+        //rotating player's body towards mouse cursor
+        if(getAttackableState() == Attackable.AttackableState.ALIVE) {
+            Vector2 toTarget = new Vector2(cursor.getPosition().x / Constants.PPM - body.getPosition().x, cursor.getPosition().y / Constants.PPM - body.getPosition().y);
+            float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
+            body.setTransform(body.getPosition(), desiredAngle);
+        }
+
         if(weaponEquipped != null)
             currentWeaponAnim.update(dt);
 
         timer.update(dt);
+
+        if(MyInput.isPressed(MyInput.DRAW) && attackableState == AttackableState.ALIVE && weaponEquipped != null && state == State.IDLE && weaponEquipped.getItemName().equals(Constants.ITEM_BOW)) {
+            state = State.DRAWING_BOW;
+            walkingSound.stop();
+
+            String reverse;
+            if(weaponDrawn) {
+                reverse = "Reverse";
+            }
+            else {
+                reverse = "";
+            }
+
+            switch (playerState) {
+                case FACING_UP:
+                    currentAnimation = animations.get("bodyManBowDrawUp" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleUp" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_UP_RIGHT:
+                    currentAnimation = animations.get("bodyManBowDrawUpRight" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleUpRight" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_RIGHT:
+                    currentAnimation = animations.get("bodyManBowDrawRight" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleRight" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_RIGHT_DOWN:
+                    currentAnimation = animations.get("bodyManBowDrawRightDown" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleRightDown" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_DOWN:
+                    currentAnimation = animations.get("bodyManBowDrawDown" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleDown" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_DOWN_LEFT:
+                    currentAnimation = animations.get("bodyManBowDrawDownLeft" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleDownLeft" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_LEFT:
+                    currentAnimation = animations.get("bodyManBowDrawLeft" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleLeft" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+                case FACING_LEFT_UP:
+                    currentAnimation = animations.get("bodyManBowDrawLeftUp" + reverse);
+
+                    if(weaponEquipped != null) {
+                        currentWeaponAnim = animations.get("bowDrawManIdleLeftUp" + reverse);
+                        currentWeaponAnim.Synchronize(currentAnimation);
+                    }
+                    break;
+            }
+        }
+
+        if(state == State.DRAWING_BOW) {
+            if(currentAnimation.hasEnded()) {
+                state = State.IDLE;
+
+                if(weaponDrawn) {
+                    weaponDrawn = false;
+                }
+                else {
+                    weaponDrawn = true;
+                }
+            }
+        }
 
         if(hp <= 0.0) {
             movementSpeed = 0.f;
@@ -212,12 +205,12 @@ public class Player extends Sprite implements Attackable {
             walkingSound.stop();
         }
 
-        if(attackableState == AttackableState.ALIVE) {
+        if(attackableState == AttackableState.ALIVE && state == State.IDLE) {
             //up right
             if(MyInput.isDown(MyInput.UP) && MyInput.isDown(MyInput.RIGHT)) {
                 this.body.applyLinearImpulse(movementSpeed / (float) Math.sqrt(2), movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runUpRight");
-                playerState = PlayerStates.FACING_UP_RIGHT;
+                playerState = Direction.FACING_UP_RIGHT;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunUpRight");
@@ -228,7 +221,7 @@ public class Player extends Sprite implements Attackable {
             else if(MyInput.isDown(MyInput.RIGHT) && MyInput.isDown(MyInput.DOWN)) {
                 this.body.applyLinearImpulse(movementSpeed / (float) Math.sqrt(2),  -movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runRightDown");
-                playerState = PlayerStates.FACING_RIGHT_DOWN;
+                playerState = Direction.FACING_RIGHT_DOWN;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunRightDown");
@@ -239,7 +232,7 @@ public class Player extends Sprite implements Attackable {
             else if (MyInput.isDown(MyInput.DOWN) && MyInput.isDown(MyInput.LEFT)) {
                 this.body.applyLinearImpulse(-movementSpeed / (float) Math.sqrt(2), -movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runDownLeft");
-                playerState = PlayerStates.FACING_DOWN_LEFT;
+                playerState = Direction.FACING_DOWN_LEFT;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunDownLeft");
@@ -250,7 +243,7 @@ public class Player extends Sprite implements Attackable {
             else if(MyInput.isDown(MyInput.LEFT) && MyInput.isDown(MyInput.UP)) {
                 this.body.applyLinearImpulse(-movementSpeed / (float) Math.sqrt(2), movementSpeed / (float) Math.sqrt(2), body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runLeftUp");
-                playerState = PlayerStates.FACING_LEFT_UP;
+                playerState = Direction.FACING_LEFT_UP;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunLeftUp");
@@ -261,7 +254,7 @@ public class Player extends Sprite implements Attackable {
             else if (MyInput.isDown(MyInput.UP)) {
                 this.body.applyLinearImpulse(0, movementSpeed, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runUp");
-                playerState = PlayerStates.FACING_UP;
+                playerState = Direction.FACING_UP;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunUp");
@@ -272,7 +265,7 @@ public class Player extends Sprite implements Attackable {
             else if (MyInput.isDown(MyInput.RIGHT)) {
                 this.body.applyLinearImpulse(movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runRight");
-                playerState = PlayerStates.FACING_RIGHT;
+                playerState = Direction.FACING_RIGHT;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunRight");
@@ -283,7 +276,7 @@ public class Player extends Sprite implements Attackable {
             else if (MyInput.isDown(MyInput.DOWN)) {
                 this.body.applyLinearImpulse(0, -movementSpeed, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runDown");
-                playerState = PlayerStates.FACING_DOWN;
+                playerState = Direction.FACING_DOWN;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunDown");
@@ -294,7 +287,7 @@ public class Player extends Sprite implements Attackable {
             else if (MyInput.isDown(MyInput.LEFT)) {
                 this.body.applyLinearImpulse(-movementSpeed, 0, body.getPosition().x, body.getPosition().y, true);
                 currentAnimation = animations.get("runLeft");
-                playerState = PlayerStates.FACING_LEFT;
+                playerState = Direction.FACING_LEFT;
 
                 if(weaponEquipped != null) {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRunLeft");
@@ -390,7 +383,7 @@ public class Player extends Sprite implements Attackable {
                 walking = false;
             }
         }
-        else {
+        else if(attackableState == AttackableState.DEAD) {
             currentAnimation = animations.get("dead");
             hp = 0;
         }
@@ -423,7 +416,7 @@ public class Player extends Sprite implements Attackable {
         return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 42.f);
     }
 
-    public PlayerStates getPlayerState() {
+    public Direction getPlayerState() {
         return playerState;
     }
 
@@ -446,7 +439,7 @@ public class Player extends Sprite implements Attackable {
     public void reset() {
         hp = maxHp;
         gold = 0;
-        playerState = PlayerStates.FACING_DOWN;
+        playerState = Direction.FACING_DOWN;
         attackableState = AttackableState.ALIVE;
         body.setTransform(100, 100, 0);
         movementSpeed = maxMovementSpeed;
@@ -469,8 +462,12 @@ public class Player extends Sprite implements Attackable {
         arrows += 1;
     }
 
-    public enum PlayerStates {
+    public enum Direction {
         FACING_UP, FACING_UP_RIGHT, FACING_RIGHT, FACING_RIGHT_DOWN, FACING_DOWN, FACING_DOWN_LEFT, FACING_LEFT, FACING_LEFT_UP
+    }
+
+    public enum State {
+        DRAWING_BOW, IDLE
     }
 
     public void setWeaponEquipped(Item weapon) {
@@ -487,5 +484,9 @@ public class Player extends Sprite implements Attackable {
 
     public ArrayList<Item> getItems() {
         return items;
+    }
+
+    public boolean isWeaponDrawn() {
+        return weaponDrawn;
     }
 }

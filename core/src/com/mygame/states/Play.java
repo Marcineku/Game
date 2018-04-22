@@ -61,7 +61,7 @@ public class Play extends GameState {
         world.setContactListener(new MyContactListener());
         b2dr = new Box2DDebugRenderer();
         rayHandler = new RayHandler(world);
-        cursor = new Cursor(world);
+        cursor = new Cursor();
 
         rayHandler.setAmbientLight(0.2f);
         rayHandler.setBlur(true);
@@ -78,7 +78,7 @@ public class Play extends GameState {
         fire.start();
 
         gameObjects = new ArrayList<Sprite>();
-        player = new Player(world, 100 * Constants.PPM, 100 * Constants.PPM);
+        player = new Player(world, 100 * Constants.PPM, 100 * Constants.PPM, cursor);
         gameObjects.add(player);
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts\\PressStart2P.ttf"));
@@ -176,14 +176,6 @@ public class Play extends GameState {
         handleInput();
 
         fire.update(dt);
-
-        //rotating player's body towards mouse cursor
-        if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
-            Body body = player.getBody();
-            Vector2 toTarget = new Vector2(cursor.getPosition().x / Constants.PPM - body.getPosition().x, cursor.getPosition().y / Constants.PPM - body.getPosition().y);
-            float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(45) + (float) Math.toRadians(37.5);
-            body.setTransform(body.getPosition(), desiredAngle);
-        }
 
         ArrayList<Loot> lootToDrop = new ArrayList<Loot>();
         for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
@@ -353,7 +345,7 @@ public class Play extends GameState {
     @Override
     public void handleInput() {
         //shooting arrows on click
-        if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null) {
+        if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.isWeaponDrawn()) {
             MyGame.assets.getSound("bow").play();
             player.shoot();
             Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y, player.getWeaponEquipped().getDamage());
