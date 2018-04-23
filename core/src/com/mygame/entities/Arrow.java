@@ -21,8 +21,9 @@ public class Arrow extends Sprite {
     private boolean flipped;
     private int damage;
     private float random;
+    private Sprite archer;
 
-    public Arrow(World world, float positionX, float positionY, int damage) {
+    public Arrow(World world, float positionX, float positionY, int damage, Sprite archer) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 0.25f, 0.f);
 
         layer       = 2;
@@ -31,6 +32,7 @@ public class Arrow extends Sprite {
         highlighted = false;
         flipped     = false;
         this.damage = damage;
+        this.archer = archer;
 
         //Generating random radius from a center of a hit body in pixels
         float min = 4;
@@ -167,5 +169,9 @@ public class Arrow extends Sprite {
 
     public int getDamage() {
         return damage;
+    }
+
+    public Sprite getArcher() {
+        return archer;
     }
 }

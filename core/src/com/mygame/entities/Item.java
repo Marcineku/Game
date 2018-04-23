@@ -44,7 +44,7 @@ public class Item extends Sprite{
         highlightedAnimation = animations.get(itemName + "Highlighted");
 
         if(itemName.equals(Constants.ITEM_BOW)) {
-            damage = 10;
+            damage = 30;
             price = 20;
         }
     }

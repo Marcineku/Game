@@ -248,4 +248,18 @@ public abstract class Sprite implements Comparable<Sprite> {
         fixture.setSensor(isSensor);
         shape.dispose();
     }
+
+    public enum Direction {
+        UP("Up"), UP_RIGHT("UpRight"), RIGHT("Right"), RIGHT_DOWN("RightDown"), DOWN("Down"), DOWN_LEFT("DownLeft"), LEFT("Left"), LEFT_UP("LeftUp");
+
+        private String value;
+        Direction(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return this.value;
+        }
+    }
 }

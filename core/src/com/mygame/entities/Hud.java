@@ -36,6 +36,7 @@ public class Hud {
     public void render(SpriteBatch sb) {
         String gold = Integer.toString(player.getGold());
         String arrows = Integer.toString(player.getArrows());
+        String exp = Integer.toString(player.getExp());
 
         sb.begin();
         sb.draw(coin, 20, MyGame.V_HEIGHT - 35);
@@ -43,6 +44,7 @@ public class Hud {
         if(player.getWeaponEquipped() != null && player.getWeaponEquipped().toString().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
             font.draw(sb, "Arrows: " + arrows, 32, MyGame.V_HEIGHT - 48);
         }
+        font.draw(sb, "Exp: " + exp, 32, MyGame.V_HEIGHT - 38);
         if(MyInput.isDown(MyInput.EQ)) {
             for(Item i : player.getItems()) {
                 String tmp = i.getItemName();

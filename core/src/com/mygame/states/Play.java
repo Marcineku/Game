@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.entities.*;
@@ -25,6 +26,7 @@ import com.mygame.handlers.MyInput;
 import com.mygame.interfaces.Attackable;
 import com.mygame.interfaces.Lootable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -40,6 +42,7 @@ public class Play extends GameState {
     private Cursor cursor;
 
     private ArrayList<Sprite> gameObjects;
+    private ArrayList<Event> events;
 
     private BitmapFont hpBarFont;
     private BitmapFont itemNameFont;
@@ -80,6 +83,8 @@ public class Play extends GameState {
         gameObjects = new ArrayList<Sprite>();
         player = new Player(world, 100 * Constants.PPM, 100 * Constants.PPM, cursor);
         gameObjects.add(player);
+
+        events = new ArrayList<Event>();
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts\\PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -171,7 +176,7 @@ public class Play extends GameState {
 
     @Override
     public void update(float dt) {
-        Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + " OBJ: " + gameObjects.size());
+        Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + " OBJ: " + gameObjects.size() + " EVNT: " + events.size());
 
         handleInput();
 
@@ -181,33 +186,31 @@ public class Play extends GameState {
         for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
             Sprite s = i.next();
 
-            //moving slimes towards the player
             if(s instanceof Slime) {
-                if(((Slime) s).getAttackableState() == Attackable.AttackableState.ALIVE) {
-                    if(player.getAttackableState() == Attackable.AttackableState.ALIVE) {
-                        s.getBody().setLinearVelocity(player.getBody().getPosition().x - s.getBody().getPosition().x, player.getBody().getPosition().y - s.getBody().getPosition().y);
-                    }
-                }
-                //removing dead slimes
+                //Removing dead slimes
                 if(((Slime) s).getAttackableState() == Attackable.AttackableState.DEAD && s.getBody().getPosition().dst(player.getPosition()) > MyGame.V_WIDTH / Constants.PPM) {
                     world.destroyBody(s.getBody());
                     i.remove();
                 }
             }
             if(s instanceof Attackable) {
-                //Removing dead slimes
                 if(((Attackable) s).getAttackableState() == Attackable.AttackableState.DEAD) {
-                    if(s.getCurrentAnimation().getTimesPlayed() > 20) {
-                        world.destroyBody(s.getBody());
-                        i.remove();
-                    }
                     //Dropping loot
                     if(s instanceof Lootable) {
                         if(!((Lootable) s).isLooted()) {
                             lootToDrop.add(new Loot(world, s.getPosition().x * Constants.PPM, s.getPosition().y * Constants.PPM, ((Lootable) s).getGold()));
                             ((Lootable) s).setLooted(true);
+                            //Increasing player's exp
+                            player.addExp(((Attackable) s).getExp());
+                            String exp = Integer.toString(((Attackable) s).getExp());
+                            events.add(new Event(sb, itemNameFont,"+" + exp, 3.f, s.getPosition().scl(Constants.PPM), Color.WHITE, 1/2.f, 0));
                         }
                     }
+                }
+                if(((Attackable) s).getAttackableState() == Attackable.AttackableState.ALIVE && ((Attackable) s).isHit()) {
+                    ((Attackable) s).setHit(false);
+                    String damage = Integer.toString(((Attackable) s).getDamage());
+                    events.add(new Event(sb, itemNameFont, "-" + damage, 1.f, s.getPosition().scl(Constants.PPM), Color.RED, 1.f, 1));
                 }
             }
             //Removing looted loot
@@ -252,6 +255,19 @@ public class Play extends GameState {
         //updating all game objects
         for(Sprite i : gameObjects) {
             i.update(dt);
+        }
+
+        //updating all events
+        for(Event i : events) {
+            i.update(dt);
+        }
+
+        for(Iterator<Event> i = events.iterator(); i.hasNext();) {
+            Event e = i.next();
+
+            if(!e.isActive()) {
+                i.remove();
+            }
         }
 
         //stepping physics simulation
@@ -333,6 +349,11 @@ public class Play extends GameState {
         //rendering lights
         rayHandler.render();
 
+        //rendering all events
+        for(Event i : events) {
+            i.render();
+        }
+
         sb.begin();
         fire.draw(sb);
         sb.end();
@@ -345,24 +366,42 @@ public class Play extends GameState {
     @Override
     public void handleInput() {
         //shooting arrows on click
-        if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.isWeaponDrawn()) {
+        if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
+            player.getTimer().start();
+            MyGame.assets.getSound("bowPull").stop();
+            MyGame.assets.getSound("bowPull").play();
+        }
+        if(MyInput.isReleased(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
+            MyGame.assets.getSound("bowPull").stop();
             MyGame.assets.getSound("bow").play();
+
+            float velocity = 120.f * player.getTimer().getTime();
+
+            int damage = MathUtils.clamp((int) velocity / 5,2, player.getWeaponEquipped().getDamage());
+
+            if(velocity > 100.f) {
+                velocity = 100.f;
+            }
+
             player.shoot();
-            Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y, player.getWeaponEquipped().getDamage());
+
+            Arrow arrow = new Arrow(world, player.getPosition().x, player.getPosition().y, damage, player);
             arrow.getBody().setTransform(
                     player.getBody().getPosition().x,
                     player.getBody().getPosition().y,
-                    player.getBody().getAngle() + (float) Math.toRadians(100f)
+                    player.getBody().getAngle() + (float) Math.toRadians(90.f)
             );
-            arrow.getBody().setLinearVelocity(
-                    -arrow.getBody().getPosition().x * Constants.PPM + cursor.getPosition().x, -arrow.getBody().getPosition().y * Constants.PPM + cursor.getPosition().y
-            );
+
+            Vector2 dir = new Vector2(cursor.getPosition()).sub(arrow.getPosition().scl(Constants.PPM)).nor().scl(velocity);
+            arrow.getBody().setLinearVelocity(dir);
             gameObjects.add(arrow);
+
+            player.getTimer().reset();
         }
 
         //spawning slimes
         if(MyInput.isPressed(MyInput.SLIME)) {
-            gameObjects.add(new Slime(cursor.getPosition().x, cursor.getPosition().y, world));
+            gameObjects.add(new Slime(cursor.getPosition().x, cursor.getPosition().y, world, player));
         }
 
         //resetting player after death and when he pressed reset button

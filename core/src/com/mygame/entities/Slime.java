@@ -7,31 +7,42 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
+import com.mygame.handlers.Timer;
 import com.mygame.interfaces.Attackable;
 import com.mygame.interfaces.Lootable;
 
 public class Slime extends Sprite implements Attackable, Lootable {
     private int hp;
     private int maxHp;
-    private SlimeStates slimeState;
+    private Direction direction;
     private AttackableState attackableState;
     private float movementSpeed;
     private float maxMovementSpeed;
     private boolean looted;
     private int gold;
+    private Sprite target;
+    private Timer timer;
+    private int exp;
+    boolean hit;
+    private int damage;
 
-    public Slime(float positionX, float positionY, World world) {
+    public Slime(float positionX, float positionY, World world, Sprite target) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
 
         layer = 3;
         maxHp = 100;
         hp = maxHp;
-        maxMovementSpeed = 25.f;
+        maxMovementSpeed = 10.f;
         movementSpeed = maxMovementSpeed;
-        slimeState = SlimeStates.FACING_DOWN;
+        direction = Direction.DOWN;
         attackableState = AttackableState.ALIVE;
         looted = false;
         gold = 2;
+        this.target = target;
+        timer = new Timer();
+        exp = 10;
+        hit = false;
+        damage = 0;
 
         defineMainCollider(8.f, 6.f, Constants.BIT_ENEMY, this);
 
@@ -78,6 +89,8 @@ public class Slime extends Sprite implements Attackable, Lootable {
     public void update(float dt) {
         super.update(dt);
 
+        timer.update(dt);
+
         if(hp <= 0) {
             hp = 0;
             attackableState = AttackableState.DEAD;
@@ -91,27 +104,37 @@ public class Slime extends Sprite implements Attackable, Lootable {
         }
 
         if(attackableState == AttackableState.ALIVE) {
+            if(target instanceof Attackable && ((Attackable) target).getAttackableState() == Attackable.AttackableState.ALIVE) {
+                Vector2 dir = new Vector2(target.body.getPosition()).sub(body.getPosition()).nor().scl(movementSpeed * 20);
+
+                if(!timer.isRunning()) {
+                    timer.start();
+                }
+
+                if(timer.getTime() >= 0.4f) {
+                    getBody().applyLinearImpulse(dir, getPosition(), true);
+                    timer.reset();
+                }
+            }
+
             Vector2 v = body.getLinearVelocity();
             if(v.x > 0 && v.y > 0) {
                 if(v.x > v.y) {
-                    currentAnimation = animations.get("walkRight");
-                    slimeState = SlimeStates.FACING_RIGHT;
+                    direction = Direction.RIGHT;
                 }
                 else {
-                    currentAnimation = animations.get("walkUp");
-                    slimeState = SlimeStates.FACING_UP;
+                    direction = Direction.UP;
                 }
             }
             else {
                 if(v.x < v.y) {
-                    currentAnimation = animations.get("walkLeft");
-                    slimeState = SlimeStates.FACING_LEFT;
+                    direction = Direction.LEFT;
                 }
                 else {
-                    currentAnimation = animations.get("walkDown");
-                    slimeState = SlimeStates.FACING_DOWN;
+                    direction = Direction.DOWN;
                 }
             }
+            currentAnimation = animations.get("walk" + direction);
         }
         else {
             currentAnimation = animations.get("dead");
@@ -121,6 +144,8 @@ public class Slime extends Sprite implements Attackable, Lootable {
     @Override
     public void hit(int damage) {
         hp -= damage;
+        this.damage = damage;
+        hit = true;
     }
 
     @Override
@@ -128,8 +153,12 @@ public class Slime extends Sprite implements Attackable, Lootable {
         return hp;
     }
 
-    public SlimeStates getSlimeState() {
-        return slimeState;
+    public int getExp() {
+        return exp;
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
     public AttackableState getAttackableState() {
@@ -163,7 +192,15 @@ public class Slime extends Sprite implements Attackable, Lootable {
         return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 12.f);
     }
 
-    public enum SlimeStates {
-        FACING_UP, FACING_DOWN, FACING_LEFT, FACING_RIGHT
+    public boolean isHit() {
+        return hit;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
+
+    public int getDamage() {
+        return damage;
     }
 }

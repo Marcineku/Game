@@ -21,7 +21,7 @@ public class MyContactListener implements ContactListener {
 
         playerLootCollision(fa, fb);
 
-        arrowEnemyCollision(fa, fb);
+        arrowEnemyCollision(fa, fb, wm);
     }
 
     @Override
@@ -56,15 +56,12 @@ public class MyContactListener implements ContactListener {
             if (((Attackable) player).getAttackableState() == Attackable.AttackableState.ALIVE &&
                     ((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE) {
                 float impulsePower = 200.f;
-                Vector2 n = wm.getNormal();
+                Vector2 n = wm.getNormal().nor().scl(impulsePower);
 
-                player.getBody().applyLinearImpulse(new Vector2(n.x * impulsePower,
-                        n.y * impulsePower), player.getBody().getPosition(), true);
-                enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
-                        -n.y * impulsePower), enemy.getBody().getPosition(), true);
+                player.getBody().applyLinearImpulse(n, player.getBody().getPosition(), true);
+                enemy.getBody().applyLinearImpulse(n.rotate(180), enemy.getBody().getPosition(), true);
 
                 ((Attackable) player).hit(10);
-                ((Attackable) enemy).hit(20);
 
                 MyGame.assets.getSound("hurt01").stop();
                 MyGame.assets.getSound("hurt01").play(0.2f);
@@ -121,7 +118,7 @@ public class MyContactListener implements ContactListener {
         }
     }
 
-    private void arrowEnemyCollision(Fixture fa, Fixture fb) {
+    private void arrowEnemyCollision(Fixture fa, Fixture fb, WorldManifold wm) {
         if ((fa.getFilterData().categoryBits == Constants.BIT_ARROW && fb.getFilterData().categoryBits == Constants.BIT_ENEMY) ||
                 (fb.getFilterData().categoryBits == Constants.BIT_ARROW && fa.getFilterData().categoryBits == Constants.BIT_ENEMY)) {
             Arrow arrow;
@@ -137,11 +134,11 @@ public class MyContactListener implements ContactListener {
 
             if (((Attackable) enemy).getAttackableState() == Attackable.AttackableState.ALIVE &&
                     arrow.isActive()) {
-                float impulsePower = 800.f;
+                float impulsePower = 250.f;
 
-                Vector2 n = new Vector2(arrow.getPosition().x - enemy.getPosition().x, arrow.getPosition().y - enemy.getPosition().y);
-                enemy.getBody().applyLinearImpulse(new Vector2(-n.x * impulsePower,
-                        -n.y * impulsePower), enemy.getBody().getPosition(), true);
+                Vector2 n = new Vector2(arrow.getArcher().getPosition()).sub(enemy.getPosition()).nor().scl(impulsePower);
+
+                enemy.getBody().applyLinearImpulse(n.rotate(180), enemy.getBody().getPosition(), true);
 
                 ((Attackable) enemy).hit(arrow.getDamage());
                 arrow.getBody().setLinearVelocity(0, 0);

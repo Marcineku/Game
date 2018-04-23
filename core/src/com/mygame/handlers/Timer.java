@@ -19,6 +19,7 @@ public class Timer {
 
     public void reset() {
         time = 0;
+        running = false;
     }
 
     public void start() {
@@ -27,5 +28,9 @@ public class Timer {
 
     public void stop() {
         running = false;
+    }
+
+    public boolean isRunning() {
+        return running;
     }
 }

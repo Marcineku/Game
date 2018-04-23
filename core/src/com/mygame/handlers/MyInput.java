@@ -39,4 +39,6 @@ public class MyInput {
     public static boolean isPressed(int i) {
         return keys[i] && !pkeys[i];
     }
+
+    public static boolean isReleased(int i) { return !keys[i] && pkeys[i]; }
 }
