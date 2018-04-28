@@ -200,6 +200,7 @@ public class Play extends GameState {
                         if(!((Lootable) s).isLooted()) {
                             lootToDrop.add(new Loot(world, s.getPosition().x * Constants.PPM, s.getPosition().y * Constants.PPM, ((Lootable) s).getGold()));
                             ((Lootable) s).setLooted(true);
+                            MyGame.assets.getSound("goldDrop").play();
                             //Increasing player's exp
                             player.addExp(((Attackable) s).getExp());
                             String exp = Integer.toString(((Attackable) s).getExp());
@@ -217,6 +218,7 @@ public class Play extends GameState {
             if(s instanceof Loot) {
                 Loot loot = (Loot) s;
                 if(loot.isLooted()) {
+                    events.add(new Event(sb, itemNameFont, "+" + ((Loot) s).getGold(), 3.f, s.getPosition().scl(Constants.PPM), Color.GOLD, 1/2.f, 0));
                     world.destroyBody(loot.getBody());
                     i.remove();
                 }
@@ -343,6 +345,14 @@ public class Play extends GameState {
                     ((Arrow) i).setHighlighted(false);
                 }
             }
+            if(i instanceof Loot) {
+                if(i.getFixture().testPoint(cursor.getBox2DPosition())) {
+                    ((Loot) i).setHighlighted(true);
+                }
+                else {
+                    ((Loot) i).setHighlighted(false);
+                }
+            }
         }
         sb.end();
 
@@ -367,17 +377,24 @@ public class Play extends GameState {
     public void handleInput() {
         //shooting arrows on click
         if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
+            player.setClickPoint(new Vector2(cursor.getPosition()));
             player.getTimer().start();
             MyGame.assets.getSound("bowPull").stop();
             MyGame.assets.getSound("bowPull").play();
+            player.setState(Player.State.PULLING_BOWSTRING);
         }
-        if(MyInput.isReleased(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
+
+        if(MyInput.isReleased(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn() && player.getState() == Player.State.PULLING_BOWSTRING) {
+            player.getCurrentAnimation().reset();
+            player.getCurrentWeaponAnim().reset();
+
+            player.setState(Player.State.IDLE);
             MyGame.assets.getSound("bowPull").stop();
             MyGame.assets.getSound("bow").play();
 
             float velocity = 120.f * player.getTimer().getTime();
 
-            int damage = MathUtils.clamp((int) velocity / 5,2, player.getWeaponEquipped().getDamage());
+            int damage = MathUtils.clamp((int) velocity / 5 + 10,2, player.getWeaponEquipped().getDamage());
 
             if(velocity > 100.f) {
                 velocity = 100.f;
@@ -392,11 +409,19 @@ public class Play extends GameState {
                     player.getBody().getAngle() + (float) Math.toRadians(90.f)
             );
 
-            Vector2 dir = new Vector2(cursor.getPosition()).sub(arrow.getPosition().scl(Constants.PPM)).nor().scl(velocity);
+            Vector2 dir = new Vector2(player.getClickPoint()).sub(arrow.getPosition().scl(Constants.PPM)).nor().scl(velocity);
             arrow.getBody().setLinearVelocity(dir);
             gameObjects.add(arrow);
 
             player.getTimer().reset();
+        }
+
+        //resetting player's state after he's not firing bow after pulling bowstring
+        if(MyInput.isPressed(MyInput.STRIKE2) && player.getState() == Player.State.PULLING_BOWSTRING) {
+            player.getCurrentAnimation().reset();
+            player.getCurrentWeaponAnim().reset();
+
+            player.setState(Player.State.IDLE);
         }
 
         //spawning slimes

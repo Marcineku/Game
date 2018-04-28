@@ -59,7 +59,7 @@ public class Animation {
         return currentFrame;
     }
 
-    public void Synchronize(Animation anim) {
+    public void synchronize(Animation anim) {
         this.time = anim.getTime();
         this.currentFrame = anim.getCurrentFrame();
     }
@@ -102,5 +102,11 @@ public class Animation {
         for(int i = 0; i < frames.length; ++i) {
             frames[i] = tmp[j--];
         }
+    }
+
+    public void reset() {
+        time         = 0;
+        currentFrame = 0;
+        ended = false;
     }
 }

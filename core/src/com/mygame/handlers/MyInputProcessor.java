@@ -104,6 +104,10 @@ public class MyInputProcessor extends InputAdapter {
             MyInput.setKey(MyInput.STRIKE, true);
         }
 
+        if(button == Input.Buttons.RIGHT) {
+            MyInput.setKey(MyInput.STRIKE2, true);
+        }
+
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
@@ -111,6 +115,10 @@ public class MyInputProcessor extends InputAdapter {
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
         if(button == Input.Buttons.LEFT) {
             MyInput.setKey(MyInput.STRIKE, false);
+        }
+
+        if(button == Input.Buttons.RIGHT) {
+            MyInput.setKey(MyInput.STRIKE2, false);
         }
 
         return super.touchUp(screenX, screenY, pointer, button);

@@ -37,6 +37,7 @@ public class Player extends Sprite implements Attackable {
     private int             exp;
     private int             damage;
     private boolean         hit;
+    private Vector2         clickPoint;
 
     public Player(World world, float positionX, float positionY, Cursor cursor) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 6.f, world, 0.f, 25.f, 0.25f);
@@ -64,6 +65,7 @@ public class Player extends Sprite implements Attackable {
         exp = 0;
         damage = 0;
         hit = false;
+        clickPoint = new Vector2();
 
         defineMainCollider(6.f, Constants.BIT_PLAYER, this);
 
@@ -92,6 +94,12 @@ public class Player extends Sprite implements Attackable {
 
         //Animation of drawn bow while running
         addDirectionalAnimation("bowDrawnRun", MyGame.assets.getTexture("bowDrawnManRun"), 8, 0.09f);
+
+        //Animation of player pulling bowstring
+        addDirectionalAnimation("bodyManBowPull", MyGame.assets.getTexture("bodyManBowPull"), 3, 0.1f, false);
+
+        //Animation of bow being pulled
+        addDirectionalAnimation("bowPullMan", MyGame.assets.getTexture("bowPullMan"), 3, 0.1f, false);
 
         TextureRegion[] dead = new TextureRegion[1];
         dead[0] = getCurrentAnimation().getFrame();
@@ -126,6 +134,15 @@ public class Player extends Sprite implements Attackable {
             body.setTransform(body.getPosition(), desiredAngle);
         }
 
+        //Animating player while he's shooting arrows
+        if(attackableState == AttackableState.ALIVE && state == State.PULLING_BOWSTRING && weaponEquipped != null && weaponEquipped.getItemName().equals(Constants.ITEM_BOW)) {
+            walkingSound.stop();
+
+            currentAnimation = animations.get("bodyManBowPull" + direction);
+            currentWeaponAnim = animations.get("bowPullMan" + direction);
+            currentWeaponAnim.synchronize(currentAnimation);
+        }
+
         //Drawing or hiding weapon
         if(MyInput.isPressed(MyInput.DRAW) && attackableState == AttackableState.ALIVE && state == State.IDLE && weaponEquipped != null && weaponEquipped.getItemName().equals(Constants.ITEM_BOW)) {
             state = State.DRAWING_BOW;
@@ -144,7 +161,7 @@ public class Player extends Sprite implements Attackable {
 
             if(weaponEquipped != null) {
                 currentWeaponAnim = animations.get("bowDrawManIdle" + direction + reverse);
-                currentWeaponAnim.Synchronize(currentAnimation);
+                currentWeaponAnim.synchronize(currentAnimation);
             }
         }
 
@@ -205,7 +222,7 @@ public class Player extends Sprite implements Attackable {
                     currentWeaponAnim = animations.get(weaponEquipped + "BackRun" + direction);
                 }
 
-                currentWeaponAnim.Synchronize(currentAnimation);
+                currentWeaponAnim.synchronize(currentAnimation);
             }
 
             if(!MyInput.isDown(MyInput.STRIKE) && strike && timer.getTime() >= 0.5f) {
@@ -231,7 +248,7 @@ public class Player extends Sprite implements Attackable {
                         currentWeaponAnim = animations.get(weaponEquipped + "BackIdle" + direction);
                     }
 
-                    currentWeaponAnim.Synchronize(currentAnimation);
+                    currentWeaponAnim.synchronize(currentAnimation);
                 }
 
                 walkingSound.stop();
@@ -286,6 +303,10 @@ public class Player extends Sprite implements Attackable {
         return strike;
     }
 
+    public Animation getCurrentWeaponAnim() {
+        return currentWeaponAnim;
+    }
+
     public int getGold() {
         return gold;
     }
@@ -321,7 +342,7 @@ public class Player extends Sprite implements Attackable {
     }
 
     public enum State {
-        DRAWING_BOW, IDLE
+        DRAWING_BOW, IDLE, PULLING_BOWSTRING
     }
 
     public void setWeaponEquipped(Item weapon) {
@@ -412,5 +433,21 @@ public class Player extends Sprite implements Attackable {
     @Override
     public int getDamage() {
         return damage;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public Vector2 getClickPoint() {
+        return clickPoint;
+    }
+
+    public void setClickPoint(Vector2 clickPoint) {
+        this.clickPoint = clickPoint;
     }
 }

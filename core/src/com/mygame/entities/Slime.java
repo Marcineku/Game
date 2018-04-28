@@ -11,6 +11,8 @@ import com.mygame.handlers.Timer;
 import com.mygame.interfaces.Attackable;
 import com.mygame.interfaces.Lootable;
 
+import java.util.Random;
+
 public class Slime extends Sprite implements Attackable, Lootable {
     private int hp;
     private int maxHp;
@@ -19,11 +21,12 @@ public class Slime extends Sprite implements Attackable, Lootable {
     private float movementSpeed;
     private float maxMovementSpeed;
     private boolean looted;
-    private int gold;
+    private int minGold;
+    private int maxGold;
     private Sprite target;
     private Timer timer;
     private int exp;
-    boolean hit;
+    private boolean hit;
     private int damage;
 
     public Slime(float positionX, float positionY, World world, Sprite target) {
@@ -37,7 +40,8 @@ public class Slime extends Sprite implements Attackable, Lootable {
         direction = Direction.DOWN;
         attackableState = AttackableState.ALIVE;
         looted = false;
-        gold = 2;
+        minGold = 1;
+        maxGold = 3;
         this.target = target;
         timer = new Timer();
         exp = 10;
@@ -174,7 +178,8 @@ public class Slime extends Sprite implements Attackable, Lootable {
     }
 
     public int getGold() {
-        return gold;
+        Random generator = new Random();
+        return generator.nextInt(maxGold) + minGold;
     }
 
     @Override

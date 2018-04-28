@@ -4,7 +4,7 @@ public class MyInput {
     public static boolean[] keys;
     public static boolean[] pkeys;
 
-    public static final int NUM_KEYS = 11;
+    public static final int NUM_KEYS = 12;
     public static final int UP       = 0;
     public static final int DOWN     = 1;
     public static final int LEFT     = 2;
@@ -16,6 +16,7 @@ public class MyInput {
     public static final int PICK     = 8;
     public static final int EQ       = 9;
     public static final int DRAW     = 10;
+    public static final int STRIKE2  = 11;
 
     static {
         keys = new boolean[NUM_KEYS];

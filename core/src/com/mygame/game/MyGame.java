@@ -59,6 +59,9 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadTexture("images\\bodyLegsIdle.png", "bodyLegsIdle");
 		assets.loadTexture("images\\bowDrawnManIdle.png", "bowDrawnManIdle");
 		assets.loadTexture("images\\bowDrawnManRun.png", "bowDrawnManRun");
+		assets.loadTexture("images\\bodyManBowPull.png", "bodyManBowPull");
+		assets.loadTexture("images\\bowPullMan.png", "bowPullMan");
+		assets.loadTexture("images\\gold.png", "gold");
 
 		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");
@@ -74,6 +77,7 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadSound("sfx\\pickup.wav", "pickup");
 		assets.loadSound("sfx\\bowPull.wav", "bowPull");
 		assets.loadSound("sfx\\bowDraw.ogg", "bowDraw");
+		assets.loadSound("sfx\\goldDrop.ogg", "goldDrop");
 
 		assets.loadParticleEffect("particles\\fire", "fire");
 
