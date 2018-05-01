@@ -7,18 +7,205 @@
   </component>
   <component name="BookmarkManager">
     <bookmark url="file://$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java" line="32" />
-    <bookmark url="file://$PROJECT_DIR$/core/src/com/mygame/states/Play.java" line="206" />
+    <bookmark url="file://$PROJECT_DIR$/core/src/com/mygame/states/Play.java" line="211" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="de4bc1ea-0ba6-4fa8-a11a-4e6c8ebe4efb" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/Game.iws" afterPath="$PROJECT_DIR$/Game.iws" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/mygame/entities/Loot.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/entities/Loot.java" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/background.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/bodyFleshIdle.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/bodyLegsIdle.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/bodyMaleTorsoIdle.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/grass.jpg" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/hud.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/princeRanger.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/images/sword.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/README" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/BELT_leather.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/BELT_rope.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/BODY_animation.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/FEET_plate_armor_shoes.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/FEET_shoes_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HANDS_plate_armor_gloves.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HEAD_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HEAD_chain_armor_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HEAD_hair_blonde.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HEAD_leather_armor_hat.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HEAD_plate_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/HEAD_robe_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/LEGS_pants_greenish.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/LEGS_plate_armor_pants.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/LEGS_robe_skirt.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_chain_armor_jacket_purple.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_chain_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_leather_armor_bracers.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_leather_armor_shirt_white.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_leather_armor_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_leather_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_plate_armor_arms_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_plate_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/TORSO_robe_shirt_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/WEAPON_arrow.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/bow/WEAPON_bow.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/combat_dummy/BODY_animation.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/armored_skeleton_slash.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/chain_armor.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/chain_armor_bandit.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/combat_dummy.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/dark_skinned_knight.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/leather_armor.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/mixed_metal.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/naked_bowman.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/naked_thrust_staff.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/orange_recolor_monk.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/plate_armor.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/robe.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/robed_skeleton_spellcast.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/robin_hoodlike.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/simple_clothes.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/examples/skeleton.gif" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/BEHIND_quiver.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/BELT_leather.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/BELT_rope.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/BODY_male.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/BODY_skeleton.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/FEET_plate_armor_shoes.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/FEET_shoes_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HANDS_plate_armor_gloves.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HEAD_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HEAD_chain_armor_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HEAD_hair_blonde.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HEAD_leather_armor_hat.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HEAD_plate_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/HEAD_robe_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/LEGS_pants_greenish.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/LEGS_plate_armor_pants.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/LEGS_robe_skirt.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_chain_armor_jacket_purple.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_chain_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_leather_armor_bracers.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_leather_armor_shirt_white.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_leather_armor_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_leather_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_plate_armor_arms_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_plate_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/hurt/TORSO_robe_shirt_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/BEHIND_quiver.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/BELT_leather.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/BELT_rope.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/BODY_human.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/BODY_skeleton.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/FEET_plate_armor_shoes.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/FEET_shoes_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HANDS_plate_armor_gloves.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HEAD_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HEAD_chain_armor_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HEAD_hair_blonde.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HEAD_leather_armor_hat.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HEAD_plate_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/HEAD_robe_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/LEGS_pants_greenish.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/LEGS_plate_armor_pants.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/LEGS_robe_skirt.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_chain_armor_jacket_purple.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_chain_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_leather_armor_bracers.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_leather_armor_shirt_white.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_leather_armor_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_leather_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_plate_armor_arms_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_plate_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/TORSO_robe_shirt_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/slash/WEAPON_dagger.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/BEHIND_quiver.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/BELT_leather.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/BELT_rope.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/BODY_male.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/BODY_skeleton.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/FEET_plate_armor_shoes.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/FEET_shoes_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HANDS_plate_armor_gloves.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_chain_armor_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_hair_blonde.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_leather_armor_hat.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_plate_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_robe_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/HEAD_skeleton_eye_glow.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/LEGS_pants_greenish.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/LEGS_plate_armor_pants.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/LEGS_robe_skirt.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_chain_armor_jacket_purple.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_chain_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_leather_armor_bracers.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_leather_armor_shirt_white.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_leather_armor_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_leather_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_plate_armor_arms_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_plate_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/spellcast/TORSO_robe_shirt_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/BEHIND_quiver.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/BELT_leather.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/BELT_rope.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/BODY_animation.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/FEET_plate_armor_shoes.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/FEET_shoes_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HANDS_plate_armor_gloves.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HEAD_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HEAD_chain_armor_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HEAD_hair_blonde.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HEAD_leather_armor_hat.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HEAD_plate_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/HEAD_robe_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/LEGS_pants_greenish.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/LEGS_plate_armor_pants.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/LEGS_robe_skirt.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_chain_armor_jacket_purple.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_chain_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_leather_armor_bracers.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_leather_armor_shirt_white.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_leather_armor_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_leather_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_plate_armor_arms_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_plate_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/TORSO_robe_shirt_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/WEAPON_shield_cutout_body.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/WEAPON_shield_cutout_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/WEAPON_spear.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/thrust/WEAPON_staff.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/BEHIND_quiver.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/BELT_leather.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/BELT_rope.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/BODY_male.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/BODY_skeleton.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/FEET_plate_armor_shoes.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/FEET_shoes_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HANDS_plate_armor_gloves.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HEAD_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HEAD_chain_armor_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HEAD_hair_blonde.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HEAD_leather_armor_hat.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HEAD_plate_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/HEAD_robe_hood.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/LEGS_pants_greenish.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/LEGS_plate_armor_pants.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/LEGS_robe_skirt.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_chain_armor_jacket_purple.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_chain_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_leather_armor_bracers.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_leather_armor_shirt_white.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_leather_armor_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_leather_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_plate_armor_arms_shoulders.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_plate_armor_torso.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/TORSO_robe_shirt_brown.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/WEAPON_shield_cutout_body.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/walkcycle/WEAPON_shield_cutout_chain_armor_helmet.png" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/xcf/combat_dummy_sprites.xcf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/xcf/male_sprites.xcf" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/core/assets/lpc_entry/xcf/skeleton_sprites.xcf" afterPath="" />
       <change beforePath="$PROJECT_DIR$/core/src/com/mygame/entities/Player.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/entities/Player.java" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/mygame/entities/Slime.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/entities/Slime.java" />
       <change beforePath="$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/mygame/handlers/Animation.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/handlers/Animation.java" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/mygame/handlers/MyInput.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/handlers/MyInput.java" />
-      <change beforePath="$PROJECT_DIR$/core/src/com/mygame/handlers/MyInputProcessor.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/handlers/MyInputProcessor.java" />
       <change beforePath="$PROJECT_DIR$/core/src/com/mygame/states/Play.java" afterPath="$PROJECT_DIR$/core/src/com/mygame/states/Play.java" />
     </list>
     <ignored path="$PROJECT_DIR$/desktop/.gradle/" />
@@ -95,158 +282,157 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Player.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3028">
-              <caret line="278" column="21" lean-forward="true" selection-start-line="278" selection-start-column="21" selection-end-line="278" selection-end-column="21" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#10744#10745#0" expanded="true" />
-                <element signature="e#10769#10770#0" expanded="true" />
-                <element signature="e#10986#10987#0" expanded="true" />
-                <element signature="e#11018#11019#0" expanded="true" />
-                <element signature="e#11069#11070#0" expanded="true" />
-                <element signature="e#11107#11108#0" expanded="true" />
-                <element signature="e#11140#11141#0" expanded="true" />
-                <element signature="e#11169#11170#0" expanded="true" />
-                <element signature="e#11216#11217#0" expanded="true" />
-                <element signature="e#11256#11257#0" expanded="true" />
-                <element signature="e#11284#11285#0" expanded="true" />
-                <element signature="e#11311#11312#0" expanded="true" />
-                <element signature="e#11349#11350#0" expanded="true" />
-                <element signature="e#11382#11383#0" expanded="true" />
-                <element signature="e#11687#11688#0" expanded="true" />
-                <element signature="e#11721#11722#0" expanded="true" />
-                <element signature="e#11748#11749#0" expanded="true" />
-                <element signature="e#11775#11776#0" expanded="true" />
-                <element signature="e#11805#11806#0" expanded="true" />
-                <element signature="e#11834#11835#0" expanded="true" />
-                <element signature="e#11865#11866#0" expanded="true" />
-                <element signature="e#11892#11893#0" expanded="true" />
-                <element signature="e#12018#12019#0" expanded="true" />
-                <element signature="e#12062#12063#0" expanded="true" />
-                <element signature="e#12101#12102#0" expanded="true" />
-                <element signature="e#12138#12139#0" expanded="true" />
-                <element signature="e#12177#12178#0" expanded="true" />
-                <element signature="e#12208#12209#0" expanded="true" />
-                <element signature="e#12249#12250#0" expanded="true" />
-                <element signature="e#12277#12278#0" expanded="true" />
-                <element signature="e#12315#12316#0" expanded="true" />
-                <element signature="e#12349#12350#0" expanded="true" />
-                <element signature="e#14591#14592#0" expanded="true" />
-                <element signature="e#14617#14618#0" expanded="true" />
-                <element signature="e#14652#14653#0" expanded="true" />
-                <element signature="e#14683#14684#0" expanded="true" />
-                <element signature="e#14714#14715#0" expanded="true" />
-                <element signature="e#14742#14743#0" expanded="true" />
-                <element signature="e#14786#14787#0" expanded="true" />
-                <element signature="e#14812#14813#0" expanded="true" />
-                <element signature="e#14865#14866#0" expanded="true" />
-                <element signature="e#14895#14896#0" expanded="true" />
-                <element signature="e#14939#14940#0" expanded="true" />
-                <element signature="e#14968#14969#0" expanded="true" />
-                <element signature="e#15009#15010#0" expanded="true" />
-                <element signature="e#15043#15044#0" expanded="true" />
-                <element signature="e#15074#15075#0" expanded="true" />
-                <element signature="e#15102#15103#0" expanded="true" />
-                <element signature="e#15140#15141#0" expanded="true" />
-                <element signature="e#15173#15174#0" expanded="true" />
-                <element signature="e#15226#15227#0" expanded="true" />
-                <element signature="e#15270#15271#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Play.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/states/Play.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="690">
-              <caret line="220" column="151" lean-forward="false" selection-start-line="220" selection-start-column="151" selection-end-line="220" selection-end-column="151" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Slime.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Slime.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="799">
-              <caret line="181" column="52" lean-forward="false" selection-start-line="181" selection-start-column="52" selection-end-line="181" selection-end-column="52" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Arrow.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Arrow.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="354">
-              <caret line="39" column="8" lean-forward="true" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="59" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MyGame.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="800">
-              <caret line="79" column="43" lean-forward="false" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Loot.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Loot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="136">
-              <caret line="16" column="43" lean-forward="true" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-              <folding>
-                <element signature="e#2339#2340#0" expanded="true" />
-                <element signature="e#2368#2369#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Constants.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/Constants.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MyInputProcessor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyInputProcessor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="507">
-              <caret line="120" column="51" lean-forward="true" selection-start-line="120" selection-start-column="51" selection-end-line="120" selection-end-column="51" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Animation.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/Animation.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="612">
-              <caret line="109" column="22" lean-forward="false" selection-start-line="109" selection-start-column="22" selection-end-line="109" selection-end-column="22" />
-              <folding>
-                <element signature="e#1132#1133#0" expanded="true" />
-                <element signature="e#1175#1176#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <splitter split-orientation="horizontal" split-proportion="0.6666667">
+      <split-first>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="Player.java" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Player.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2601">
+                  <caret line="165" column="2" lean-forward="false" selection-start-line="165" selection-start-column="2" selection-end-line="165" selection-end-column="2" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#11629#11630#0" expanded="true" />
+                    <element signature="e#11654#11655#0" expanded="true" />
+                    <element signature="e#11871#11872#0" expanded="true" />
+                    <element signature="e#11903#11904#0" expanded="true" />
+                    <element signature="e#11954#11955#0" expanded="true" />
+                    <element signature="e#11992#11993#0" expanded="true" />
+                    <element signature="e#12025#12026#0" expanded="true" />
+                    <element signature="e#12054#12055#0" expanded="true" />
+                    <element signature="e#12101#12102#0" expanded="true" />
+                    <element signature="e#12141#12142#0" expanded="true" />
+                    <element signature="e#12169#12170#0" expanded="true" />
+                    <element signature="e#12196#12197#0" expanded="true" />
+                    <element signature="e#12234#12235#0" expanded="true" />
+                    <element signature="e#12267#12268#0" expanded="true" />
+                    <element signature="e#12572#12573#0" expanded="true" />
+                    <element signature="e#12606#12607#0" expanded="true" />
+                    <element signature="e#12633#12634#0" expanded="true" />
+                    <element signature="e#12660#12661#0" expanded="true" />
+                    <element signature="e#12690#12691#0" expanded="true" />
+                    <element signature="e#12719#12720#0" expanded="true" />
+                    <element signature="e#12750#12751#0" expanded="true" />
+                    <element signature="e#12777#12778#0" expanded="true" />
+                    <element signature="e#12912#12913#0" expanded="true" />
+                    <element signature="e#12956#12957#0" expanded="true" />
+                    <element signature="e#12995#12996#0" expanded="true" />
+                    <element signature="e#13032#13033#0" expanded="true" />
+                    <element signature="e#13071#13072#0" expanded="true" />
+                    <element signature="e#13102#13103#0" expanded="true" />
+                    <element signature="e#13143#13144#0" expanded="true" />
+                    <element signature="e#13171#13172#0" expanded="true" />
+                    <element signature="e#13209#13210#0" expanded="true" />
+                    <element signature="e#13243#13244#0" expanded="true" />
+                    <element signature="e#15485#15486#0" expanded="true" />
+                    <element signature="e#15511#15512#0" expanded="true" />
+                    <element signature="e#15546#15547#0" expanded="true" />
+                    <element signature="e#15577#15578#0" expanded="true" />
+                    <element signature="e#15608#15609#0" expanded="true" />
+                    <element signature="e#15636#15637#0" expanded="true" />
+                    <element signature="e#15680#15681#0" expanded="true" />
+                    <element signature="e#15706#15707#0" expanded="true" />
+                    <element signature="e#15759#15760#0" expanded="true" />
+                    <element signature="e#15789#15790#0" expanded="true" />
+                    <element signature="e#15833#15834#0" expanded="true" />
+                    <element signature="e#15862#15863#0" expanded="true" />
+                    <element signature="e#15903#15904#0" expanded="true" />
+                    <element signature="e#15937#15938#0" expanded="true" />
+                    <element signature="e#15968#15969#0" expanded="true" />
+                    <element signature="e#15996#15997#0" expanded="true" />
+                    <element signature="e#16034#16035#0" expanded="true" />
+                    <element signature="e#16067#16068#0" expanded="true" />
+                    <element signature="e#16120#16121#0" expanded="true" />
+                    <element signature="e#16164#16165#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Play.java" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/core/src/com/mygame/states/Play.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="391">
+                  <caret line="322" column="17" lean-forward="false" selection-start-line="322" selection-start-column="17" selection-end-line="322" selection-end-column="17" />
+                  <folding>
+                    <element signature="e#6717#6723#0" expanded="true" />
+                    <element signature="method#dispose#0;class#Play#0" expanded="false" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-first>
+      <split-second>
+        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+          <file leaf-file-name="Player.java" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Player.java">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="469">
+                  <caret line="420" column="16" lean-forward="false" selection-start-line="420" selection-start-column="0" selection-end-line="421" selection-end-column="0" />
+                  <folding>
+                    <element signature="imports" expanded="true" />
+                    <element signature="e#11629#11630#0" expanded="true" />
+                    <element signature="e#11654#11655#0" expanded="true" />
+                    <element signature="e#11871#11872#0" expanded="true" />
+                    <element signature="e#11903#11904#0" expanded="true" />
+                    <element signature="e#11954#11955#0" expanded="true" />
+                    <element signature="e#11992#11993#0" expanded="true" />
+                    <element signature="e#12025#12026#0" expanded="true" />
+                    <element signature="e#12054#12055#0" expanded="true" />
+                    <element signature="e#12101#12102#0" expanded="true" />
+                    <element signature="e#12141#12142#0" expanded="true" />
+                    <element signature="e#12169#12170#0" expanded="true" />
+                    <element signature="e#12196#12197#0" expanded="true" />
+                    <element signature="e#12234#12235#0" expanded="true" />
+                    <element signature="e#12267#12268#0" expanded="true" />
+                    <element signature="e#12572#12573#0" expanded="true" />
+                    <element signature="e#12606#12607#0" expanded="true" />
+                    <element signature="e#12633#12634#0" expanded="true" />
+                    <element signature="e#12660#12661#0" expanded="true" />
+                    <element signature="e#12690#12691#0" expanded="true" />
+                    <element signature="e#12719#12720#0" expanded="true" />
+                    <element signature="e#12750#12751#0" expanded="true" />
+                    <element signature="e#12777#12778#0" expanded="true" />
+                    <element signature="e#12912#12913#0" expanded="true" />
+                    <element signature="e#12956#12957#0" expanded="true" />
+                    <element signature="e#12995#12996#0" expanded="true" />
+                    <element signature="e#13032#13033#0" expanded="true" />
+                    <element signature="e#13071#13072#0" expanded="true" />
+                    <element signature="e#13102#13103#0" expanded="true" />
+                    <element signature="e#13143#13144#0" expanded="true" />
+                    <element signature="e#13171#13172#0" expanded="true" />
+                    <element signature="e#13209#13210#0" expanded="true" />
+                    <element signature="e#13243#13244#0" expanded="true" />
+                    <element signature="e#15485#15486#0" expanded="true" />
+                    <element signature="e#15511#15512#0" expanded="true" />
+                    <element signature="e#15546#15547#0" expanded="true" />
+                    <element signature="e#15577#15578#0" expanded="true" />
+                    <element signature="e#15608#15609#0" expanded="true" />
+                    <element signature="e#15636#15637#0" expanded="true" />
+                    <element signature="e#15680#15681#0" expanded="true" />
+                    <element signature="e#15706#15707#0" expanded="true" />
+                    <element signature="e#15759#15760#0" expanded="true" />
+                    <element signature="e#15789#15790#0" expanded="true" />
+                    <element signature="e#15833#15834#0" expanded="true" />
+                    <element signature="e#15862#15863#0" expanded="true" />
+                    <element signature="e#15903#15904#0" expanded="true" />
+                    <element signature="e#15937#15938#0" expanded="true" />
+                    <element signature="e#15968#15969#0" expanded="true" />
+                    <element signature="e#15996#15997#0" expanded="true" />
+                    <element signature="e#16034#16035#0" expanded="true" />
+                    <element signature="e#16067#16068#0" expanded="true" />
+                    <element signature="e#16120#16121#0" expanded="true" />
+                    <element signature="e#16164#16165#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+        </leaf>
+      </split-second>
+    </splitter>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -1007,13 +1193,13 @@
         <option value="$PROJECT_DIR$/core/src/com/mygame/entities/Event.java" />
         <option value="$PROJECT_DIR$/core/src/com/mygame/interfaces/Attackable.java" />
         <option value="$PROJECT_DIR$/core/src/com/mygame/handlers/Animation.java" />
-        <option value="$PROJECT_DIR$/core/src/com/mygame/entities/Player.java" />
         <option value="$PROJECT_DIR$/core/src/com/mygame/handlers/MyInput.java" />
         <option value="$PROJECT_DIR$/core/src/com/mygame/handlers/MyInputProcessor.java" />
-        <option value="$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java" />
         <option value="$PROJECT_DIR$/core/src/com/mygame/entities/Loot.java" />
-        <option value="$PROJECT_DIR$/core/src/com/mygame/states/Play.java" />
         <option value="$PROJECT_DIR$/core/src/com/mygame/entities/Slime.java" />
+        <option value="$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java" />
+        <option value="$PROJECT_DIR$/core/src/com/mygame/entities/Player.java" />
+        <option value="$PROJECT_DIR$/core/src/com/mygame/states/Play.java" />
       </list>
     </option>
   </component>
@@ -1218,9 +1404,9 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scratches" />
       <pane id="Scope" />
       <pane id="AndroidView" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -1497,11 +1683,13 @@
       <workItem from="1524640692124" duration="2692000" />
       <workItem from="1524850150850" duration="4996000" />
       <workItem from="1524918244804" duration="10524000" />
+      <workItem from="1524987426321" duration="19294000" />
+      <workItem from="1525080668310" duration="2683000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="396143000" />
+    <option name="totallyTimeSpent" value="418120000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -1521,7 +1709,6 @@
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1921875" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32873806" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3296875" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1535,6 +1722,7 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Build" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32873806" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1606,33 +1794,17 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="10" />
+      <option name="time" value="12" />
     </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_162/src.zip!/java/util/ArrayList.java" />
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_51/src.zip!/java/util/ArrayList.java" />
-    <entry file="file://$PROJECT_DIR$/core/assets/images/sword.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/images/hud.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/images/grass.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/images/background.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/images/sword.png" />
+    <entry file="file://$PROJECT_DIR$/core/assets/images/hud.png" />
+    <entry file="file://$PROJECT_DIR$/core/assets/images/grass.jpg" />
+    <entry file="file://$PROJECT_DIR$/core/assets/images/background.png" />
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.8/bac17f395be5010619b31280fe84e9f53118d0b9/gdx-1.9.8-sources.jar!/com/badlogic/gdx/utils/BufferUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="258">
@@ -1661,11 +1833,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/images/princeRanger.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/images/princeRanger.png" />
     <entry file="file://$PROJECT_DIR$/core/assets/images/characters.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -1720,11 +1888,7 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/assets/lpc_entry/examples/naked_bowman.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/core/assets/lpc_entry/examples/naked_bowman.gif" />
     <entry file="file://$PROJECT_DIR$/gradlew">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="578">
@@ -1757,13 +1921,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/Content.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="292">
-          <caret line="39" column="48" lean-forward="true" selection-start-line="39" selection-start-column="48" selection-end-line="39" selection-end-column="48" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/core/assets/images/bowDrawManIdle.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -1785,10 +1942,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="425">
           <caret line="33" column="8" lean-forward="false" selection-start-line="33" selection-start-column="8" selection-end-line="33" selection-end-column="23" />
-          <folding>
-            <element signature="e#528#529#0" expanded="false" />
-            <element signature="e#558#559#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1812,11 +1965,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
           <caret line="13" column="29" lean-forward="true" selection-start-line="13" selection-start-column="29" selection-end-line="13" selection-end-column="29" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#1487#1488#0" expanded="false" />
-            <element signature="e#1516#1517#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1825,41 +1973,10 @@
         <state />
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/Animation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="109" column="22" lean-forward="false" selection-start-line="109" selection-start-column="22" selection-end-line="109" selection-end-column="22" />
-          <folding>
-            <element signature="e#1132#1133#0" expanded="true" />
-            <element signature="e#1175#1176#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.badlogicgames.gdx/gdx/1.9.8/bac17f395be5010619b31280fe84e9f53118d0b9/gdx-1.9.8-sources.jar!/com/badlogic/gdx/math/Vector2.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="265">
           <caret line="54" column="0" lean-forward="true" selection-start-line="54" selection-start-column="0" selection-end-line="54" selection-end-column="0" />
-          <folding>
-            <element signature="e#1795#1796#0" expanded="true" />
-            <element signature="e#1808#1809#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyInput.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="42" lean-forward="true" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyInputProcessor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="507">
-          <caret line="120" column="51" lean-forward="true" selection-start-line="120" selection-start-column="51" selection-end-line="120" selection-end-column="51" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1885,6 +2002,36 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="453">
           <caret line="53" column="19" lean-forward="true" selection-start-line="53" selection-start-column="19" selection-end-line="53" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyContactListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-54">
+          <caret line="114" column="44" lean-forward="true" selection-start-line="114" selection-start-column="44" selection-end-line="114" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/Content.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="21" column="0" lean-forward="false" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Arrow.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="235">
+          <caret line="32" column="28" lean-forward="true" selection-start-line="32" selection-start-column="28" selection-end-line="32" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Slime.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2686">
+          <caret line="181" column="52" lean-forward="false" selection-start-line="181" selection-start-column="52" selection-end-line="181" selection-end-column="52" />
           <folding />
         </state>
       </provider>
@@ -1897,116 +2044,113 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/Animation.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="109" column="22" lean-forward="false" selection-start-line="109" selection-start-column="22" selection-end-line="109" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Loot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="16" column="43" lean-forward="true" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-          <folding>
-            <element signature="e#2339#2340#0" expanded="true" />
-            <element signature="e#2368#2369#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="272">
+          <caret line="24" column="28" lean-forward="true" selection-start-line="24" selection-start-column="28" selection-end-line="24" selection-end-column="28" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyInputProcessor.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="800">
-          <caret line="79" column="43" lean-forward="false" selection-start-line="79" selection-start-column="43" selection-end-line="79" selection-end-column="43" />
-          <folding />
+        <state relative-caret-position="1686">
+          <caret line="120" column="51" lean-forward="false" selection-start-line="120" selection-start-column="51" selection-end-line="120" selection-end-column="51" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/states/Play.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyInput.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="690">
-          <caret line="220" column="151" lean-forward="false" selection-start-line="220" selection-start-column="151" selection-end-line="220" selection-end-column="151" />
+        <state relative-caret-position="306">
+          <caret line="18" column="42" lean-forward="true" selection-start-line="18" selection-start-column="42" selection-end-line="18" selection-end-column="42" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Player.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3028">
-          <caret line="278" column="21" lean-forward="true" selection-start-line="278" selection-start-column="21" selection-end-line="278" selection-end-column="21" />
+        <state relative-caret-position="469">
+          <caret line="420" column="16" lean-forward="false" selection-start-line="420" selection-start-column="0" selection-end-line="421" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#10744#10745#0" expanded="true" />
-            <element signature="e#10769#10770#0" expanded="true" />
-            <element signature="e#10986#10987#0" expanded="true" />
-            <element signature="e#11018#11019#0" expanded="true" />
-            <element signature="e#11069#11070#0" expanded="true" />
-            <element signature="e#11107#11108#0" expanded="true" />
-            <element signature="e#11140#11141#0" expanded="true" />
-            <element signature="e#11169#11170#0" expanded="true" />
-            <element signature="e#11216#11217#0" expanded="true" />
-            <element signature="e#11256#11257#0" expanded="true" />
-            <element signature="e#11284#11285#0" expanded="true" />
-            <element signature="e#11311#11312#0" expanded="true" />
-            <element signature="e#11349#11350#0" expanded="true" />
-            <element signature="e#11382#11383#0" expanded="true" />
-            <element signature="e#11687#11688#0" expanded="true" />
-            <element signature="e#11721#11722#0" expanded="true" />
-            <element signature="e#11748#11749#0" expanded="true" />
-            <element signature="e#11775#11776#0" expanded="true" />
-            <element signature="e#11805#11806#0" expanded="true" />
-            <element signature="e#11834#11835#0" expanded="true" />
-            <element signature="e#11865#11866#0" expanded="true" />
-            <element signature="e#11892#11893#0" expanded="true" />
-            <element signature="e#12018#12019#0" expanded="true" />
-            <element signature="e#12062#12063#0" expanded="true" />
+            <element signature="e#11629#11630#0" expanded="true" />
+            <element signature="e#11654#11655#0" expanded="true" />
+            <element signature="e#11871#11872#0" expanded="true" />
+            <element signature="e#11903#11904#0" expanded="true" />
+            <element signature="e#11954#11955#0" expanded="true" />
+            <element signature="e#11992#11993#0" expanded="true" />
+            <element signature="e#12025#12026#0" expanded="true" />
+            <element signature="e#12054#12055#0" expanded="true" />
             <element signature="e#12101#12102#0" expanded="true" />
-            <element signature="e#12138#12139#0" expanded="true" />
-            <element signature="e#12177#12178#0" expanded="true" />
-            <element signature="e#12208#12209#0" expanded="true" />
-            <element signature="e#12249#12250#0" expanded="true" />
-            <element signature="e#12277#12278#0" expanded="true" />
-            <element signature="e#12315#12316#0" expanded="true" />
-            <element signature="e#12349#12350#0" expanded="true" />
-            <element signature="e#14591#14592#0" expanded="true" />
-            <element signature="e#14617#14618#0" expanded="true" />
-            <element signature="e#14652#14653#0" expanded="true" />
-            <element signature="e#14683#14684#0" expanded="true" />
-            <element signature="e#14714#14715#0" expanded="true" />
-            <element signature="e#14742#14743#0" expanded="true" />
-            <element signature="e#14786#14787#0" expanded="true" />
-            <element signature="e#14812#14813#0" expanded="true" />
-            <element signature="e#14865#14866#0" expanded="true" />
-            <element signature="e#14895#14896#0" expanded="true" />
-            <element signature="e#14939#14940#0" expanded="true" />
-            <element signature="e#14968#14969#0" expanded="true" />
-            <element signature="e#15009#15010#0" expanded="true" />
-            <element signature="e#15043#15044#0" expanded="true" />
-            <element signature="e#15074#15075#0" expanded="true" />
-            <element signature="e#15102#15103#0" expanded="true" />
-            <element signature="e#15140#15141#0" expanded="true" />
-            <element signature="e#15173#15174#0" expanded="true" />
-            <element signature="e#15226#15227#0" expanded="true" />
-            <element signature="e#15270#15271#0" expanded="true" />
+            <element signature="e#12141#12142#0" expanded="true" />
+            <element signature="e#12169#12170#0" expanded="true" />
+            <element signature="e#12196#12197#0" expanded="true" />
+            <element signature="e#12234#12235#0" expanded="true" />
+            <element signature="e#12267#12268#0" expanded="true" />
+            <element signature="e#12572#12573#0" expanded="true" />
+            <element signature="e#12606#12607#0" expanded="true" />
+            <element signature="e#12633#12634#0" expanded="true" />
+            <element signature="e#12660#12661#0" expanded="true" />
+            <element signature="e#12690#12691#0" expanded="true" />
+            <element signature="e#12719#12720#0" expanded="true" />
+            <element signature="e#12750#12751#0" expanded="true" />
+            <element signature="e#12777#12778#0" expanded="true" />
+            <element signature="e#12912#12913#0" expanded="true" />
+            <element signature="e#12956#12957#0" expanded="true" />
+            <element signature="e#12995#12996#0" expanded="true" />
+            <element signature="e#13032#13033#0" expanded="true" />
+            <element signature="e#13071#13072#0" expanded="true" />
+            <element signature="e#13102#13103#0" expanded="true" />
+            <element signature="e#13143#13144#0" expanded="true" />
+            <element signature="e#13171#13172#0" expanded="true" />
+            <element signature="e#13209#13210#0" expanded="true" />
+            <element signature="e#13243#13244#0" expanded="true" />
+            <element signature="e#15485#15486#0" expanded="true" />
+            <element signature="e#15511#15512#0" expanded="true" />
+            <element signature="e#15546#15547#0" expanded="true" />
+            <element signature="e#15577#15578#0" expanded="true" />
+            <element signature="e#15608#15609#0" expanded="true" />
+            <element signature="e#15636#15637#0" expanded="true" />
+            <element signature="e#15680#15681#0" expanded="true" />
+            <element signature="e#15706#15707#0" expanded="true" />
+            <element signature="e#15759#15760#0" expanded="true" />
+            <element signature="e#15789#15790#0" expanded="true" />
+            <element signature="e#15833#15834#0" expanded="true" />
+            <element signature="e#15862#15863#0" expanded="true" />
+            <element signature="e#15903#15904#0" expanded="true" />
+            <element signature="e#15937#15938#0" expanded="true" />
+            <element signature="e#15968#15969#0" expanded="true" />
+            <element signature="e#15996#15997#0" expanded="true" />
+            <element signature="e#16034#16035#0" expanded="true" />
+            <element signature="e#16067#16068#0" expanded="true" />
+            <element signature="e#16120#16121#0" expanded="true" />
+            <element signature="e#16164#16165#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/handlers/MyContactListener.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/game/MyGame.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-54">
-          <caret line="114" column="44" lean-forward="true" selection-start-line="114" selection-start-column="44" selection-end-line="114" selection-end-column="44" />
+        <state relative-caret-position="782">
+          <caret line="55" column="75" lean-forward="true" selection-start-line="55" selection-start-column="75" selection-end-line="55" selection-end-column="75" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Arrow.java">
+    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/states/Play.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="354">
-          <caret line="39" column="8" lean-forward="true" selection-start-line="39" selection-start-column="8" selection-end-line="39" selection-end-column="59" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/core/src/com/mygame/entities/Slime.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="181" column="52" lean-forward="false" selection-start-line="181" selection-start-column="52" selection-end-line="181" selection-end-column="52" />
-          <folding />
+        <state relative-caret-position="391">
+          <caret line="322" column="17" lean-forward="false" selection-start-line="322" selection-start-column="17" selection-end-line="322" selection-end-column="17" />
+          <folding>
+            <element signature="e#6717#6723#0" expanded="true" />
+            <element signature="method#dispose#0;class#Play#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

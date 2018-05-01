@@ -133,7 +133,37 @@ public class Player extends Sprite implements Attackable {
             float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(90);
             body.setTransform(body.getPosition(), desiredAngle);
         }
+/*
+        if(attackableState == AttackableState.ALIVE && weaponDrawn && MyInput.isPressed(MyInput.JUMP)) {
+            state = State.ROLLING;
+            walkingSound.stop();
+            float jumpPower = 500.f;
 
+            switch (direction) {
+                case UP:
+                    this.body.applyLinearImpulse(0, jumpPower, body.getPosition().x, body.getPosition().y, true);
+                    break;
+                case UP_RIGHT:
+                    break;
+                case RIGHT:
+                    break;
+                case RIGHT_DOWN:
+                    break;
+                case DOWN:
+                    break;
+                case DOWN_LEFT:
+                    break;
+                case LEFT:
+                    break;
+                case LEFT_UP:
+                    break;
+            }
+        }
+
+        if(state == State.ROLLING) {
+
+        }
+*/
         //Animating player while he's shooting arrows
         if(attackableState == AttackableState.ALIVE && state == State.PULLING_BOWSTRING && weaponEquipped != null && weaponEquipped.getItemName().equals(Constants.ITEM_BOW)) {
             walkingSound.stop();
@@ -342,7 +372,7 @@ public class Player extends Sprite implements Attackable {
     }
 
     public enum State {
-        DRAWING_BOW, IDLE, PULLING_BOWSTRING
+        DRAWING_BOW, IDLE, PULLING_BOWSTRING, ROLLING
     }
 
     public void setWeaponEquipped(Item weapon) {

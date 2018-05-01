@@ -54,16 +54,12 @@ public class MyGame extends ApplicationAdapter {
 		assets.loadTexture("images\\bowItem.png", "bow");
 		assets.loadTexture("images\\bodyManBowDraw.png", "bodyManBowDraw");
 		assets.loadTexture("images\\bowDrawManIdle.png", "bowDrawManIdle");
-		assets.loadTexture("images\\bodyFleshIdle.png", "bodyFleshIdle");
-		assets.loadTexture("images\\bodyMaleTorsoIdle.png", "bodyManTorsoIdle");
-		assets.loadTexture("images\\bodyLegsIdle.png", "bodyLegsIdle");
 		assets.loadTexture("images\\bowDrawnManIdle.png", "bowDrawnManIdle");
 		assets.loadTexture("images\\bowDrawnManRun.png", "bowDrawnManRun");
 		assets.loadTexture("images\\bodyManBowPull.png", "bodyManBowPull");
 		assets.loadTexture("images\\bowPullMan.png", "bowPullMan");
 		assets.loadTexture("images\\gold.png", "gold");
 
-		assets.loadSound("sfx\\sword02.wav", "sword01");
 		assets.loadSound("sfx\\hurt01.wav", "hurt01");
 		assets.loadSound("sfx\\gold02.wav", "gold");
 		assets.loadSound("sfx\\arrowImpact01.wav", "arrowImpact01");

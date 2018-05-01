@@ -16,6 +16,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.entities.*;
 import com.mygame.game.MyGame;
@@ -40,6 +41,7 @@ public class Play extends GameState {
     private Sound fireSound;
     private long fireSoundID;
     private Cursor cursor;
+    private Vector2 clickPosition;
 
     private ArrayList<Sprite> gameObjects;
     private ArrayList<Event> events;
@@ -59,6 +61,8 @@ public class Play extends GameState {
 
     public Play(GameStateManager gsm) {
         super(gsm);
+
+        clickPosition = new Vector2(0, 0);
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
@@ -83,6 +87,7 @@ public class Play extends GameState {
         gameObjects = new ArrayList<Sprite>();
         player = new Player(world, 100 * Constants.PPM, 100 * Constants.PPM, cursor);
         gameObjects.add(player);
+        cam.position.set(new Vector3(player.getPosition().x * Constants.PPM, player.getPosition().y * Constants.PPM, 0));
 
         events = new ArrayList<Event>();
 
@@ -311,9 +316,11 @@ public class Play extends GameState {
         for(Sprite i : gameObjects) {
             //Rendering Attackable hp bars
             if(i instanceof Attackable) {
-                String hp = Integer.toString(((Attackable) i).getHp());
-                Vector2 position = new Vector2(((Attackable) i).getHpBarPosition().x, ((Attackable) i).getHpBarPosition().y);
-                hpBarFont.draw(sb, hp, position.x, position.y);
+                if(((Attackable) i).getAttackableState() == Attackable.AttackableState.ALIVE) {
+                    String hp = Integer.toString(((Attackable) i).getHp());
+                    Vector2 position = new Vector2(((Attackable) i).getHpBarPosition().x, ((Attackable) i).getHpBarPosition().y);
+                    hpBarFont.draw(sb, hp, position.x, position.y);
+                }
             }
             //Rendering Item names if mouse cursor is over Item
             if(i instanceof Item ) {
@@ -376,12 +383,16 @@ public class Play extends GameState {
     @Override
     public void handleInput() {
         //shooting arrows on click
+        if(MyInput.isDown(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
+            cam.zoom = MathUtils.lerp(cam.zoom, 0.8f, 0.1f);
+        }
         if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
             player.setClickPoint(new Vector2(cursor.getPosition()));
             player.getTimer().start();
             MyGame.assets.getSound("bowPull").stop();
             MyGame.assets.getSound("bowPull").play();
             player.setState(Player.State.PULLING_BOWSTRING);
+            clickPosition = cursor.getPosition().cpy();
         }
 
         if(MyInput.isReleased(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn() && player.getState() == Player.State.PULLING_BOWSTRING) {
@@ -437,7 +448,27 @@ public class Play extends GameState {
 
     private void cameraUpdate() {
         cam.update();
-        cam.position.set(player.getBody().getPosition().x * Constants.PPM, player.getBody().getPosition().y * Constants.PPM, 0);
+
+        if(player.isWeaponDrawn()) {
+            if(cursor.getBox2DPosition().dst(player.getPosition()) > 2.f) {
+                Vector2 dir2d = new Vector2(player.getPosition().scl(Constants.PPM).add(cursor.getPosition().sub(player.getPosition().scl(Constants.PPM)).nor().scl(60)));
+                Vector3 dir = new Vector3(dir2d.x, dir2d.y, 0);
+                cam.position.lerp(dir, 0.05f);
+                cam.zoom = MathUtils.lerp(cam.zoom, 0.9f, 0.02f);
+            }
+            else {
+                Vector2 dir2d = new Vector2(player.getPosition().scl(Constants.PPM).add(cursor.getPosition().sub(player.getPosition().scl(Constants.PPM)).nor().scl(60)));
+                Vector3 dir = new Vector3(dir2d.x, dir2d.y, 0);
+                cam.position.lerp(dir, 0.004f);
+                cam.zoom = MathUtils.lerp(cam.zoom, 0.9f, 0.02f);
+            }
+        }
+        else {
+            Vector3 dir = new Vector3(player.getPosition().x, player.getPosition().y, 0).scl(Constants.PPM);
+            cam.position.lerp(dir, 0.2f);
+            cam.zoom = MathUtils.lerp(cam.zoom, 1f, 0.02f);
+        }
+
         sb.setProjectionMatrix(cam.combined);
 
         rayHandler.setCombinedMatrix(cam.combined.cpy().scl(Constants.PPM), 0, 0, MyGame.V_WIDTH, MyGame.V_HEIGHT);
