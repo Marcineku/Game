@@ -1,5 +1,5 @@
 # Game
-It is my first game project this big. It's fully written in Java using LibGDX with Box2D for physics and shadows. 
+It is my first game project this big, meant to be an 2D top down action RPG and a end of term project assignment (although writing this project is really fun). It's fully written in Java using LibGDX with Box2D for physics and shadows. 
 # Game controls
 ### WSAD                 - to move around 
 ### E                    - to pick up arrows
