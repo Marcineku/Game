@@ -103,6 +103,10 @@ public class Arrow extends Sprite {
             }
         }
 
+        if(target != null && !target.getBody().isActive()) {
+            target = null;
+        }
+
         if(target != null && target.getBody().isActive()) {
             active = false;
             currentAnimation = animations.get("arrowThrusted");

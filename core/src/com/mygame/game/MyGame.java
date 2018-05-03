@@ -111,7 +111,7 @@ public class MyGame extends ApplicationAdapter {
 	@Override
 	public void resize(int width, int height) {
 		cam.setToOrtho(false, width / SCALE, height / SCALE);
-		hudCam.setToOrtho(false, width / SCALE, height / SCALE);
+		hudCam.setToOrtho(false, width, height);
 	}
 
 	public SpriteBatch getSpriteBatch() {

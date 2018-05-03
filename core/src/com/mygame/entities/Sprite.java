@@ -249,6 +249,32 @@ public abstract class Sprite implements Comparable<Sprite> {
         shape.dispose();
     }
 
+    public void synchronizeDirectionalAnimation(String name, Animation animation) {
+        animations.get(name + Direction.UP).synchronize(animation);
+        animations.get(name + Direction.UP_RIGHT).synchronize(animation);
+        animations.get(name + Direction.RIGHT).synchronize(animation);
+        animations.get(name + Direction.RIGHT_DOWN).synchronize(animation);
+        animations.get(name + Direction.DOWN).synchronize(animation);
+        animations.get(name + Direction.DOWN_LEFT).synchronize(animation);
+        animations.get(name + Direction.LEFT).synchronize(animation);
+        animations.get(name + Direction.LEFT_UP).synchronize(animation);
+    }
+
+    public void resetDirectionalAnimation(String name) {
+        animations.get(name + Direction.UP).reset();
+        animations.get(name + Direction.UP_RIGHT).reset();
+        animations.get(name + Direction.RIGHT).reset();
+        animations.get(name + Direction.RIGHT_DOWN).reset();
+        animations.get(name + Direction.DOWN).reset();
+        animations.get(name + Direction.DOWN_LEFT).reset();
+        animations.get(name + Direction.LEFT).reset();
+        animations.get(name + Direction.LEFT_UP).reset();
+    }
+
+    public HashMap<String, Animation> getAnimations() {
+        return animations;
+    }
+
     public enum Direction {
         UP("Up"), UP_RIGHT("UpRight"), RIGHT("Right"), RIGHT_DOWN("RightDown"), DOWN("Down"), DOWN_LEFT("DownLeft"), LEFT("Left"), LEFT_UP("LeftUp");
 

@@ -2,12 +2,19 @@ package com.mygame.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
 import com.mygame.handlers.MyInput;
@@ -18,12 +25,24 @@ public class Hud {
     private BitmapFont font;
     private TextureRegion coin;
 
-    public Hud(Player player) {
+    private Stage stage;
+    private Viewport viewport;
+
+    private Label goldText;
+    private Label goldValue;
+
+    private Label expText;
+    private Label expValue;
+
+    private Label arrowsText;
+    private Label arrowsValue;
+
+    public Hud(Player player, SpriteBatch sb, OrthographicCamera hudCam) {
         this.player = player;
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts\\PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 8;
+        parameter.size = 16;
         parameter.color = Color.GOLD;
         font = generator.generateFont(parameter);
 
@@ -31,33 +50,64 @@ public class Hud {
 
         TextureRegion[][] cn = TextureRegion.split(MyGame.assets.getTexture("coin"), 9, 9);
         coin = cn[0][0];
+
+        viewport = new ScreenViewport(hudCam);
+        stage = new Stage(viewport, sb);
+
+        Table table = new Table();
+        table.top();
+        table.left();
+        table.padTop(10);
+        table.padLeft(5);
+        table.setFillParent(true);
+
+        goldText = new Label("GOLD: ", new Label.LabelStyle(font, Color.GOLD));
+        table.add(goldText);
+        goldValue = new Label("0", new Label.LabelStyle(font, Color.GOLD));
+        table.add(goldValue);
+
+        table.row().padTop(10);
+
+        expText = new Label("EXP: ", new Label.LabelStyle(font, Color.WHITE));
+        table.add(expText);
+        expValue = new Label("0", new Label.LabelStyle(font, Color.WHITE));
+        table.add(expValue);
+
+        table.row().padTop(10);
+
+        arrowsText = new Label("ARROWS: ", new Label.LabelStyle(font, Color.BROWN));
+        table.add(arrowsText);
+        arrowsValue = new Label("0", new Label.LabelStyle(font, Color.BROWN));
+        table.add(arrowsValue);
+
+        stage.addActor(table);
     }
 
-    public void render(SpriteBatch sb) {
+    public void update() {
         String gold = Integer.toString(player.getGold());
-        String arrows = Integer.toString(player.getArrows());
         String exp = Integer.toString(player.getExp());
+        String arrows = Integer.toString(player.getArrows());
 
-        sb.begin();
-        sb.draw(coin, 20, MyGame.V_HEIGHT - 35);
-        font.draw(sb, gold, 32, MyGame.V_HEIGHT - 28);
-        if(player.getWeaponEquipped() != null && player.getWeaponEquipped().toString().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
-            font.draw(sb, "Arrows: " + arrows, 32, MyGame.V_HEIGHT - 48);
+        goldValue.setText(gold);
+        expValue.setText(exp);
+        arrowsValue.setText(arrows);
+
+        if(player.isWeaponDrawn() && player.getWeaponEquipped() != null && player.getWeaponEquipped().toString().equals(Constants.ITEM_BOW)) {
+            arrowsText.setVisible(true);
+            arrowsValue.setVisible(true);
         }
-        font.draw(sb, "Exp: " + exp, 32, MyGame.V_HEIGHT - 38);
-        if(MyInput.isDown(MyInput.EQ)) {
-            for(Item i : player.getItems()) {
-                String tmp = i.getItemName();
-                String name = tmp.substring(0, 1).toUpperCase() + tmp.substring(1);
-                Vector2 v = new Vector2(MyGame.V_WIDTH - 52, MyGame.V_HEIGHT - 52);
-                sb.draw(i.getCurrentAnimation().getFrame(), v.x, v.y);
-                font.draw(sb, name, v.x + 14, v.y + 4);
-            }
+        else {
+            arrowsText.setVisible(false);
+            arrowsValue.setVisible(false);
         }
-        sb.end();
     }
 
     public void dispose() {
         font.dispose();
+        stage.dispose();
+    }
+
+    public Stage getStage() {
+        return stage;
     }
 }

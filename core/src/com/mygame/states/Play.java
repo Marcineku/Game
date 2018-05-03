@@ -105,7 +105,7 @@ public class Play extends GameState {
 
         generator.dispose();
 
-        hud = new Hud(player);
+        hud = new Hud(player, sb, hudCam);
 
         tileMap = new TmxMapLoader().load("maps\\test.tmx");
         tmr = new OrthogonalTiledMapRenderer(tileMap);
@@ -289,6 +289,9 @@ public class Play extends GameState {
         float dst = player.getBody().getPosition().dst(new Vector2(95, 100));
         dst = (float) Math.pow(dst, -1);
         fireSound.setVolume(fireSoundID, dst);
+
+        //updating hud
+        hud.update();
     }
 
     @Override
@@ -376,8 +379,8 @@ public class Play extends GameState {
         sb.end();
 
         //rendering hud
-        sb.setProjectionMatrix(hudCam.combined);
-        hud.render(sb);
+        sb.setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().draw();
     }
 
     @Override
@@ -385,19 +388,23 @@ public class Play extends GameState {
         //shooting arrows on click
         if(MyInput.isDown(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
             cam.zoom = MathUtils.lerp(cam.zoom, 0.8f, 0.1f);
+            if(player.getCurrentAnimation().equals(player.getAnimations().get("bodyManBowPull" + player.getDirection()))) {
+                player.synchronizeDirectionalAnimation("bodyManBowPull", player.getCurrentAnimation());
+                player.synchronizeDirectionalAnimation("bowPullMan", player.getCurrentWeaponAnim());
+            }
         }
         if(MyInput.isPressed(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn()) {
-            player.setClickPoint(new Vector2(cursor.getPosition()));
             player.getTimer().start();
             MyGame.assets.getSound("bowPull").stop();
             MyGame.assets.getSound("bowPull").play();
             player.setState(Player.State.PULLING_BOWSTRING);
-            clickPosition = cursor.getPosition().cpy();
         }
 
         if(MyInput.isReleased(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn() && player.getState() == Player.State.PULLING_BOWSTRING) {
-            player.getCurrentAnimation().reset();
-            player.getCurrentWeaponAnim().reset();
+            player.setClickPoint(new Vector2(cursor.getPosition()));
+            clickPosition = cursor.getPosition().cpy();
+            player.resetDirectionalAnimation("bodyManBowPull");
+            player.resetDirectionalAnimation("bowPullMan");
 
             player.setState(Player.State.IDLE);
             MyGame.assets.getSound("bowPull").stop();
@@ -429,8 +436,8 @@ public class Play extends GameState {
 
         //resetting player's state after he's not firing bow after pulling bowstring
         if(MyInput.isPressed(MyInput.STRIKE2) && player.getState() == Player.State.PULLING_BOWSTRING) {
-            player.getCurrentAnimation().reset();
-            player.getCurrentWeaponAnim().reset();
+            player.resetDirectionalAnimation("bodyManBowPull");
+            player.resetDirectionalAnimation("bowPullMan");
 
             player.setState(Player.State.IDLE);
         }
