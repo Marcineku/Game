@@ -1,5 +1,11 @@
 package com.mygame.handlers;
 
+/**
+ * Consists of game constants such as pixels per meter
+ * (for unit conversion between physics engine
+ * units which are meter/kilogram/second and screen units, which are pixels),
+ * collision masks or item names
+ */
 public class Constants {
     public static final float PPM = 50.f/3.f;
 

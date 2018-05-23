@@ -4,14 +4,15 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Animation;
 import com.mygame.handlers.Constants;
 
+/**
+ * Contains box2d physics object, all animations and information related to arrow
+ */
 public class Arrow extends Sprite {
     private boolean active;
     private boolean looted;
@@ -23,6 +24,13 @@ public class Arrow extends Sprite {
     private float random;
     private Sprite archer;
 
+    /**
+     * @param world box2d world object in which arrow's collider will be spawned
+     * @param positionX x coordinate of spawning position
+     * @param positionY y coordinate of spawning position
+     * @param damage how much damage arrow will deal on impact
+     * @param archer shooter's object
+     */
     public Arrow(World world, float positionX, float positionY, int damage, Sprite archer) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 5.f, world, 0.f, 0.25f, 0.f);
 
@@ -71,6 +79,9 @@ public class Arrow extends Sprite {
         highlightedAnimation = animations.get("arrowHighlighted");
     }
 
+    /**
+     * @param dt time since last update
+     */
     @Override
     public void update(float dt) {
         super.update(dt);
@@ -147,6 +158,9 @@ public class Arrow extends Sprite {
         sb.end();
     }
 
+    /**
+     * @return is arrow already looted by player
+     */
     public boolean isLooted() {
         return looted;
     }
@@ -171,10 +185,16 @@ public class Arrow extends Sprite {
         this.target = target;
     }
 
+    /**
+     * @return damage dealt on impact
+     */
     public int getDamage() {
         return damage;
     }
 
+    /**
+     * @return shooter that shot the arrow
+     */
     public Sprite getArcher() {
         return archer;
     }

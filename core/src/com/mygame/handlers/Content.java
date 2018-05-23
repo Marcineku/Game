@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 
 import java.util.HashMap;
 
+/**
+ * Consists of a hash map for each data type that need to be stored for further use
+ */
 public class Content {
     private HashMap<String, Texture> textures;
     private HashMap<String, Sound> sounds;

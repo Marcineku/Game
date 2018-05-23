@@ -13,6 +13,10 @@ import com.mygame.interfaces.Lootable;
 
 import java.util.Random;
 
+/**
+ * Contains box2d physics object, all animations and information related to slime
+ * which is an enemy to player's character
+ */
 public class Slime extends Sprite implements Attackable, Lootable {
     private int hp;
     private int maxHp;
@@ -29,6 +33,12 @@ public class Slime extends Sprite implements Attackable, Lootable {
     private boolean hit;
     private int damage;
 
+    /**
+     * @param positionX x coordinate of spawning position
+     * @param positionY y coordinate of spawning position
+     * @param world box2d world object in which slime's collider will be spawned
+     * @param target sets the target for slime to chase
+     */
     public Slime(float positionX, float positionY, World world, Sprite target) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 4.f, world, 0.f, 15.f, 0.12f);
 
@@ -145,6 +155,9 @@ public class Slime extends Sprite implements Attackable, Lootable {
         }
     }
 
+    /**
+     * @param damage amount of health to subtract
+     */
     @Override
     public void hit(int damage) {
         hp -= damage;
@@ -160,7 +173,9 @@ public class Slime extends Sprite implements Attackable, Lootable {
     public int getExp() {
         return exp;
     }
-
+    /**
+     * @return direction in which slime is facing
+     */
     public Direction getDirection() {
         return direction;
     }
@@ -177,6 +192,9 @@ public class Slime extends Sprite implements Attackable, Lootable {
         return looted;
     }
 
+    /**
+     * @return amount of gold that will be dropped after slimes death
+     */
     public int getGold() {
         Random generator = new Random();
         return generator.nextInt(maxGold) + minGold;

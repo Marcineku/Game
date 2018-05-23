@@ -4,6 +4,11 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.mygame.game.MyGame;
 
+/**
+ * Contains main procedure only.
+ * Initializes all necessary LWJGL variables
+ * and creates instantion of class that consists of main game loop
+ */
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();

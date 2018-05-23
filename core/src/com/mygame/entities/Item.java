@@ -5,11 +5,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.mygame.game.MyGame;
 import com.mygame.handlers.Animation;
 import com.mygame.handlers.Constants;
+
+/**
+ * Contains box2d physics object, all animations and information related to item
+ */
 
 public class Item extends Sprite{
     private String itemName;
@@ -19,6 +22,12 @@ public class Item extends Sprite{
     private boolean highlighted;
     private Animation highlightedAnimation;
 
+    /**
+     * @param world box2d world object in which item's collider will be spawned
+     * @param positionX x coordinate of spawning position
+     * @param positionY y coordinate of spawning position
+     * @param itemName static name of an item from Constants class
+     */
     public Item(World world, float positionX, float positionY, String itemName) {
         super(BodyDef.BodyType.KinematicBody, positionX, positionY, 0.f, world, 0.f, 0.f, 0.f);
 
@@ -66,6 +75,9 @@ public class Item extends Sprite{
         return itemName;
     }
 
+    /**
+     * @return position at which item's name will be drawn
+     */
     public Vector2 getNamePosition() {
         return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 40.f);
     }

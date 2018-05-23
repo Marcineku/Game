@@ -6,6 +6,10 @@ import com.mygame.states.Play;
 
 import java.util.Stack;
 
+/**
+ * Manager of game states that is based on a stack of game states, only state that is rendered and updated is
+ * the state on top of the stack
+ */
 public class GameStateManager {
     private MyGame game;
 

@@ -2,6 +2,10 @@ package com.mygame.handlers;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
+/**
+ * Used to store animation that contain set of frames, information about delay between them,
+ * which one is current frame, times played, is animation looped or if it has ended
+ */
 public class Animation {
     private TextureRegion[] frames;
     private float           time;
@@ -11,6 +15,10 @@ public class Animation {
     private boolean         loop;
     private boolean         ended;
 
+    /**
+     * @param frames array of frames
+     * @param delay delay between frames
+     */
     public Animation(TextureRegion[] frames, float delay) {
         this.frames  = frames;
         this.delay   = delay;
@@ -72,6 +80,10 @@ public class Animation {
         return loop;
     }
 
+    /**
+     * @param x flip on x axis
+     * @param y flip on y axis
+     */
     public void flip(boolean x, boolean y) {
         for(TextureRegion i : frames) {
             i.flip(x, y);
@@ -91,6 +103,9 @@ public class Animation {
         }
     }
 
+    /**
+     * Change order of frames to opposite
+     */
     public void reverse() {
         TextureRegion[] tmp = new TextureRegion[frames.length];
 

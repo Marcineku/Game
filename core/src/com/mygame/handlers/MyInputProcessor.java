@@ -2,8 +2,10 @@ package com.mygame.handlers;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.mygame.game.MyGame;
 
+/**
+ * Listener that sets up MyInput's arrays of keys pressed accordingly to what keys are pressed
+ */
 public class MyInputProcessor extends InputAdapter {
     @Override
     public boolean keyDown(int keycode) {

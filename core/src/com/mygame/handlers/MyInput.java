@@ -1,5 +1,8 @@
 package com.mygame.handlers;
 
+/**
+ * Used to store which keys are pressed in current frame and which were pressed in previous
+ */
 public class MyInput {
     public static boolean[] keys;
     public static boolean[] pkeys;

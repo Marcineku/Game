@@ -5,25 +5,22 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.mygame.game.MyGame;
 import com.mygame.handlers.Constants;
-import com.mygame.handlers.MyInput;
 
+/**
+ * Is responsible for displaying information like current gold quantity of player's character on screen,
+ * it uses it's own camera (hudCam), uses scene2d
+ */
 public class Hud {
     private Player player;
 
     private BitmapFont font;
-    private TextureRegion coin;
 
     private Stage stage;
     private Viewport viewport;
@@ -37,6 +34,11 @@ public class Hud {
     private Label arrowsText;
     private Label arrowsValue;
 
+    /**
+     * @param player player object
+     * @param sb sprite batch
+     * @param hudCam hud camera
+     */
     public Hud(Player player, SpriteBatch sb, OrthographicCamera hudCam) {
         this.player = player;
 
@@ -47,9 +49,6 @@ public class Hud {
         font = generator.generateFont(parameter);
 
         generator.dispose();
-
-        TextureRegion[][] cn = TextureRegion.split(MyGame.assets.getTexture("coin"), 9, 9);
-        coin = cn[0][0];
 
         viewport = new ScreenViewport(hudCam);
         stage = new Stage(viewport, sb);
@@ -83,6 +82,10 @@ public class Hud {
         stage.addActor(table);
     }
 
+    /**
+     * Update's player's information and chooses which
+     * information should be shown depending on current state of a player
+     */
     public void update() {
         String gold = Integer.toString(player.getGold());
         String exp = Integer.toString(player.getExp());
@@ -107,6 +110,9 @@ public class Hud {
         stage.dispose();
     }
 
+    /**
+     * @return scene2d stage object
+     */
     public Stage getStage() {
         return stage;
     }

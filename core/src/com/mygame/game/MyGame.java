@@ -4,13 +4,14 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.mygame.entities.Sprite;
 import com.mygame.handlers.*;
 
-import java.util.ArrayList;
-
+/**
+ * Consists of main game loop,
+ * all window creation, physics step and
+ * FPS static variables
+ */
 public class MyGame extends ApplicationAdapter {
 	public static final String TITLE    = "Game";
 	public static final int    V_WIDTH  = 640;
@@ -29,6 +30,11 @@ public class MyGame extends ApplicationAdapter {
 
 	public static Content assets;
 
+	/**
+	 * Procedure that initializes
+	 * custom input processor (MyInputProcessor), loads all game assets and also
+	 * creating instances of sprite batch, main camera, hud camera and GameStateManager
+	 */
 	@Override
 	public void create () {
 		accumulator = 0;
@@ -42,11 +48,8 @@ public class MyGame extends ApplicationAdapter {
 		assets = new Content();
 
 		assets.loadTexture("images\\characters.png", "characters");
-		assets.loadTexture("images\\treasures.png", "treasures");
-		assets.loadTexture("images\\coin.png", "coin");
 		assets.loadTexture("images\\arrow.png" , "arrow");
 		assets.loadTexture("images\\dead.png", "dead");
-
 		assets.loadTexture("images\\bodyManIdle.png", "bodyManIdle");
 		assets.loadTexture("images\\bodyManRun.png", "bodyManRun");
 		assets.loadTexture("images\\bowBackManIdle.png", "bowBackManIdle");
@@ -86,6 +89,11 @@ public class MyGame extends ApplicationAdapter {
 		gsm = new GameStateManager(this);
 	}
 
+	/**
+	 * Procedure that servers as a main game loop,
+	 * calling GameStateManager's update and render
+	 * and also MyInput's update FPS times a second
+	 */
 	@Override
 	public void render () {
 		accumulator += Gdx.graphics.getDeltaTime();
@@ -97,6 +105,11 @@ public class MyGame extends ApplicationAdapter {
 		}
 	}
 
+	/**
+	 * Since most of resources in this application are not managed
+	 * by Java's garbage collector but by native drivers, this procedure
+	 * disposes all of application-level resources manually at the end of application's life-time
+	 */
 	@Override
 	public void dispose () {
 		sb.dispose();
@@ -108,6 +121,11 @@ public class MyGame extends ApplicationAdapter {
 		assets.disposeAll();
 	}
 
+	/**
+	 * Called each time when application is being resized
+	 * @param width new width of a window after resizing
+	 * @param height new height of a window after resizing
+	 */
 	@Override
 	public void resize(int width, int height) {
 		cam.setToOrtho(false, width / SCALE, height / SCALE);

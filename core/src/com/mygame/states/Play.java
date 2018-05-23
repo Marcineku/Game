@@ -27,11 +27,13 @@ import com.mygame.handlers.MyInput;
 import com.mygame.interfaces.Attackable;
 import com.mygame.interfaces.Lootable;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
+/**
+ * Main game state that consists of rendering actual game on a test level
+ */
 public class Play extends GameState {
     private World world;
     private Box2DDebugRenderer b2dr;
@@ -41,10 +43,9 @@ public class Play extends GameState {
     private Sound fireSound;
     private long fireSoundID;
     private Cursor cursor;
-    private Vector2 clickPosition;
 
     private ArrayList<Sprite> gameObjects;
-    private ArrayList<Event> events;
+    private ArrayList<TextEvent> textEvents;
 
     private BitmapFont hpBarFont;
     private BitmapFont itemNameFont;
@@ -57,12 +58,10 @@ public class Play extends GameState {
     private OrthogonalTiledMapRenderer tmr;
     private float tileSize;
 
-    public static boolean debug = true;
+    public static boolean debug = false;
 
     public Play(GameStateManager gsm) {
         super(gsm);
-
-        clickPosition = new Vector2(0, 0);
 
         world = new World(new Vector2(0, 0), true);
         world.setContactListener(new MyContactListener());
@@ -89,7 +88,7 @@ public class Play extends GameState {
         gameObjects.add(player);
         cam.position.set(new Vector3(player.getPosition().x * Constants.PPM, player.getPosition().y * Constants.PPM, 0));
 
-        events = new ArrayList<Event>();
+        textEvents = new ArrayList<TextEvent>();
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("fonts\\PressStart2P.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -181,13 +180,13 @@ public class Play extends GameState {
 
     @Override
     public void update(float dt) {
-        Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + " OBJ: " + gameObjects.size() + " EVNT: " + events.size());
+        Gdx.graphics.setTitle("FPS: " + Gdx.graphics.getFramesPerSecond() + " OBJ: " + gameObjects.size() + " EVNT: " + textEvents.size());
 
         handleInput();
 
         fire.update(dt);
 
-        ArrayList<Loot> lootToDrop = new ArrayList<Loot>();
+        ArrayList<Gold> goldToDrop = new ArrayList<Gold>();
         for(Iterator<Sprite> i = gameObjects.iterator(); i.hasNext();) {
             Sprite s = i.next();
 
@@ -203,28 +202,28 @@ public class Play extends GameState {
                     //Dropping loot
                     if(s instanceof Lootable) {
                         if(!((Lootable) s).isLooted()) {
-                            lootToDrop.add(new Loot(world, s.getPosition().x * Constants.PPM, s.getPosition().y * Constants.PPM, ((Lootable) s).getGold()));
+                            goldToDrop.add(new Gold(world, s.getPosition().x * Constants.PPM, s.getPosition().y * Constants.PPM, ((Lootable) s).getGold()));
                             ((Lootable) s).setLooted(true);
                             MyGame.assets.getSound("goldDrop").play();
                             //Increasing player's exp
                             player.addExp(((Attackable) s).getExp());
                             String exp = Integer.toString(((Attackable) s).getExp());
-                            events.add(new Event(sb, itemNameFont,"+" + exp, 3.f, s.getPosition().scl(Constants.PPM), Color.WHITE, 1/2.f, 0));
+                            textEvents.add(new TextEvent(sb, itemNameFont,"+" + exp, 3.f, s.getPosition().scl(Constants.PPM), Color.WHITE, 1/2.f, 0));
                         }
                     }
                 }
                 if(((Attackable) s).getAttackableState() == Attackable.AttackableState.ALIVE && ((Attackable) s).isHit()) {
                     ((Attackable) s).setHit(false);
                     String damage = Integer.toString(((Attackable) s).getDamage());
-                    events.add(new Event(sb, itemNameFont, "-" + damage, 1.f, s.getPosition().scl(Constants.PPM), Color.RED, 1.f, 1));
+                    textEvents.add(new TextEvent(sb, itemNameFont, "-" + damage, 1.f, s.getPosition().scl(Constants.PPM), Color.RED, 1.f, 1));
                 }
             }
             //Removing looted loot
-            if(s instanceof Loot) {
-                Loot loot = (Loot) s;
-                if(loot.isLooted()) {
-                    events.add(new Event(sb, itemNameFont, "+" + ((Loot) s).getGold(), 3.f, s.getPosition().scl(Constants.PPM), Color.GOLD, 1/2.f, 0));
-                    world.destroyBody(loot.getBody());
+            if(s instanceof Gold) {
+                Gold gold = (Gold) s;
+                if(gold.isLooted()) {
+                    textEvents.add(new TextEvent(sb, itemNameFont, "+" + ((Gold) s).getGold(), 3.f, s.getPosition().scl(Constants.PPM), Color.GOLD, 1/2.f, 0));
+                    world.destroyBody(gold.getBody());
                     i.remove();
                 }
             }
@@ -257,20 +256,20 @@ public class Play extends GameState {
                 }
             }
         }
-        gameObjects.addAll(lootToDrop);
+        gameObjects.addAll(goldToDrop);
 
         //updating all game objects
         for(Sprite i : gameObjects) {
             i.update(dt);
         }
 
-        //updating all events
-        for(Event i : events) {
+        //updating all textEvents
+        for(TextEvent i : textEvents) {
             i.update(dt);
         }
 
-        for(Iterator<Event> i = events.iterator(); i.hasNext();) {
-            Event e = i.next();
+        for(Iterator<TextEvent> i = textEvents.iterator(); i.hasNext();) {
+            TextEvent e = i.next();
 
             if(!e.isActive()) {
                 i.remove();
@@ -355,12 +354,12 @@ public class Play extends GameState {
                     ((Arrow) i).setHighlighted(false);
                 }
             }
-            if(i instanceof Loot) {
+            if(i instanceof Gold) {
                 if(i.getFixture().testPoint(cursor.getBox2DPosition())) {
-                    ((Loot) i).setHighlighted(true);
+                    ((Gold) i).setHighlighted(true);
                 }
                 else {
-                    ((Loot) i).setHighlighted(false);
+                    ((Gold) i).setHighlighted(false);
                 }
             }
         }
@@ -369,8 +368,8 @@ public class Play extends GameState {
         //rendering lights
         rayHandler.render();
 
-        //rendering all events
-        for(Event i : events) {
+        //rendering all textEvents
+        for(TextEvent i : textEvents) {
             i.render();
         }
 
@@ -402,7 +401,6 @@ public class Play extends GameState {
 
         if(MyInput.isReleased(MyInput.STRIKE) && player.getAttackableState() == Attackable.AttackableState.ALIVE && !player.isArrowsEmpty() && player.getWeaponEquipped() != null && player.getWeaponEquipped().getItemName().equals(Constants.ITEM_BOW) && player.isWeaponDrawn() && player.getState() == Player.State.PULLING_BOWSTRING) {
             player.setClickPoint(new Vector2(cursor.getPosition()));
-            clickPosition = cursor.getPosition().cpy();
             player.resetDirectionalAnimation("bodyManBowPull");
             player.resetDirectionalAnimation("bowPullMan");
 
@@ -480,7 +478,7 @@ public class Play extends GameState {
 
         rayHandler.setCombinedMatrix(cam.combined.cpy().scl(Constants.PPM), 0, 0, MyGame.V_WIDTH, MyGame.V_HEIGHT);
 
-        cursor.Update(cam);
+        cursor.update(cam);
 
         if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
             cam.zoom -= 0.02f;

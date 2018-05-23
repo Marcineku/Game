@@ -6,6 +6,9 @@ import com.mygame.entities.*;
 import com.mygame.game.MyGame;
 import com.mygame.interfaces.Attackable;
 
+/**
+ * Handling of collision response
+ */
 public class MyContactListener implements ContactListener {
     @Override
     public void beginContact(Contact contact) {
@@ -102,17 +105,17 @@ public class MyContactListener implements ContactListener {
         if ((fa.getFilterData().categoryBits == Constants.BIT_PLAYER && fb.getFilterData().categoryBits == Constants.BIT_LOOT) ||
                 (fb.getFilterData().categoryBits == Constants.BIT_PLAYER && fa.getFilterData().categoryBits == Constants.BIT_LOOT)) {
             Player player;
-            Loot loot;
+            Gold gold;
 
             if (fa.getUserData() instanceof Player) {
                 player = (Player) fa.getUserData();
-                loot = (Loot) fb.getUserData();
+                gold = (Gold) fb.getUserData();
             } else {
                 player = (Player) fb.getUserData();
-                loot = (Loot) fa.getUserData();
+                gold = (Gold) fa.getUserData();
             }
 
-            player.lootGold(loot.getGold());
+            player.lootGold(gold.getGold());
 
             MyGame.assets.getSound("gold").play();
         }

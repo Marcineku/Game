@@ -14,6 +14,9 @@ import com.mygame.interfaces.Attackable;
 
 import java.util.ArrayList;
 
+/**
+ * Contains box2d physics object, all animations and information related to player
+ */
 public class Player extends Sprite implements Attackable {
     private Cursor          cursor;
     private int             hp;
@@ -39,6 +42,12 @@ public class Player extends Sprite implements Attackable {
     private boolean         hit;
     private Vector2         clickPoint;
 
+    /**
+     * @param world box2d world object in which player's collider will be spawned
+     * @param positionX x coordinate of spawning position
+     * @param positionY y coordinate of spawning position
+     * @param cursor cursor object
+     */
     public Player(World world, float positionX, float positionY, Cursor cursor) {
         super(BodyDef.BodyType.DynamicBody, positionX, positionY, 6.f, world, 0.f, 25.f, 0.25f);
 
@@ -133,37 +142,7 @@ public class Player extends Sprite implements Attackable {
                 float desiredAngle = (float) Math.atan2(-toTarget.x, toTarget.y) + (float) Math.toRadians(90);
                 body.setTransform(body.getPosition(), desiredAngle);
             }
-/*
-        if(attackableState == AttackableState.ALIVE && weaponDrawn && MyInput.isPressed(MyInput.JUMP)) {
-            state = State.ROLLING;
-            walkingSound.stop();
-            float jumpPower = 500.f;
 
-            switch (direction) {
-                case UP:
-                    this.body.applyLinearImpulse(0, jumpPower, body.getPosition().x, body.getPosition().y, true);
-                    break;
-                case UP_RIGHT:
-                    break;
-                case RIGHT:
-                    break;
-                case RIGHT_DOWN:
-                    break;
-                case DOWN:
-                    break;
-                case DOWN_LEFT:
-                    break;
-                case LEFT:
-                    break;
-                case LEFT_UP:
-                    break;
-            }
-        }
-
-        if(state == State.ROLLING) {
-
-        }
-*/
             //If bow is equipped
             if(weaponEquipped != null && weaponEquipped.getItemName().equals(Constants.ITEM_BOW)) {
                 //Animating player while he's shooting arrows
@@ -297,6 +276,9 @@ public class Player extends Sprite implements Attackable {
         sb.end();
     }
 
+    /**
+     * @param damage how much damage has been dealt to player
+     */
     @Override
     public void hit(int damage) {
         hp -= damage;
@@ -314,16 +296,15 @@ public class Player extends Sprite implements Attackable {
         return new Vector2(body.getPosition().x * Constants.PPM - 8.f, body.getPosition().y * Constants.PPM + 42.f);
     }
 
+    /**
+     * @return direction in which player is facing
+     */
     public Direction getDirection() {
         return direction;
     }
 
     public AttackableState getAttackableState() {
         return attackableState;
-    }
-
-    public boolean isStrike() {
-        return strike;
     }
 
     public Animation getCurrentWeaponAnim() {
@@ -334,10 +315,16 @@ public class Player extends Sprite implements Attackable {
         return gold;
     }
 
+    /**
+     * @param gold how much gold player looted
+     */
     public void lootGold(int gold) {
         this.gold += gold;
     }
 
+    /**
+     * Resets player's character when dead by reviving him
+     */
     public void reset() {
         hp = maxHp;
         gold = 0;
@@ -352,6 +339,9 @@ public class Player extends Sprite implements Attackable {
         return arrows <= 0;
     }
 
+    /**
+     * Subtracts one arrow from player's quiver
+     */
     public void shoot() {
         arrows -= 1;
     }
@@ -360,12 +350,18 @@ public class Player extends Sprite implements Attackable {
         return arrows;
     }
 
+    /**
+     * Adds one arrow to player's quiver;
+     */
     public void lootArrow() {
         arrows += 1;
     }
 
+    /**
+     * Player's current state
+     */
     public enum State {
-        DRAWING_BOW, IDLE, PULLING_BOWSTRING, ROLLING
+        DRAWING_BOW, IDLE, PULLING_BOWSTRING
     }
 
     public void setWeaponEquipped(Item weapon) {
@@ -466,10 +462,16 @@ public class Player extends Sprite implements Attackable {
         return state;
     }
 
+    /**
+     * @return click point for calculating direction of arrow that can be shot
+     */
     public Vector2 getClickPoint() {
         return clickPoint;
     }
 
+    /**
+     * @param clickPoint click point for calculating direction of arrow that can be shot
+     */
     public void setClickPoint(Vector2 clickPoint) {
         this.clickPoint = clickPoint;
     }

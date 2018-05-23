@@ -1,5 +1,8 @@
 package com.mygame.handlers;
 
+/**
+ * Simple time counter
+ */
 public class Timer {
     private float time;
     private boolean running;

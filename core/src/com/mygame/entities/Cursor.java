@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.*;
 import com.mygame.handlers.Constants;
 
+/**
+ * Consists of current cursor position
+ */
 public class Cursor {
     private Vector2 position;
 
@@ -14,7 +16,11 @@ public class Cursor {
         position = new Vector2(0, 0);
     }
 
-    public void Update(OrthographicCamera cam) {
+    /**
+     * Updates the cursor's position in relation to camera
+     * @param cam the camera in relation to which cursor's position will be calculated
+     */
+    public void update(OrthographicCamera cam) {
         Vector3 mouseInWorld3D = new Vector3();
         mouseInWorld3D.x = Gdx.input.getX();
         mouseInWorld3D.y = Gdx.input.getY();
